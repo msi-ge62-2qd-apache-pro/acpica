@@ -240,7 +240,32 @@
  * Macros for little-endian machines
  */
 
-#ifndef ACPI_MISALIGNMENT_NOT_SUPPORTED
+#if 0
+
+static void ACPI_MOVE(void* d, const void* s, size_t c, size_t z) __attribute__((unused));
+static void ACPI_MOVE(void* d, const void* s, size_t c, size_t z)
+{
+	memcpy(d, s, c);
+	if (z) memset((char*)d + c, 0, z);
+}
+
+#define ACPI_MOVE_16_TO_16(d, s)        ACPI_MOVE(d, s, 2, 0)
+#define ACPI_MOVE_16_TO_32(d, s)        ACPI_MOVE(d, s, 2, 2)
+#define ACPI_MOVE_16_TO_64(d, s)        ACPI_MOVE(d, s, 2, 6)
+
+/* 32-bit source, 16/32/64 destination */
+
+#define ACPI_MOVE_32_TO_16(d, s)        ACPI_MOVE_16_TO_16(d, s)    /* Truncate to 16 */
+#define ACPI_MOVE_32_TO_32(d, s)        ACPI_MOVE(d, s, 4, 0)
+#define ACPI_MOVE_32_TO_64(d, s)        ACPI_MOVE(d, s, 4, 4)
+
+/* 64-bit source, 16/32/64 destination */
+
+#define ACPI_MOVE_64_TO_16(d, s)        ACPI_MOVE_16_TO_16(d, s)    /* Truncate to 16 */
+#define ACPI_MOVE_64_TO_32(d, s)        ACPI_MOVE_32_TO_32(d, s)    /* Truncate to 32 */
+#define ACPI_MOVE_64_TO_64(d, s)        ACPI_MOVE(d, s, 8, 0)
+
+#elif !defined ACPI_MISALIGNMENT_NOT_SUPPORTED
 
 /* The hardware supports unaligned transfers, just do the little-endian move */
 
