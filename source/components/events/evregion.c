@@ -257,6 +257,7 @@ AcpiEvAddressSpaceDispatch (
         return_ACPI_STATUS (AE_NOT_EXIST);
     }
 
+    AcpiEvGetSpaceHandler (HandlerDesc);
     Context = HandlerDesc->AddressSpace.Context;
 
     /*
@@ -275,7 +276,8 @@ AcpiEvAddressSpaceDispatch (
             ACPI_ERROR ((AE_INFO,
                 "No init routine for region(%p) [%s]",
                 RegionObj, AcpiUtGetRegionName (RegionObj->Region.SpaceId)));
-            return_ACPI_STATUS (AE_NOT_EXIST);
+            Status = AE_NOT_EXIST;
+            goto ErrorExit;
         }
 
         /*
@@ -299,7 +301,7 @@ AcpiEvAddressSpaceDispatch (
             ACPI_EXCEPTION ((AE_INFO, Status,
                 "During region initialization: [%s]",
                 AcpiUtGetRegionName (RegionObj->Region.SpaceId)));
-            return_ACPI_STATUS (Status);
+            goto ErrorExit;
         }
 
         /* Region initialization may have been completed by RegionSetup */
@@ -399,6 +401,8 @@ AcpiEvAddressSpaceDispatch (
         AcpiExEnterInterpreter ();
     }
 
+ErrorExit:
+    AcpiEvPutSpaceHandler (HandlerDesc);
     return_ACPI_STATUS (Status);
 }
 
