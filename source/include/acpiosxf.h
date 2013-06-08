@@ -123,7 +123,6 @@
 #include "platform/acenv.h"
 #include "actypes.h"
 
-
 /* Types for AcpiOsExecute */
 
 typedef enum
@@ -483,7 +482,6 @@ ACPI_STATUS
 AcpiOsGetTableByAddress (
     ACPI_PHYSICAL_ADDRESS   Address,
     ACPI_TABLE_HEADER       **Table);
-
 
 /*
  * Directory manipulation

@@ -125,6 +125,7 @@
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
+#pragma clang diagnostic ignored "-Wcomment"
 #endif
 
 #endif /* __ACMACOSX_H__ */

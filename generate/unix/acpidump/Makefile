@@ -38,8 +38,14 @@ OBJECTS = \
 	$(OBJDIR)/utmath.o\
 	$(OBJDIR)/utstring.o\
 	$(OBJDIR)/utxferror.o\
-	$(OBJDIR)/oslinuxtbl.o\
 	$(OBJDIR)/getopt.o
+
+ifneq ($(HOST),_APPLE)
+OBJECTS += $(OBJDIR)/oslinuxtbl.o
+else
+OBJECTS += $(OBJDIR)/osmacosxtbl.o
+LDFLAGS  += -framework CoreFoundation -framework IOKit
+endif
 
 #
 # Flags specific to acpidump
