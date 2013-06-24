@@ -278,8 +278,8 @@ $(OBJDIR)/prparser.y.h: $(OBJDIR)/prparserparse.h
 # Cannot use the common compile warning flags since the C files are created
 # by the utilities above and they are not necessarily ANSI C, etc.
 #
-$(OBJDIR)/aslcompilerlex.o :   $(OBJDIR)/aslcompilerlex.c
-	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $?
+$(OBJDIR)/aslcompilerlex.o :   $(OBJDIR)/aslcompilerlex.c $(OBJDIR)/aslcompiler.y.h
+	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $<
 
 $(OBJDIR)/aslcompilerparse.o : $(OBJDIR)/aslcompilerparse.c
 	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $?
@@ -290,8 +290,8 @@ $(OBJDIR)/dtparserlex.o :      $(OBJDIR)/dtparserlex.c
 $(OBJDIR)/dtparserparse.o :    $(OBJDIR)/dtparserparse.c
 	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $?
 
-$(OBJDIR)/prparserlex.o :      $(OBJDIR)/prparserlex.c
-	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $?
+$(OBJDIR)/prparserlex.o :      $(OBJDIR)/prparserlex.c $(OBJDIR)/prparser.y.h
+	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $<
 
 $(OBJDIR)/prparserparse.o :    $(OBJDIR)/prparserparse.c
 	$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $?
