@@ -333,7 +333,7 @@ $(OBJDIR)/prparserparse.c $(OBJDIR)/prparser.y.h :       $(ASL_COMPILER)/prparse
 # Cannot use the common compile warning flags since the C files are created
 # by the utilities above and they are not necessarily ANSI C, etc.
 #
-$(OBJDIR)/aslcompilerlex.o :   $(OBJDIR)/aslcompilerlex.c
+$(OBJDIR)/aslcompilerlex.o :   $(OBJDIR)/aslcompilerlex.c $(OBJDIR)/aslcompiler.y.h
 	@echo "- " "Intermediate" $<
 	@$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $<
 
@@ -349,7 +349,7 @@ $(OBJDIR)/dtparserparse.o :    $(OBJDIR)/dtparserparse.c
 	@echo "- " "Intermediate" $<
 	@$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $<
 
-$(OBJDIR)/prparserlex.o :      $(OBJDIR)/prparserlex.c
+$(OBJDIR)/prparserlex.o :      $(OBJDIR)/prparserlex.c $(OBJDIR)/prparser.y.h
 	@echo "- " "Intermediate" $<
 	@$(CC) -c $(CFLAGS) -Wall -Werror -o$@ $<
 
