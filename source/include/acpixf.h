@@ -829,6 +829,7 @@ AcpiError (
     const char              *Format,
     ...) ACPI_PRINTF_LIKE(3);
 
+#ifndef AcpiException
 void  ACPI_INTERNAL_VAR_XFACE
 AcpiException (
     const char              *ModuleName,
@@ -836,6 +837,7 @@ AcpiException (
     ACPI_STATUS             Status,
     const char              *Format,
     ...) ACPI_PRINTF_LIKE(4);
+#endif
 
 void ACPI_INTERNAL_VAR_XFACE
 AcpiWarning (

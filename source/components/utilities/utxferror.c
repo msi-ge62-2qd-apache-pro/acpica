@@ -164,7 +164,7 @@ AcpiError (
 
 ACPI_EXPORT_SYMBOL (AcpiError)
 
-
+#ifndef AcpiException
 /*******************************************************************************
  *
  * FUNCTION:    AcpiException
@@ -204,7 +204,7 @@ AcpiException (
 }
 
 ACPI_EXPORT_SYMBOL (AcpiException)
-
+#endif
 
 /*******************************************************************************
  *
