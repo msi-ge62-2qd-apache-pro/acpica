@@ -200,7 +200,7 @@ extern FILE                 *AcpiGbl_OutputFile;
  * Common message suffix
  */
 #define ACPI_MSG_SUFFIX \
-    AcpiOsPrintf (" (%x/%s:%x)\n", ACPI_CA_VERSION, ModuleName, LineNumber)
+    AcpiOsPrintf (" (%8.8X/%s-%u)\n", ACPI_CA_VERSION, ModuleName, LineNumber)
 
 
 /* Types for Resource descriptor entries */
