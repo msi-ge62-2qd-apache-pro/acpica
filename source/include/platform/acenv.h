@@ -255,6 +255,9 @@
 #elif defined(__HAIKU__)
 #include "achaiku.h"
 
+#elif defined(__XEOS__)
+#include "acxeos.h"
+
 #else
 
 /* Unknown environment */
