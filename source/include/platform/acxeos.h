@@ -116,11 +116,31 @@
 #ifndef __ACXEOS_H__
 #define __ACXEOS_H__
 
+#include <stdint.h>
+
+#define ACPI_USE_SYSTEM_CLIBRARY                        1
+#define ACPI_USE_STANDARD_HEADERS                       1
+
 #ifdef __LP64__
-#define ACPI_MACHINE_WIDTH  64
+#define ACPI_MACHINE_WIDTH                              64
 #else
-#define ACPI_MACHINE_WIDTH  32
+#define ACPI_MACHINE_WIDTH                              32
 #endif
+
+#define COMPILER_DEPENDENT_INT64                        int64_t
+#define COMPILER_DEPENDENT_UINT64                       uint64_t
+
+#define ACPI_MUTEX_TYPE                                 ACPI_OSL_MUTEX
+
+#define ACPI_INLINE                                     inline
+
+#define ACPI_PRINTF_LIKE( c )                           __attribute__( ( __format__ ( __printf__, c, c + 1 ) ) )
+#define ACPI_UNUSED_VAR                                 __attribute__( ( unused ) )
+
+#define ACPI_ACQUIRE_GLOBAL_LOCK( GLptr, Acq )          
+#define ACPI_RELEASE_GLOBAL_LOCK( GLptr, Pnd )          
+
+#define ACPI_FLUSH_CPU_CACHE()                          __asm__( "wbinvd" )
 
 #define	ACPI_DIV_64_BY_32( n_hi, n_lo, d32, q32, r32 )  \
     __asm__ __volatile__                                \
