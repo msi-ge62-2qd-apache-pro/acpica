@@ -1257,6 +1257,14 @@ AcpiDebugPrintRaw (
     const char              *Format,
     ...))
 
+ACPI_DBG_DEPENDENT_RETURN_VOID (
+void
+AcpiTracePoint (
+    ACPI_TRACE_EVENT_TYPE   Type,
+    BOOLEAN                 Begin,
+    UINT8                   *Aml,
+    char                    *Pathname))
+
 ACPI_APP_DEPENDENT_RETURN_VOID (
 ACPI_PRINTF_LIKE(1)
 void ACPI_INTERNAL_VAR_XFACE
