@@ -260,6 +260,9 @@
 #elif defined(__HAIKU__)
 #include "achaiku.h"
 
+#elif defined(__QUARNOS__)
+#include "acquarnos.h"
+
 #else
 
 /* Unknown environment */
