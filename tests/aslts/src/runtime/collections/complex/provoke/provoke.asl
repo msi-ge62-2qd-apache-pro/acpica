@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -39,13 +39,13 @@ Name(z055, 55)
 
 // Meaningless zero valued parameter
 
-Method(m130, 1)
+Method(m130, 1, Serialized)
 {
 	Name(B000, Buffer(2) {0x21, 0x21})
 
 	Store(0, Local0)
 
-	ToString(B000, Local0)
+	Store(ToString(B000, Local0), Local2)
 
 	if (LNotequal(Local0, 0)) {
 		err(arg0, z055, 0, 0, 0, Local0, 0)
@@ -117,7 +117,7 @@ Method(m136, 1)
 }
 
 // Run-method
-Method(PRV0)
+Method(PRV0,, Serialized)
 {
 	Name(ts, "PRV0")
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,26 +32,26 @@
  * SUMMARY: No exception on DerefOf for parameter which is none of ObjectReference/IndexReference/String
  */
 
-Method(mfb2)
+Method(mfb2,, Serialized)
 	{
 	Name(b000, Buffer(){ 1, 2, 3, 4, 0x95, 6, 7, 8})
 	Name(i000, 0xabbc0000)
 	Name(p000, Package() {1,2,3,4})
 
 	CH03("", 0, 0x000, 0, 0)
-	DerefOf(b000)
-	CH04("", 0, 47, 0, 0x001, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(b000), Local0)
+	CH04("", 1, 47, 0, 0x001, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x002, 0, 0)
-	DerefOf(i000)
-	CH04("", 0, 47, 0, 0x003, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(i000), Local0)
+	CH04("", 1, 47, 0, 0x003, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x004, 0, 0)
-	DerefOf(p000)
-	CH04("", 0, 47, 0, 0x005, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(p000), Local0)
+	CH04("", 1, 47, 0, 0x005, 0, 0) // AE_AML_OPERAND_TYPE
 }
 
-Method(mfb3)
+Method(mfb3,, Serialized)
 {
 	Event(e000)
 	Mutex(mx00, 0)
@@ -62,30 +62,30 @@ Method(mfb3)
 	PowerResource(pw00, 1, 0) {Method(mmmm){return (0)}}
 
 	CH03("", 0, 0x006, 0, 0)
-	DerefOf(e000)
-	CH04("", 0, 47, 0, 0x007, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(e000), Local0)
+	CH04("", 1, 47, 0, 0x007, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x008, 0, 0)
-	DerefOf(mx00)
-	CH04("", 0, 47, 0, 0x009, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(mx00), Local0)
+	CH04("", 1, 47, 0, 0x009, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x00a, 0, 0)
-	DerefOf(d000)
-	CH04("", 0, 47, 0, 0x00b, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(d000), Local0)
+	CH04("", 1, 47, 0, 0x00b, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x00c, 0, 0)
-	DerefOf(tz00)
-	CH04("", 0, 47, 0, 0x00d, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(tz00), Local0)
+	CH04("", 1, 47, 0, 0x00d, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x00e, 0, 0)
-	DerefOf(pr00)
-	CH04("", 0, 47, 0, 0x00f, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(pr00), Local0)
+	CH04("", 1, 47, 0, 0x00f, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x010, 0, 0)
-	DerefOf(r000)
-	CH04("", 0, 47, 0, 0x011, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(r000), Local0)
+	CH04("", 1, 47, 0, 0x011, 0, 0) // AE_AML_OPERAND_TYPE
 
 	CH03("", 0, 0x012, 0, 0)
-	DerefOf(pw00)
-	CH04("", 0, 47, 0, 0x013, 0, 0) // AE_AML_OPERAND_TYPE
+	Store(DerefOf(pw00), Local0)
+	CH04("", 1, 47, 0, 0x013, 0, 0) // AE_AML_OPERAND_TYPE
 }

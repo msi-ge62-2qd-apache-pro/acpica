@@ -18,29 +18,39 @@ PROG = $(OBJDIR)/acpisrc
 # Search path for source files and individual source files
 #
 vpath %.c \
-    $(ACPISRC) \
-    $(ACPICA_COMMON) \
+    $(ACPISRC)\
+    $(ACPICA_UTILITIES)\
+    $(ACPICA_COMMON)\
     $(ACPICA_OSL)
 
 HEADERS = \
     $(wildcard $(ACPISRC)/*.h)
 
 OBJECTS = \
-    $(OBJDIR)/ascase.o \
-    $(OBJDIR)/asconvrt.o \
-    $(OBJDIR)/asfile.o \
-    $(OBJDIR)/asmain.o \
-    $(OBJDIR)/asremove.o \
-    $(OBJDIR)/astable.o \
-    $(OBJDIR)/asutils.o \
-    $(OBJDIR)/osunixdir.o \
-    $(OBJDIR)/getopt.o
+    $(OBJDIR)/ascase.o\
+    $(OBJDIR)/asconvrt.o\
+    $(OBJDIR)/asfile.o\
+    $(OBJDIR)/asmain.o\
+    $(OBJDIR)/asremove.o\
+    $(OBJDIR)/astable.o\
+    $(OBJDIR)/asutils.o\
+    $(OBJDIR)/cmfsize.o\
+    $(OBJDIR)/getopt.o \
+    $(OBJDIR)/oslibcfs.o\
+    $(OBJDIR)/osunixdir.o\
+    $(OBJDIR)/osunixxf.o\
+    $(OBJDIR)/utdebug.o\
+    $(OBJDIR)/utexcep.o\
+    $(OBJDIR)/utglobal.o\
+    $(OBJDIR)/utmath.o\
+    $(OBJDIR)/utprint.o\
+    $(OBJDIR)/utxferror.o
 
 #
 # Compile flags specific to acpisrc
 #
-CFLAGS+= \
-    -DACPI_SRC_APP \
+CFLAGS += \
+    -DACPI_SRC_APP\
     -I$(ACPISRC)
 
 #

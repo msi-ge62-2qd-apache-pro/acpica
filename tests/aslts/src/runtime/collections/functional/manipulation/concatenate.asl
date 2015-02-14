@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -143,7 +143,7 @@ Method(m312, 6, Serialized)
 }
 
 // Integers
-Method(m313)
+Method(m313,, Serialized)
 {
 	Name(ts, "m313")
 
@@ -219,7 +219,7 @@ Method(m313)
 }
 
 // Strings
-Method(m314)
+Method(m314,, Serialized)
 {
 	Name(ts, "m314")
 
@@ -286,7 +286,7 @@ Method(m314)
 }
 
 // Buffers
-Method(m315)
+Method(m315,, Serialized)
 {
 	Name(ts, "m314")
 

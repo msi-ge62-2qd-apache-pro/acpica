@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,7 +36,7 @@
 Name(z058, 58)
 
 // Divide by zero
-Method(m140)
+Method(m140,, Serialized)
 {
 	Name(ts, "m140")
 
@@ -60,7 +60,7 @@ Method(m140)
 }
 
 // Modulo divide by zero
-Method(m141)
+Method(m141,, Serialized)
 {
 	Name(ts, "m141")
 
@@ -84,7 +84,7 @@ Method(m141)
 }
 
 // Release ownership on a Mutex that is not currently owned
-Method(m142)
+Method(m142,, Serialized)
 {
 	Name(ts, "m142")
 
@@ -98,7 +98,7 @@ Method(m142)
 }
 
 // SizeOf for data types not an Integer, Buffer, String or Package object
-Method(m143)
+Method(m143,, Serialized)
 {
 	Name(ts, "m143")
 
@@ -146,43 +146,43 @@ Method(m143)
 
 	CH03(ts, z058, 10, 0, 0)
 
-	SizeOf (STR0)
-	SizeOf (BUF0)
-	SizeOf (PAC0)
-	SizeOf (INT0)
+	Store(SizeOf(STR0), Local5)
+	Store(SizeOf(BUF0), Local5)
+	Store(SizeOf(PAC0), Local5)
+	Store(SizeOf(INT0), Local5)
 
 	CH03(ts, z058, 11, 0, 0)
 
 	if (INT0) {
 		Store(0, Local1)
 	}
-	SizeOf (Local1)
-	CH04(ts, 0, 49, z058, 12, 0, 0)	// AE_AML_UNINITIALIZED_LOCAL
+	Store(SizeOf(Local1), Local5)
+	CH04(ts, 1, 49, z058, 12, 0, 0)	// AE_AML_UNINITIALIZED_LOCAL
 
-	SizeOf (DEV0)
-	CH04(ts, 0, 47, z058, 13, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(DEV0), Local5)
+	CH04(ts, 1, 47, z058, 13, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (EVE0)
-	CH04(ts, 0, 47, z058, 14, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(EVE0), Local5)
+	CH04(ts, 1, 47, z058, 14, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (MTX0)
-	CH04(ts, 0, 47, z058, 15, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(MTX0), Local5)
+	CH04(ts, 1, 47, z058, 15, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (OPR0)
-	CH04(ts, 0, 47, z058, 16, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(OPR0), Local5)
+	CH04(ts, 1, 47, z058, 16, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (PWR0)
-	CH04(ts, 0, 47, z058, 17, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(PWR0), Local5)
+	CH04(ts, 1, 47, z058, 17, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (CPU0)
-	CH04(ts, 0, 47, z058, 18, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(CPU0), Local5)
+	CH04(ts, 1, 47, z058, 18, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	SizeOf (TZN0)
-	CH04(ts, 0, 47, z058, 19, 0, 0)	// AE_AML_OPERAND_TYPE
+	Store(SizeOf(TZN0), Local5)
+	CH04(ts, 1, 47, z058, 19, 0, 0)	// AE_AML_OPERAND_TYPE
 }
 
 // ToString() when the number of characters copied from buffer exceeds 200
-Method(m144)
+Method(m144,, Serialized)
 {
 	Name(ts, "m144")
 
@@ -196,7 +196,7 @@ Method(m144)
 
 	CH03(ts, z058, 20, 0, 0)
 
-	ToString(b000, Ones)
+	ToString(b000, Ones, Local5)
 
 	CH03(ts, z058, 21, 0, 0)
 
@@ -208,7 +208,7 @@ Method(m144)
 		Increment(Local0)
 	}
 
-	ToString(b001, Ones)
+	ToString(b001, Ones, Local5)
 
 	/*
 	 * CH04(ts, 0, 61, z058, 22, 0, 0)	// AE_AML_STRING_LIMIT
@@ -220,7 +220,7 @@ Method(m144)
 }
 
 // Access out of Package
-Method(m145)
+Method(m145,, Serialized)
 {
 	Name(ts, "m145")
 
@@ -231,13 +231,13 @@ Method(m145)
 
 	// Package()
 
-	Index(p000, 2)
+	Store(Index(p000, 2), Local5)
 
 	CH03(ts, z058, 24, 0, 0)
 
-	Index(p000, 3)
+	Store(Index(p000, 3), Local5)
 
-	CH04(ts, 0, 55, z058, 25, 0, 0)	// AE_AML_PACKAGE_LIMIT
+	CH04(ts, 1, 55, z058, 25, 0, 0)	// AE_AML_PACKAGE_LIMIT
 
 	Index(p000, 2, Local0)
 
@@ -249,11 +249,11 @@ Method(m145)
 
 	// Package(3)
 
-	Index(p001, 2)
+	Store(Index(p001, 2), Local5)
 
 	CH03(ts, z058, 28, 0, 0)
 
-	Index(p001, 3)
+	Index(p001, 3, Local5)
 
 	CH04(ts, 0, 55, z058, 29, 0, 0)	// AE_AML_PACKAGE_LIMIT
 
@@ -267,7 +267,7 @@ Method(m145)
 }
 
 // Access out of String
-Method(m085)
+Method(m085,, Serialized)
 {
 	Name(ts, "m085")
 
@@ -275,11 +275,11 @@ Method(m085)
 
 	CH03(ts, z058, 32, 0, 0)
 
-	Index(s000, 2)
+	Index(s000, 2, Local5)
 
 	CH03(ts, z058, 33, 0, 0)
 
-	Index(s000, 3)
+	Index(s000, 3, Local5)
 
 	// Bug 177, Bugzilla 5480.
 	CH04(ts, 0, 61, z058, 34, 0, 0)	// AE_AML_STRING_LIMIT
@@ -294,7 +294,7 @@ Method(m085)
 }
 
 // Access out of Buffer
-Method(m086)
+Method(m086,, Serialized)
 {
 	Name(ts, "m086")
 
@@ -305,11 +305,11 @@ Method(m086)
 
 	// Buffer()
 
-	Index(b000, 2)
+	Index(b000, 2, Local5)
 
 	CH03(ts, z058, 38, 0, 0)
 
-	Index(b000, 3)
+	Index(b000, 3, Local5)
 
 	CH04(ts, 0, 54, z058, 39, 0, 0)	// AE_AML_BUFFER_LIMIT
 
@@ -323,11 +323,11 @@ Method(m086)
 
 	// Buffer(3)
 
-	Index(b001, 2)
+	Index(b001, 2, Local5)
 
 	CH03(ts, z058, 42, 0, 0)
 
-	Index(b001, 3)
+	Index(b001, 3, Local5)
 
 	CH04(ts, 0, 54, z058, 43, 0, 0)	// AE_AML_BUFFER_LIMIT
 
@@ -342,7 +342,7 @@ Method(m086)
 
 // ToInteger() passed with an image of a number which value
 // exceeds the maximum of an integer for the current mode.
-Method(m146)
+Method(m146,, Serialized)
 {
 	Name(ts, "m146")
 
@@ -353,7 +353,7 @@ Method(m146)
 	} else {
 		Store("0xffffffff", Local0)
 	}
-	ToInteger(Local0)
+	ToInteger(Local0, Local5)
 
 	CH03(ts, z058, 47, 0, 0)
 
@@ -362,7 +362,7 @@ Method(m146)
 	} else {
 		Store("0x111111111", Local0)
 	}
-	ToInteger(Local0)
+	ToInteger(Local0, Local5)
 
 	CH04(ts, 0, 46, z058, 48, 0, 0)	// AE_AML_NO_OPERAND
 }
@@ -370,7 +370,7 @@ Method(m146)
 // [Uninitialized] None.
 // Causes a fatal error when used as a source
 // operand in any ASL statement.
-Method(m147, 1)
+Method(m147, 1, Serialized)
 {
 	Name(ts, "m147")
 
@@ -392,7 +392,7 @@ Method(m148)
 
 // Stall, Time parameter is too large (> 100)
 
-Method(m149, 1)
+Method(m149, 1, Serialized)
 {
 	Name(ts, "m149")
 
@@ -403,7 +403,7 @@ Method(m149, 1)
 	CH03(ts, z058, 52, 0, 0)
 }
 
-Method(m14a, 1)
+Method(m14a, 1, Serialized)
 {
 	Name(ts, "m14a")
 
@@ -419,11 +419,22 @@ Method(m14a, 1)
 Method(m14b)
 {
 	m149(100)
-	m14a(101)
+	/*
+	 * We are forced by Windows and BIOS code to increase the maximum stall
+	 * time to 255, this is in violation of the ACPI specification.
+	 * ACPI specification requires that Stall() does not relinquish the
+	 * processor, and delays longer than 100 usec should use Sleep()
+	 * instead. We allow stall up to 255 usec for compatibility with other
+	 * interpreters and existing BIOS.
+	 *
+	 * So we remove this test from test suite.
+	 *
+	 * m14a(101)
+	 */
 }
 
 // Concatenate() when the number of result characters in string exceeds 200
-Method(m14c)
+Method(m14c,, Serialized)
 {
 	Name(ts, "m14c")
 
@@ -435,11 +446,11 @@ Method(m14c)
 
 	CH03(ts, z058, 55, 0, 0)
 
-	Concatenate(Local0, Local0)
+	Concatenate(Local0, Local0, Local5)
 
 	CH03(ts, z058, 56, 0, 0)
 
-	Concatenate(Local0, Local1)
+	Concatenate(Local0, Local1, Local5)
 
 	/*
 	 * CH04(ts, 0, 61, z058, 57, 0, 0)	// AE_AML_STRING_LIMIT
@@ -452,7 +463,7 @@ Method(m14c)
 }
 
 // ToDecimalString() when the number of result characters in string exceeds 200
-Method(m14d)
+Method(m14d,, Serialized)
 {
 	Name(ts, "m14d")
 
@@ -478,11 +489,11 @@ Method(m14d)
 
 	CH03(ts, z058, 58, 0, 0)
 
-	ToDecimalString(b000)
+	ToDecimalString(b000, Local5)
 
 	CH03(ts, z058, 59, 0, 0)
 
-	ToDecimalString(b001)
+	ToDecimalString(b001, Local5)
 
 	/*
 	 * CH04(ts, 0, 61, z058, 60, 0, 0)	// AE_AML_STRING_LIMIT
@@ -495,31 +506,31 @@ Method(m14d)
 }
 
 // ToBCD() when a specified integer overflows a number of the BCD format
-Method(m14e)
+Method(m14e,, Serialized)
 {
 	Name(ts, "m14e")
 
 	CH03(ts, z058, 61, 0, 0)
 
 	if (LEqual(F64, 1)) {
-		ToBCD(9999999999999999)
+		ToBCD(9999999999999999, Local5)
 	} else {
-		ToBCD(99999999)
+		ToBCD(99999999, Local5)
 	}
 
 	CH03(ts, z058, 62, 0, 0)
 
 	if (LEqual(F64, 1)) {
-		ToBCD(10000000000000000)
+		ToBCD(10000000000000000, Local5)
 	} else {
-		ToBCD(100000000)
+		ToBCD(100000000, Local5)
 	}
 
 	CH04(ts, 0, 52, z058, 63, 0, 0)	// AE_AML_NUMERIC_OVERFLOW
 }
 
 // Create field out of buffer
-Method(m14f)
+Method(m14f,, Serialized)
 {
 	Name(ts, "m14f")
 
@@ -569,7 +580,7 @@ Method(m14f)
 }
 
 // Access to uninitialized local
-Method(m150, 1)
+Method(m150, 1, Serialized)
 {
 	Name(ts, "m150")
 
@@ -579,13 +590,13 @@ Method(m150, 1)
 
 	CH03(ts, z058, 85, 0, 0)
 
-	Index(Local0, 0)
+	Index(Local0, 0, Local5)
 
 	CH04(ts, 0, 49, z058, 86, 0, 0)	// AE_AML_UNINITIALIZED_LOCAL
 }
 
 // Access to an uninitialized element of package
-Method(m151)
+Method(m151,, Serialized)
 {
 	Name(ts, "m151")
 
@@ -593,11 +604,11 @@ Method(m151)
 
 	CH03(ts, z058, 87, 0, 0)
 
-	DeRefOf(Index(p000, 2))
+	Store(DeRefOf(Index(p000, 2)), Local5)
 
 	CH03(ts, z058, 88, 0, 0)
 
-	DeRefOf(Index(p000, 3))
+	Store(DeRefOf(Index(p000, 3)), Local5)
 
 	/*
 	 * Obsolete:
@@ -606,9 +617,13 @@ Method(m151)
 	 * Updated according to Bug 85 fix: no exception is expected
 	 * since the value is not processed.
 	 */
-	CH03(ts, z058, 89, 0, 0)
+	/*
+	 * OBSOLETE July 2013. DerefOf on an empty package element now causes error
+	 * CH04(ts, 0, 62, z058, 89, 0, 0)
+	 */
+	CH04(ts, 1, 51, z058, 89, 0, 0)	// AE_AML_UNINITIALIZED_ELEMENT
 
-	Add(DeRefOf(Index(p000, 3)), 1)
+	Add(DeRefOf(Index(p000, 3)), 1, Local5)
 
 	if (EXCV) {
 		CH04(ts, 0, 51, z058, 169, 0, 0)	// AE_AML_UNINITIALIZED_ELEMENT
@@ -620,7 +635,7 @@ Method(m151)
 }
 
 // ToHexString() when the number of result characters in string exceeds 200
-Method(m152)
+Method(m152,, Serialized)
 {
 	Name(ts, "m152")
 
@@ -642,11 +657,11 @@ Method(m152)
 
 	CH03(ts, z058, 90, 0, 0)
 
-	ToHexString(b000)
+	ToHexString(b000, Local5)
 
 	CH03(ts, z058, 91, 0, 0)
 
-	ToHexString(b001)
+	ToHexString(b001, Local5)
 
 	/*
 	 * CH04(ts, 0, 61, z058, 92, 0, 0)	// AE_AML_STRING_LIMIT
@@ -659,7 +674,7 @@ Method(m152)
 }
 
 // StartIndex in Match greater than the package size
-Method(m153)
+Method(m153,, Serialized)
 {
 	Name(ts, "m153")
 
@@ -667,17 +682,17 @@ Method(m153)
 
 	CH03(ts, z058, 93, 0, 0)
 
-	Match(PAC0, MTR, 0, MTR, 0, 0)
+	Store(Match(PAC0, MTR, 0, MTR, 0, 0), Local5)
 
 	CH03(ts, z058, 94, 0, 0)
 
-	Match(PAC0, MTR, 0, MTR, 0, 1)
+	Store(Match(PAC0, MTR, 0, MTR, 0, 1), Local5)
 
-	CH04(ts, 0, 55, z058, 95, 0, 0)	// AE_AML_PACKAGE_LIMIT
+	CH04(ts, 1, 55, z058, 95, 0, 0)	// AE_AML_PACKAGE_LIMIT
 }
 
 // Exeptional conditions of ConcatenateResTemplate
-Method(m154)
+Method(m154,, Serialized)
 {
 	Name(ts, "m154")
 
@@ -691,11 +706,11 @@ Method(m154)
 
 	CH03(ts, z058, 96, 0, 0)
 
-	ConcatenateResTemplate(RT00, RT00)
+	ConcatenateResTemplate(RT00, RT00, Local5)
 
 	CH03(ts, z058, 97, 0, 0)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
 	// Bug 188.
 	CH03(ts, z058, 98, 0, 0)
@@ -705,10 +720,16 @@ Method(m154)
 
 	Store(Buffer(){0}, Local2)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
+	/*
+	 * Note: As for there is not a separate type for ResourceTemplate,
+	 * ResourceTemplate is in fact a buffer but interpreted as
+	 * ResourceTemplate. If the buffer has no complete END_TAG descriptor,
+	 * we get AE_AML_NO_RESOURCE_END_TAG instead of AE_AML_OPERAND_TYPE.
+	 */
 	if (EXCV) {
-		CH04(ts, 0, 47, z058, 100, 0, 0)	// AE_AML_OPERAND_TYPE
+		CH04(ts, 0, 71, z058, 100, 0, 0) // AE_AML_NO_RESOURCE_END_TAG
 	} else {
 		CH04(ts, 0, 0xff, z058, 100, 0, 0)
 	}
@@ -717,19 +738,19 @@ Method(m154)
 
 	Store(Buffer(){0x79}, Local2)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
 	// Bug 189.
-	CH04(ts, 0, 47, z058, 101, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 0, 71, z058, 101, 0, 0)	// AE_AML_NO_RESOURCE_END_TAG
 
 	// Not resource template buffer
 
 	Store(Buffer(){0x2a, 0x04, 0x02}, Local2)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
 	if (EXCV) {
-		CH04(ts, 0, 47, z058, 102, 0, 0)	// AE_AML_OPERAND_TYPE
+		CH04(ts, 0, 71, z058, 102, 0, 0) // AE_AML_NO_RESOURCE_END_TAG
 	} else {
 		CH04(ts, 0, 0xff, z058, 102, 0, 0)
 	}
@@ -738,19 +759,19 @@ Method(m154)
 
 	Store(Buffer(){0x2a, 0x10, 0x05, 0x79}, Local2)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
 	// Bug 190.
-	CH04(ts, 0, 47, z058, 103, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 0, 71, z058, 103, 0, 0)	// AE_AML_NO_RESOURCE_END_TAG
 
 	// Like resource template buffer
 
 	Store(Buffer(){0x00, 0x00, 0x00, 0x79, 0x00}, Local2)
 
-	ConcatenateResTemplate(RT00, Local2)
+	ConcatenateResTemplate(RT00, Local2, Local5)
 
 	if (EXCV) {
-		CH04(ts, 0, 47, z058, 104, 0, 0)	// AE_AML_OPERAND_TYPE
+		CH04(ts, 0, 71, z058, 104, 0, 0) // AE_AML_NO_RESOURCE_END_TAG
 	} else {
 		CH04(ts, 0, 0xff, z058, 104, 0, 0)
 	}
@@ -770,7 +791,7 @@ Method(m154)
  * "Note: the first non-hex character terminates the conversion
  * without error, and a '0x' prefix is not allowed."
  */
-Method(m155)
+Method(m155,, Serialized)
 {
 	Name(ts, "m155")
 
@@ -798,7 +819,7 @@ Method(m155)
  * even if it is not the most appropreate one.
  * See 111,112,113.
  */
-Method(m156)
+Method(m156,, Serialized)
 {
 	Name(ts, "m156")
 
@@ -808,36 +829,36 @@ Method(m156)
 	CH03(ts, z058, 107, 0, 0)
 
 	// Add, empty String
-	Add("", 0)
+	Add("", 0, Local5)
 
 //	CH04(ts, 0, 34, z058, 108, 0, 0)	// AE_BAD_HEX_CONSTANT
 	CH03(ts, z058, 108, 0, 0)
 
 	// Add, String filled with blanks
-	Add("                 ", 0)
+	Add("                 ", 0, Local5)
 
 //	CH04(ts, 0, 34, z058, 109, 0, 0)	// AE_BAD_HEX_CONSTANT
 	CH03(ts, z058, 109, 0, 0)
 
 	// ToInteger, empty String
-	ToInteger("")
+	ToInteger("", Local5)
 
 	CH04(ts, 0, 36, z058, 110, 0, 0)	// AE_BAD_DECIMAL_CONSTANT
 
 	// ToInteger, String filled with blanks
-	ToInteger("                 ")
+	ToInteger("                 ", Local5)
 
 //	CH04(ts, 0, 34, z058, 111, 0, 0)	// AE_BAD_HEX_CONSTANT
 	CH04(ts, 0, 36, z058, 111, 0, 0)	// AE_BAD_DECIMAL_CONSTANT
 
 	// Add, zero-length Buffer
-	Add(b000, 0)
+	Add(b000, 0, Local5)
 
 //	CH04(ts, 0, 34, z058, 112, 0, 0)	// AE_BAD_HEX_CONSTANT
 	CH04(ts, 0, 54, z058, 112, 0, 0)	// AE_AML_BUFFER_LIMIT
 
 	// ToInteger, zero-length Buffer
-	ToInteger(b000)
+	ToInteger(b000, Local5)
 
 //	CH04(ts, 0, 34, z058, 113, 0, 0)	// AE_BAD_HEX_CONSTANT
 	CH04(ts, 0, 54, z058, 113, 0, 0)	// AE_AML_BUFFER_LIMIT
@@ -850,7 +871,7 @@ Method(m156)
 // //////////////////////////////////////////////////////////
 
 // Index(Integer)
-Method(m157)
+Method(m157,, Serialized)
 {
 	Name(ts, "m157")
 
@@ -858,9 +879,9 @@ Method(m157)
 
 	CH03(ts, z058, 114, 0, 0)
 
-	Index(i000, 0)
+	Store(Index(i000, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 115, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 115, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(i000, 0, Local0)
 
@@ -877,7 +898,7 @@ Method(m157)
 
 // Bug 83
 // DerefOf(Integer)
-Method(m158)
+Method(m158,, Serialized)
 {
 	Name(ts, "m158")
 
@@ -886,7 +907,7 @@ Method(m158)
 	CH03(ts, z058, 119, 0, 0)
 
 	// Bug 83, Bugzilla 5387.
-	DerefOf(i000)
+	Store(DerefOf(i000), Local5)
 
 	CH04(ts, 0, 0xff, z058, 120, 0, 0)
 
@@ -898,7 +919,7 @@ Method(m158)
 
 // Index(Local7-Integer)
 // DerefOf(Integer)
-Method(m087)
+Method(m087,, Serialized)
 {
 	Name(ts, "m087")
 
@@ -910,9 +931,9 @@ Method(m087)
 
 	// Index(Integer)
 
-	Index(Local7, 0)
+	Store(Index(Local7, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 123, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 123, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(Local7, 0, Local0)
 
@@ -928,7 +949,7 @@ Method(m087)
 
 	// DerefOf(Integer)
 
-	DerefOf(Local7)
+	Store(DerefOf(Local7), Local5)
 
 	CH04(ts, 0, 0xff, z058, 127, 0, 0)
 
@@ -938,7 +959,7 @@ Method(m087)
 }
 
 // Index(Buffer Field)
-Method(m159)
+Method(m159,, Serialized)
 {
 	Name(ts, "m159")
 
@@ -947,9 +968,9 @@ Method(m159)
 
 	CH03(ts, z058, 129, 0, 0)
 
-	Index(bf00, 0)
+	Store(Index(bf00, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 130, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 130, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(bf00, 0, Local0)
 
@@ -970,7 +991,7 @@ Method(m159)
 
 // Bug 83
 // DerefOf(Buffer Field)
-Method(m15a)
+Method(m15a,, Serialized)
 {
 	Name(ts, "m15a")
 
@@ -979,7 +1000,7 @@ Method(m15a)
 
 	CH03(ts, z058, 135, 0, 0)
 
-	DerefOf(bf00)
+	Store(DerefOf(bf00), Local5)
 
 	// Bug 83, Bugzilla 5387.
 	CH04(ts, 0, 0xff, z058, 136, 0, 0)
@@ -991,7 +1012,7 @@ Method(m15a)
 }
 
 // Index(Field Unit)
-Method(m15d)
+Method(m15d,, Serialized)
 {
 	Name(ts, "m15d")
 
@@ -1005,9 +1026,9 @@ Method(m15d)
 
 	// Field
 
-	Index(f000, 0)
+	Store(Index(f000, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 139, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 139, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(f000, 0, Local0)
 
@@ -1027,9 +1048,9 @@ Method(m15d)
 
 	// BankField
 
-	Index(bkf0, 0)
+	Store(Index(bkf0, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 144, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 144, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(bkf0, 0, Local0)
 
@@ -1049,9 +1070,9 @@ Method(m15d)
 
 	// IndexField
 
-	Index(if00, 0)
+	Store(Index(if00, 0), Local5)
 
-	CH04(ts, 0, 47, z058, 149, 0, 0)	// AE_AML_OPERAND_TYPE
+	CH04(ts, 1, 47, z058, 149, 0, 0)	// AE_AML_OPERAND_TYPE
 
 	Index(if00, 0, Local0)
 
@@ -1072,7 +1093,7 @@ Method(m15d)
 
 // Bug 83
 // DerefOf(Field Unit)
-Method(m15e)
+Method(m15e,, Serialized)
 {
 	Name(ts, "m15e")
 
@@ -1086,7 +1107,7 @@ Method(m15e)
 
 	// Field
 
-	DerefOf(f000)
+	Store(DerefOf(f000), Local5)
 
 	// Bug 83, Bugzilla 5387.
 	CH04(ts, 0, 0xff, z058, 155, 0, 0)
@@ -1098,7 +1119,7 @@ Method(m15e)
 
 	// BankField
 
-	DerefOf(bkf0)
+	Store(DerefOf(bkf0), Local5)
 
 	// Bug 83, Bugzilla 5387.
 	CH04(ts, 0, 0xff, z058, 157, 0, 0)
@@ -1110,7 +1131,7 @@ Method(m15e)
 
 	// IndexField
 
-	DerefOf(if00)
+	Store(DerefOf(if00), Local5)
 
 	// Bug 83, Bugzilla 5387.
 	CH04(ts, 0, 0xff, z058, 159, 0, 0)
@@ -1124,7 +1145,7 @@ Method(m15e)
 // UPDATE exc.m084: Implement this test for all the types of objects
 //                  (see for example ref.asl files about objects) and
 //                  all the types of operators.
-Method(m084, 1)
+Method(m084, 1, Serialized)
 {
 	Name(ts, "m084")
 
@@ -1201,7 +1222,7 @@ Method(mf9d)
 }
 
 // Access out of OpRegion and DataTableRegion
-Method(m708)
+Method(m708,, Serialized)
 {
 	Name(ts, "m708")
 
@@ -1248,7 +1269,16 @@ Method(m708)
 			// Read
 			Store(DeRefof(Local2), Local4)
 
-			CH04(ts, 0, 53, z058, Add(183, Local1), 0, 0)	// AE_AML_REGION_LIMIT
+			/* July 2013
+			 *
+			 * The Store above should actually cause two errors
+			 * 1) AE_AML_REGION_LIMIT
+			 * 2) AE_AML_NO_RETURN_VALUE
+			 *
+			 * Indicate we only care about the first by placing a 1
+			 * in the second argument
+			 */
+			CH04(ts, 1, 53, z058, Add(183, Local1), 0, 0)	// AE_AML_REGION_LIMIT
 
 			Decrement(Local0)
 			Increment(Local1)
@@ -1259,7 +1289,7 @@ Method(m708)
 }
 
 // Try non-copmputational data OpRegion arguments
-Method(m709)
+Method(m709,, Serialized)
 {
 	Name(ts, "m709")
 
@@ -1267,7 +1297,7 @@ Method(m709)
 	Name(lenp, Package(1){0x123})
 	Name(i000, 0x100)
 
-	Method(m000) {
+	Method(m000,, Serialized) {
 		OperationRegion(OPR0, SystemMemory, offp, 1)
 	}
 	
@@ -1283,7 +1313,7 @@ Method(m709)
 }
 
 // Try OpRegion arguments when Offset + Length > MaxInteger
-Method(m70a)
+Method(m70a,, Serialized)
 {
 	Name(ts, "m70a")
 
@@ -1292,18 +1322,26 @@ Method(m70a)
 
 	OperationRegion(OPR0, SystemMemory, off0, len0)
 
+	//17+1 > 17.
 	Field(OPR0, AnyAcc, NoLock, Preserve) {
-		Offset(0x10), FU00, 8}
-
-	Store(0x12, FU00)
+		Offset(0x11), FU00, 8}
+	//16+2 > 17.
+	Field(OPR0, WordAcc, NoLock, Preserve) {
+		Offset(0x10), FU01, 8}
 
 	CH03(ts, z058, 191, 0, 0)
 
+	Store(0x12, FU00)
+
 	CH04(ts, 0, 53, z058, 192, 0, 0)	// AE_AML_REGION_LIMIT
+
+	Store(0x12, FU01)
+
+	CH04(ts, 0, 53, z058, 193, 0, 0)	// AE_AML_REGION_LIMIT
 }
 
 // Attempt to write into DataTableRegion
-Method(m70b)
+Method(m70b,, Serialized)
 {
 	Name(ts, "m70b")
 
@@ -1314,15 +1352,15 @@ Method(m70b)
 
 	Store(FU00, Local0)
 
-	CH03(ts, z058, 193, 0, 0)
+	CH03(ts, z058, 194, 0, 0)
 
 	Store(0, FU00)
 
-	CH04(ts, 0, 16, z058, 194, 0, 0)	// AE_SUPPORT
+	CH04(ts, 0, 16, z058, 195, 0, 0)	// AE_SUPPORT
 }
 
 // Check non-String DataTableRegion *String arguments
-Method(m7f5)
+Method(m7f5,, Serialized)
 {
 	Name(ts, "m7f5")
 
@@ -1333,35 +1371,35 @@ Method(m7f5)
 	CH03(ts, z058, 193, 0, 0)
 
 	DataTableRegion (DR00, b000, "", "")
-	CH04(ts, 0, 5, z058, 195, 0, 0)	// AE_NOT_FOUND
-
-	DataTableRegion (DR01, "SSDT", b000, "")
 	CH04(ts, 0, 5, z058, 196, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR02, "SSDT", "", b000)
+	DataTableRegion (DR01, "SSDT", b000, "")
 	CH04(ts, 0, 5, z058, 197, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR03, i000, "", "")
+	DataTableRegion (DR02, "SSDT", "", b000)
 	CH04(ts, 0, 5, z058, 198, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR04, "SSDT", i000, "")
+	DataTableRegion (DR03, i000, "", "")
 	CH04(ts, 0, 5, z058, 199, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR05, "SSDT", "", i000)
+	DataTableRegion (DR04, "SSDT", i000, "")
 	CH04(ts, 0, 5, z058, 200, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR06, p000, "", i000)
-	CH04(ts, 0, 47, z058, 201, 0, 0)	// AE_AML_OPERAND_TYPE
+	DataTableRegion (DR05, "SSDT", "", i000)
+	CH04(ts, 0, 5, z058, 201, 0, 0)	// AE_NOT_FOUND
 
-	DataTableRegion (DR07, "SSDT", p000, "")
+	DataTableRegion (DR06, p000, "", i000)
 	CH04(ts, 0, 47, z058, 202, 0, 0)	// AE_AML_OPERAND_TYPE
 
-	DataTableRegion (DR08, "SSDT", "", p000)
+	DataTableRegion (DR07, "SSDT", p000, "")
 	CH04(ts, 0, 47, z058, 203, 0, 0)	// AE_AML_OPERAND_TYPE
+
+	DataTableRegion (DR08, "SSDT", "", p000)
+	CH04(ts, 0, 47, z058, 204, 0, 0)	// AE_AML_OPERAND_TYPE
 }
 
 // Check SMBus OpRegion restictions
-Method(m7f6)
+Method(m7f6,, Serialized)
 {
 	Name(ts, "m7f6")
 
@@ -1375,16 +1413,16 @@ Method(m7f6)
 	// Create improper SMBus data buffer
 	Name(BUFF, Buffer(33){})
 
-	CH03(ts, z058, 204, 0, 0)
+	CH03(ts, z058, 205, 0, 0)
 
 	// Invoke Write Quick transaction
 	Store(BUFF, FLD0)
 
-	CH04(ts, 0, 54, z058, 205, 0, 0)	// AE_AML_BUFFER_LIMIT
+	CH04(ts, 0, 54, z058, 206, 0, 0)	// AE_AML_BUFFER_LIMIT
 }
 
 /* Name space issues */
-Method(m0bc)
+Method(m0bc,, Serialized)
 {
 	Name(ts, "m0bc")
 

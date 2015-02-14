@@ -297,6 +297,10 @@
 				Name="Common"
 				>
 				<File
+					RelativePath="..\..\source\common\cmfsize.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\common\getopt.c"
 					>
 					<FileConfiguration
@@ -318,6 +322,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\os_specific\service_layers\oslibcfs.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\os_specific\service_layers\oswinxf.c"
@@ -374,6 +382,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utbuffer.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utcache.c"
 					>
 					<FileConfiguration
@@ -394,6 +406,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utdebug.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utdecode.c"
@@ -440,7 +456,19 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\uterror.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\uteval.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utexcep.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utfileio.c"
 					>
 				</File>
 				<File
@@ -464,6 +492,18 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\uthex.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utids.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utinit.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utlock.c"
@@ -600,6 +640,14 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utownerid.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utprint.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utstate.c"
 					>
 					<FileConfiguration
@@ -620,6 +668,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utstring.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utxface.c"
@@ -673,6 +725,10 @@
 			<Filter
 				Name="Tables"
 				>
+				<File
+					RelativePath="..\..\source\components\tables\tbdata.c"
+					>
+				</File>
 				<File
 					RelativePath="..\..\source\components\tables\tbfadt.c"
 					>
@@ -738,6 +794,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\tables\tbprint.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\tables\tbutils.c"
@@ -1170,6 +1230,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\parser\psobject.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\parser\psopcode.c"
 					>
 					<FileConfiguration
@@ -1190,6 +1254,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\parser\psopinfo.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\parser\psparse.c"
@@ -1556,6 +1624,14 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\executer\exdump.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\executer\exmutex.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\executer\exnames.c"
 					>
 					<FileConfiguration
@@ -1620,6 +1696,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\executer\exsystem.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\executer\exutils.c"

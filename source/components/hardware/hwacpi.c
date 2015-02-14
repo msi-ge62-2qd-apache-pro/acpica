@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,8 +113,6 @@
  *
  *****************************************************************************/
 
-#define __HWACPI_C__
-
 #include "acpi.h"
 #include "accommon.h"
 
@@ -146,6 +144,14 @@ AcpiHwSetMode (
 
 
     ACPI_FUNCTION_TRACE (HwSetMode);
+
+
+    /* If the Hardware Reduced flag is set, machine is always in acpi mode */
+
+    if (AcpiGbl_ReducedHardware)
+    {
+        return_ACPI_STATUS (AE_OK);
+    }
 
     /*
      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,
@@ -184,7 +190,6 @@ AcpiHwSetMode (
         break;
 
     case ACPI_SYS_MODE_LEGACY:
-
         /*
          * BIOS should clear all fixed status bits and restore fixed event
          * enable bits to default
@@ -196,6 +201,7 @@ AcpiHwSetMode (
         break;
 
     default:
+
         return_ACPI_STATUS (AE_BAD_PARAMETER);
     }
 
@@ -252,28 +258,35 @@ AcpiHwGetMode (
     ACPI_FUNCTION_TRACE (HwGetMode);
 
 
+    /* If the Hardware Reduced flag is set, machine is always in acpi mode */
+
+    if (AcpiGbl_ReducedHardware)
+    {
+        return_UINT32 (ACPI_SYS_MODE_ACPI);
+    }
+
     /*
      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,
      * system does not support mode transition.
      */
     if (!AcpiGbl_FADT.SmiCommand)
     {
-        return_VALUE (ACPI_SYS_MODE_ACPI);
+        return_UINT32 (ACPI_SYS_MODE_ACPI);
     }
 
     Status = AcpiReadBitRegister (ACPI_BITREG_SCI_ENABLE, &Value);
     if (ACPI_FAILURE (Status))
     {
-        return_VALUE (ACPI_SYS_MODE_LEGACY);
+        return_UINT32 (ACPI_SYS_MODE_LEGACY);
     }
 
     if (Value)
     {
-        return_VALUE (ACPI_SYS_MODE_ACPI);
+        return_UINT32 (ACPI_SYS_MODE_ACPI);
     }
     else
     {
-        return_VALUE (ACPI_SYS_MODE_LEGACY);
+        return_UINT32 (ACPI_SYS_MODE_LEGACY);
     }
 }
 

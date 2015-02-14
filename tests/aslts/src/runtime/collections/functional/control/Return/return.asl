@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z139, 139)
 
-Method(mf72, 1)
+Method(mf72, 1, Serialized)
 {
 	Name(i000, 0)
 	Name(cmp0, 0)
@@ -68,7 +68,7 @@ Method(mf72, 1)
 		}
 	}
 
-	Method(m004, 7)
+	Method(m004, 7, Serialized)
 	{
 	Name(ret4, 0)
 	Name(r400, 0)
@@ -80,7 +80,7 @@ Method(mf72, 1)
 	Name(r406, 0)
 	Name(r407, 0)
 
-	Method(m005, 7)
+	Method(m005, 7, Serialized)
 	{
 	Name(ret5, 0)
 	Name(r500, 0)
@@ -92,7 +92,7 @@ Method(mf72, 1)
 	Name(r506, 0)
 	Name(r507, 0)
 
-	Method(m006, 7)
+	Method(m006, 7, Serialized)
 	{
 	Name(ret6, 0)
 	Name(r600, 0)
@@ -104,7 +104,7 @@ Method(mf72, 1)
 	Name(r606, 0)
 	Name(r607, 0)
 
-	Method(m007, 7)
+	Method(m007, 7, Serialized)
 	{
 	Name(ret7, 0)
 	Name(r700, 0)
@@ -128,12 +128,12 @@ Method(mf72, 1)
           m001()
           if (Store(0xaaaa0007, i001)) {
               Increment(i002)
-              Add(0xaaaa0008, 0)
-              Subtract(0xaaaa0009, 0)
+              Store(Add(0xaaaa0008, 0), Local5)
+              Store(Subtract(0xaaaa0009, 0), Local5)
               if (LEqual(arg0, 0)) {
                   return (0x55550000)
               }
-              Multiply(0xaaaa000a, 1)
+              Store(Multiply(0xaaaa000a, 1), Local5)
               Store(0xaaaa000d, i001)
               Decrement(i001)
           }
@@ -158,12 +158,12 @@ Method(mf72, 1)
                   while (0xabcd0004) {
                     if (Store(0xaaaa0007, i001)) {
                         Increment(i002)
-                        Add(0xaaaa0008, 0)
-                        Subtract(0xaaaa0009, 0)
+                        Store(Add(0xaaaa0008, 0), Local5)
+                        Store(Subtract(0xaaaa0009, 0), Local5)
                         if (LEqual(arg0, 3)) {
                             return (0x55550003)
                         }
-                        Multiply(0xaaaa000a, 1)
+                        Store(Multiply(0xaaaa000a, 1), Local5)
                         Store(0xaaaa000d, i001)
                         Decrement(i001)
                     }
@@ -300,8 +300,8 @@ Method(mf72, 1)
           m001()
           if (Store(0xaaaa0007, i001)) {
               Increment(i002)
-              Add(0xaaaa0008, 0)
-              Subtract(0xaaaa0009, 0)
+              Store(Add(0xaaaa0008, 0), Local5)
+              Store(Subtract(0xaaaa0009, 0), Local5)
               if (LEqual(arg0, 0)) {
                   CopyObject(Store(CopyObject(Store(CopyObject(CopyObject(Store(Store(
                       m008(arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -309,7 +309,7 @@ Method(mf72, 1)
                   return (ret9)
               //  return (0x55550000)
               }
-              Multiply(0xaaaa000a, 1)
+              Store(Multiply(0xaaaa000a, 1), Local5)
               Store(0xaaaa000d, i001)
               Decrement(i001)
           }
@@ -338,8 +338,8 @@ Method(mf72, 1)
                   while (0xabcd0004) {
                     if (Store(0xaaaa0007, i001)) {
                         Increment(i002)
-                        Add(0xaaaa0008, 0)
-                        Subtract(0xaaaa0009, 0)
+                        Store(Add(0xaaaa0008, 0), Local5)
+                        Store(Subtract(0xaaaa0009, 0), Local5)
                         if (LEqual(arg0, 3)) {
                             Store(Store(CopyObject(Store(Store(Store(Store(Store(
                                   m008(arg0, arg1, arg2, arg3, arg4, arg5, arg6),
@@ -347,7 +347,7 @@ Method(mf72, 1)
                             return (ret9)
                          // return (0x55550003)
                         }
-                        Multiply(0xaaaa000a, 1)
+                        Store(Multiply(0xaaaa000a, 1), Local5)
                         Store(0xaaaa000d, i001)
                         Decrement(i001)
                     }

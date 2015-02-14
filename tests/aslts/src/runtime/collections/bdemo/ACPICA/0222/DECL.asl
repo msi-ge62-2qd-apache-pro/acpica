@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Alternating access to OpRegions of different Address Spaces issue
  */
 
-Method(m10a)
+Method(m10a,, Serialized)
 {
 	Method(CHCK, 3)
 	{

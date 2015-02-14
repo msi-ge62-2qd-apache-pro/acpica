@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -114,8 +114,6 @@
  *
  *****************************************************************************/
 
-#define __EXCREATE_C__
-
 #include "acpi.h"
 #include "accommon.h"
 #include "acinterp.h"
@@ -186,7 +184,6 @@ AcpiExCreateAlias (
     case ACPI_TYPE_BUFFER:
     case ACPI_TYPE_PACKAGE:
     case ACPI_TYPE_BUFFER_FIELD:
-
     /*
      * These types open a new scope, so we need the NS node in order to access
      * any children.
@@ -196,7 +193,6 @@ AcpiExCreateAlias (
     case ACPI_TYPE_PROCESSOR:
     case ACPI_TYPE_THERMAL:
     case ACPI_TYPE_LOCAL_SCOPE:
-
         /*
          * The new alias has the type ALIAS and points to the original
          * NS node, not the object itself.
@@ -206,7 +202,6 @@ AcpiExCreateAlias (
         break;
 
     case ACPI_TYPE_METHOD:
-
         /*
          * Control method aliases need to be differentiated
          */

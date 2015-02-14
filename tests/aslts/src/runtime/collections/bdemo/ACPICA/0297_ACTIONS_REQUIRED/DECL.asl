@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@
 /*
  * It is m369 od Synchronization test
  */
-Method(m1e4, 1)
+Method(m1e4, 1, Serialized)
 {
     CH03("", 0, 0x000, 0, 0)
 

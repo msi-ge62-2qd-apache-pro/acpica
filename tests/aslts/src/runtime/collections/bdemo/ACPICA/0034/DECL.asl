@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Some data tables are corrupted when _BAS field of FixedIO Resource Descriptor Macro is specified
  */
 
-Method(mdc9)
+Method(mdc9,, Serialized)
 {
 	Name(RT00,
 		ResourceTemplate () {
@@ -41,7 +41,7 @@ Method(mdc9)
 	Store(FIO0._BAS, Debug)
 }
 
-Method(mdca)
+Method(mdca,, Serialized)
 {
 	Name(RT00,
 		ResourceTemplate () {

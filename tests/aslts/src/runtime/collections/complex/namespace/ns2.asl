@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,7 +33,7 @@ Name(z156, 156)
  * where the parent is an element of some complex object (Device).
  */
 
-Method(m200)
+Method(m200,, Serialized)
 {
 	Name(ts, "m200")
 	Device(d000)
@@ -57,7 +57,7 @@ Method(m200)
 	CH03(ts, z156, 0x001, 0, 0)
 }
 
-Method(m201)
+Method(m201,, Serialized)
 {
 	Name(ts, "m201")
 	Device(d000)
@@ -80,7 +80,7 @@ Method(m201)
 	CH03(ts, z156, 0x003, 0, 0)
 }
 
-Method(m202)
+Method(m202,, Serialized)
 {
 	Name(ts, "m202")
 	Device(d000)
@@ -106,7 +106,7 @@ Method(m202)
 /*
  * Element of Package instead of i000 (in m002)
  */
-Method(m204)
+Method(m204,, Serialized)
 {
 	Name(ts, "m204")
 	Name(i001, 0)

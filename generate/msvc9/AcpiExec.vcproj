@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/out:&quot;.\AcpiExecDebug\AcpiExec.exe&quot;"
-				AdditionalDependencies="libcmtd.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="setargv.obj"
 				OutputFile=".\AcpiExecDebug\AcpiExec.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -189,6 +189,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="setargv.obj"
 				OutputFile=".\AcpiExec/AcpiExec.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -263,6 +264,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utbuffer.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utcache.c"
@@ -375,6 +380,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\uterror.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\uteval.c"
 					>
 					<FileConfiguration
@@ -401,6 +410,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utfileio.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utglobal.c"
 					>
 					<FileConfiguration
@@ -421,6 +434,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\uthex.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utids.c"
@@ -601,6 +618,18 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utownerid.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utpredef.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utprint.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utresrc.c"
 					>
 					<FileConfiguration
@@ -645,6 +674,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utstring.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\uttrack.c"
 					>
 					<FileConfiguration
@@ -665,6 +698,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utuuid.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utxface.c"
@@ -765,6 +802,14 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\namespace\nsarguments.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\namespace\nsconvert.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\namespace\nsdump.c"
@@ -963,6 +1008,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\namespace\nsprepkg.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\namespace\nsrepair.c"
@@ -1443,6 +1492,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\events\evhandler.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\events\evmisc.c"
 					>
 					<FileConfiguration
@@ -1669,6 +1722,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\tools\acpiexec\aeinitfile.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\Tools\AcpiExec\aemain.c"
 					>
 					<FileConfiguration
@@ -1692,6 +1749,10 @@
 							DisableLanguageExtensions="false"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\tools\acpiexec\aeregion.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\tools\acpiexec\aetables.c"
@@ -1741,6 +1802,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\debugger\dbconvert.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\COMPONENTS\DEBUGGER\dbdisply.c"
@@ -1921,6 +1986,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\debugger\dbtest.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\COMPONENTS\DEBUGGER\dbutils.c"
 					>
 					<FileConfiguration
@@ -1969,6 +2038,10 @@
 				Name="Tables"
 				Filter=".c"
 				>
+				<File
+					RelativePath="..\..\source\components\tables\tbdata.c"
+					>
+				</File>
 				<File
 					RelativePath="..\..\source\components\tables\tbfadt.c"
 					>
@@ -2034,6 +2107,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\tables\tbprint.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\tables\tbutils.c"
@@ -2111,6 +2188,18 @@
 				Filter=".c"
 				>
 				<File
+					RelativePath="..\..\source\common\ahids.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\common\ahuuids.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\common\cmfsize.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\COMPONENTS\Disassembler\dmnames.c"
 					>
 					<FileConfiguration
@@ -2155,6 +2244,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\os_specific\service_layers\oslibcfs.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\os_specific\service_layers\oswindir.c"
 					>
 					<FileConfiguration
@@ -2184,8 +2277,6 @@
 						>
 						<Tool
 							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
 							DisableLanguageExtensions="false"
 						/>
 					</FileConfiguration>
@@ -2194,8 +2285,6 @@
 						>
 						<Tool
 							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
 							DisableLanguageExtensions="false"
 						/>
 					</FileConfiguration>
@@ -2291,6 +2380,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\resources\rsdumpinfo.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\resources\rsinfo.c"
@@ -2497,6 +2590,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\disassembler\dmcstyle.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\disassembler\dmdeferred.c"
@@ -3243,6 +3340,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\parser\psobject.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\parser\psopcode.c"
 					>
 					<FileConfiguration
@@ -3263,6 +3364,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\parser\psopinfo.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\parser\psparse.c"

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: ConcatenateResTemplate doesn't consume an empty buffer
  */
 
-Method(mf7c)
+Method(mf7c,, Serialized)
 {
 	Name(b000, Buffer() {0x22, 0x02, 0x00, 0x79, 0x00})
 	Name(RT00, ResourceTemplate () {IRQNoFlags () {1}})

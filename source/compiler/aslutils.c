@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "aslcompiler.h"
 #include "aslcompiler.y.h"
@@ -315,37 +314,6 @@ UtEndEvent (
 
 /*******************************************************************************
  *
- * FUNCTION:    UtHexCharToValue
- *
- * PARAMETERS:  HexChar             - Hex character in Ascii
- *
- * RETURN:      The binary value of the hex character
- *
- * DESCRIPTION: Perform ascii-to-hex translation
- *
- ******************************************************************************/
-
-UINT8
-UtHexCharToValue (
-    int                     HexChar)
-{
-
-    if (HexChar <= 0x39)
-    {
-        return ((UINT8) (HexChar - 0x30));
-    }
-
-    if (HexChar <= 0x46)
-    {
-        return ((UINT8) (HexChar - 0x37));
-    }
-
-    return ((UINT8) (HexChar - 0x57));
-}
-
-
-/*******************************************************************************
- *
  * FUNCTION:    UtConvertByteToHex
  *
  * PARAMETERS:  RawByte             - Binary data
@@ -368,8 +336,8 @@ UtConvertByteToHex (
     Buffer[0] = '0';
     Buffer[1] = 'x';
 
-    Buffer[2] = (UINT8) AslHexLookup[(RawByte >> 4) & 0xF];
-    Buffer[3] = (UINT8) AslHexLookup[RawByte & 0xF];
+    Buffer[2] = (UINT8) AcpiUtHexToAsciiChar (RawByte, 4);
+    Buffer[3] = (UINT8) AcpiUtHexToAsciiChar (RawByte, 0);
 }
 
 
@@ -384,7 +352,7 @@ UtConvertByteToHex (
  * RETURN:      Ascii hex byte is stored in Buffer.
  *
  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed
- *              with "0x"
+ *              with '0', and a trailing 'h' is added.
  *
  ******************************************************************************/
 
@@ -395,8 +363,8 @@ UtConvertByteToAsmHex (
 {
 
     Buffer[0] = '0';
-    Buffer[1] = (UINT8) AslHexLookup[(RawByte >> 4) & 0xF];
-    Buffer[2] = (UINT8) AslHexLookup[RawByte & 0xF];
+    Buffer[1] = (UINT8) AcpiUtHexToAsciiChar (RawByte, 4);
+    Buffer[2] = (UINT8) AcpiUtHexToAsciiChar (RawByte, 0);
     Buffer[3] = 'h';
 }
 
@@ -425,8 +393,6 @@ DbgPrint (
     va_list                 Args;
 
 
-    va_start (Args, Fmt);
-
     if (!Gbl_DebugFlag)
     {
         return;
@@ -438,6 +404,7 @@ DbgPrint (
         return;
     }
 
+    va_start (Args, Fmt);
     (void) vfprintf (stderr, Fmt, Args);
     va_end (Args);
     return;
@@ -658,7 +625,7 @@ UtCheckIntegerRange (
 
 /*******************************************************************************
  *
- * FUNCTION:    UtGetStringBuffer
+ * FUNCTION:    UtStringCacheCalloc
  *
  * PARAMETERS:  Length              - Size of buffer requested
  *
@@ -671,22 +638,58 @@ UtCheckIntegerRange (
  ******************************************************************************/
 
 char *
-UtGetStringBuffer (
+UtStringCacheCalloc (
     UINT32                  Length)
 {
     char                    *Buffer;
+    ASL_CACHE_INFO          *Cache;
+    UINT32                  CacheSize = ASL_STRING_CACHE_SIZE;
 
+
+    if (Length > CacheSize)
+    {
+        CacheSize = Length;
+
+        if (Gbl_StringCacheList)
+        {
+            Cache = UtLocalCalloc (sizeof (Cache->Next) + CacheSize);
+
+            /* Link new cache buffer just following head of list */
+
+            Cache->Next = Gbl_StringCacheList->Next;
+            Gbl_StringCacheList->Next = Cache;
+
+            /* Leave cache management pointers alone as they pertain to head */
+
+            Gbl_StringCount++;
+            Gbl_StringSize += Length;
+
+            return (Cache->Buffer);
+        }
+    }
 
     if ((Gbl_StringCacheNext + Length) >= Gbl_StringCacheLast)
     {
-        Gbl_StringCacheNext = UtLocalCalloc (ASL_STRING_CACHE_SIZE + Length);
-        Gbl_StringCacheLast = Gbl_StringCacheNext + ASL_STRING_CACHE_SIZE +
-                                Length;
+        /* Allocate a new buffer */
+
+        Cache = UtLocalCalloc (sizeof (Cache->Next) + CacheSize);
+
+        /* Link new cache buffer to head of list */
+
+        Cache->Next = Gbl_StringCacheList;
+        Gbl_StringCacheList = Cache;
+
+        /* Setup cache management pointers */
+
+        Gbl_StringCacheNext = Cache->Buffer;
+        Gbl_StringCacheLast = Gbl_StringCacheNext + CacheSize;
     }
+
+    Gbl_StringCount++;
+    Gbl_StringSize += Length;
 
     Buffer = Gbl_StringCacheNext;
     Gbl_StringCacheNext += Length;
-
     return (Buffer);
 }
 
@@ -719,7 +722,8 @@ UtExpandLineBuffers (
     NewSize = Gbl_LineBufferSize * 2;
     if (Gbl_CurrentLineBuffer)
     {
-        DbgPrint (ASL_DEBUG_OUTPUT,"Increasing line buffer size from %u to %u\n",
+        DbgPrint (ASL_DEBUG_OUTPUT,
+            "Increasing line buffer size from %u to %u\n",
             Gbl_LineBufferSize, NewSize);
     }
 
@@ -764,6 +768,30 @@ ErrorExit:
 }
 
 
+/******************************************************************************
+ *
+ * FUNCTION:    UtFreeLineBuffers
+ *
+ * PARAMETERS:  None
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Free all line buffers
+ *
+ *****************************************************************************/
+
+void
+UtFreeLineBuffers (
+    void)
+{
+
+    free (Gbl_CurrentLineBuffer);
+    free (Gbl_MainTokenBuffer);
+    free (Gbl_MacroTokenBuffer);
+    free (Gbl_ExpressionTokenBuffer);
+}
+
+
 /*******************************************************************************
  *
  * FUNCTION:    UtInternalizeName
@@ -796,9 +824,9 @@ UtInternalizeName (
     Info.ExternalName = ExternalName;
     AcpiNsGetInternalNameLength (&Info);
 
-    /* We need a segment to store the internal  name */
+    /* We need a segment to store the internal name */
 
-    Info.InternalName = UtGetStringBuffer (Info.Length);
+    Info.InternalName = UtStringCacheCalloc (Info.Length);
     if (!Info.InternalName)
     {
         return (AE_NO_MEMORY);
@@ -991,7 +1019,7 @@ UtDoConstant (
 }
 
 
-/* TBD: use version in ACPI CA main code base? */
+/* TBD: use version in ACPICA main code base? */
 
 /*******************************************************************************
  *
@@ -1028,6 +1056,7 @@ UtStrtoul64 (
     case 8:
     case 10:
     case 16:
+
         break;
 
     default:
@@ -1162,19 +1191,24 @@ ErrorExit:
     switch (Base)
     {
     case 8:
+
         Status = AE_BAD_OCTAL_CONSTANT;
         break;
 
     case 10:
+
         Status = AE_BAD_DECIMAL_CONSTANT;
         break;
 
     case 16:
+
         Status = AE_BAD_HEX_CONSTANT;
         break;
 
     default:
+
         /* Base validated above */
+
         break;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -128,7 +128,7 @@ Method(m302, 6, Serialized)
 	return (0)
 }
 
-Method(ST00)
+Method(ST00,, Serialized)
 {
 	Name(ts, "ST00")
 
@@ -491,7 +491,7 @@ Method(ST00)
 	}
 }
 
-Method(m30d)
+Method(m30d,, Serialized)
 {
 	Name(str0, "mnbvcxzlkjhgf")
 	Name(str1, "mnbvcxzlkjAgf")

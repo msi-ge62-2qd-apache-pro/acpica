@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Exception on ToDecimalString for Buffer with 51 elements
  */
 
-Method(mdd6)
+Method(mdd6,, Serialized)
 {
 	// ToDecimalString() when the number of result characters in string
 	// exceeds 200. Results into 204 (51 * 4) characters.

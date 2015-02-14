@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: In ConcatenateResTemplate an operand ending only with the first byte of the end tag doesn't cause a run-time error
  */
 
-Method(mf7e)
+Method(mf7e,, Serialized)
 {
 	Name(RT00, ResourceTemplate () {IRQNoFlags () {1}})
 
@@ -42,7 +42,7 @@ Method(mf7e)
 
 	CH03("", 0, 0x000, 0, 0)
 
-	ConcatenateResTemplate(RT00, Local0)
+	Store(ConcatenateResTemplate(RT00, Local0), Local1)
 
 	CH04("", 0, 0xff, 0, 0x001, 0, 0)
 }

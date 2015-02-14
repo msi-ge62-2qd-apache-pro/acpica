@@ -9,7 +9,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -114,8 +114,6 @@
  *
  *****************************************************************************/
 
-#define __NSUTILS_C__
-
 #include "acpi.h"
 #include "accommon.h"
 #include "acnamesp.h"
@@ -200,10 +198,10 @@ AcpiNsGetType (
     if (!Node)
     {
         ACPI_WARNING ((AE_INFO, "Null Node parameter"));
-        return_VALUE (ACPI_TYPE_ANY);
+        return_UINT8 (ACPI_TYPE_ANY);
     }
 
-    return_VALUE (Node->Type);
+    return_UINT8 (Node->Type);
 }
 
 
@@ -232,10 +230,10 @@ AcpiNsLocal (
         /* Type code out of range  */
 
         ACPI_WARNING ((AE_INFO, "Invalid Object Type 0x%X", Type));
-        return_VALUE (ACPI_NS_NORMAL);
+        return_UINT32 (ACPI_NS_NORMAL);
     }
 
-    return_VALUE (AcpiGbl_NsProperties[Type] & ACPI_NS_LOCAL);
+    return_UINT32 (AcpiGbl_NsProperties[Type] & ACPI_NS_LOCAL);
 }
 
 
@@ -569,10 +567,12 @@ AcpiNsExternalizeName (
     switch (InternalName[0])
     {
     case AML_ROOT_PREFIX:
+
         PrefixLength = 1;
         break;
 
     case AML_PARENT_PREFIX:
+
         for (i = 0; i < InternalNameLength; i++)
         {
             if (ACPI_IS_PARENT_PREFIX (InternalName[i]))
@@ -593,6 +593,7 @@ AcpiNsExternalizeName (
         break;
 
     default:
+
         break;
     }
 
@@ -762,26 +763,28 @@ void
 AcpiNsTerminate (
     void)
 {
-    ACPI_OPERAND_OBJECT     *ObjDesc;
+    ACPI_STATUS             Status;
 
 
     ACPI_FUNCTION_TRACE (NsTerminate);
 
 
     /*
-     * 1) Free the entire namespace -- all nodes and objects
-     *
-     * Delete all object descriptors attached to namepsace nodes
+     * Free the entire namespace -- all nodes and all objects
+     * attached to the nodes
      */
     AcpiNsDeleteNamespaceSubtree (AcpiGbl_RootNode);
 
-    /* Detach any objects attached to the root */
+    /* Delete any objects attached to the root node */
 
-    ObjDesc = AcpiNsGetAttachedObject (AcpiGbl_RootNode);
-    if (ObjDesc)
+    Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
+    if (ACPI_FAILURE (Status))
     {
-        AcpiNsDetachObject (AcpiGbl_RootNode);
+        return_VOID;
     }
+
+    AcpiNsDeleteNode (AcpiGbl_RootNode);
+    (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
 
     ACPI_DEBUG_PRINT ((ACPI_DB_INFO, "Namespace freed\n"));
     return_VOID;

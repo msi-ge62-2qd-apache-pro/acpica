@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -114,6 +114,7 @@
  *****************************************************************************/
 
 #include "acpisrc.h"
+#include "acapps.h"
 
 /* Local prototypes */
 
@@ -215,6 +216,7 @@ AsDoWildcard (
                 break;
 
             default:
+
                 break;
             }
         }
@@ -250,7 +252,7 @@ AsProcessTree (
     {
         if (ConversionTable->Flags & FLG_LOWERCASE_DIRNAMES)
         {
-            strlwr (TargetPath);
+            AsStrlwr (TargetPath);
         }
 
         VERBOSE_PRINT (("Creating Directory \"%s\"\n", TargetPath));
@@ -378,29 +380,46 @@ AsConvertFile (
     ACPI_IDENTIFIER_TABLE   *LineTable;
     ACPI_IDENTIFIER_TABLE   *MacroTable;
     ACPI_TYPED_IDENTIFIER_TABLE *StructTable;
+    ACPI_IDENTIFIER_TABLE   *SpecialMacroTable;
 
 
     switch (FileType)
     {
     case FILE_TYPE_SOURCE:
+
         Functions           = ConversionTable->SourceFunctions;
         StringTable         = ConversionTable->SourceStringTable;
         LineTable           = ConversionTable->SourceLineTable;
         ConditionalTable    = ConversionTable->SourceConditionalTable;
         MacroTable          = ConversionTable->SourceMacroTable;
         StructTable         = ConversionTable->SourceStructTable;
+        SpecialMacroTable   = ConversionTable->SourceSpecialMacroTable;
        break;
 
     case FILE_TYPE_HEADER:
+
         Functions           = ConversionTable->HeaderFunctions;
         StringTable         = ConversionTable->HeaderStringTable;
         LineTable           = ConversionTable->HeaderLineTable;
         ConditionalTable    = ConversionTable->HeaderConditionalTable;
         MacroTable          = ConversionTable->HeaderMacroTable;
         StructTable         = ConversionTable->HeaderStructTable;
+        SpecialMacroTable   = ConversionTable->HeaderSpecialMacroTable;
+        break;
+
+    case FILE_TYPE_PATCH:
+
+        Functions           = ConversionTable->PatchFunctions;
+        StringTable         = ConversionTable->PatchStringTable;
+        LineTable           = ConversionTable->PatchLineTable;
+        ConditionalTable    = ConversionTable->PatchConditionalTable;
+        MacroTable          = ConversionTable->PatchMacroTable;
+        StructTable         = ConversionTable->PatchStructTable;
+        SpecialMacroTable   = ConversionTable->PatchSpecialMacroTable;
         break;
 
     default:
+
         printf ("Unknown file type, cannot process\n");
         return;
     }
@@ -469,6 +488,14 @@ AsConvertFile (
         }
     }
 
+    if (SpecialMacroTable)
+    {
+        for (i = 0; SpecialMacroTable[i].Identifier; i++)
+        {
+            AsCleanupSpecialMacro (FileBuffer, SpecialMacroTable[i].Identifier);
+        }
+    }
+
     /* Process the function table */
 
     for (i = 0; i < 32; i++)
@@ -478,75 +505,64 @@ AsConvertFile (
         switch ((1 << i) & Functions)
         {
         case 0:
+
             /* This function not configured */
             break;
-
 
         case CVT_COUNT_TABS:
 
             AsCountTabs (FileBuffer, Filename);
             break;
 
-
         case CVT_COUNT_NON_ANSI_COMMENTS:
 
             AsCountNonAnsiComments (FileBuffer, Filename);
             break;
-
 
         case CVT_CHECK_BRACES:
 
             AsCheckForBraces (FileBuffer, Filename);
             break;
 
-
         case CVT_TRIM_LINES:
 
             AsTrimLines (FileBuffer, Filename);
             break;
-
 
         case CVT_COUNT_LINES:
 
             AsCountSourceLines (FileBuffer, Filename);
             break;
 
-
         case CVT_BRACES_ON_SAME_LINE:
 
             AsBracesOnSameLine (FileBuffer);
             break;
-
 
         case CVT_MIXED_CASE_TO_UNDERSCORES:
 
             AsMixedCaseToUnderscores (FileBuffer, Filename);
             break;
 
-
         case CVT_LOWER_CASE_IDENTIFIERS:
 
             AsLowerCaseIdentifiers (FileBuffer);
             break;
-
 
         case CVT_REMOVE_DEBUG_MACROS:
 
             AsRemoveDebugMacros (FileBuffer);
             break;
 
-
         case CVT_TRIM_WHITESPACE:
 
             AsTrimWhitespace (FileBuffer);
             break;
 
-
         case CVT_REMOVE_EMPTY_BLOCKS:
 
             AsRemoveEmptyBlocks (FileBuffer, Filename);
             break;
-
 
         case CVT_REDUCE_TYPEDEFS:
 
@@ -554,12 +570,10 @@ AsConvertFile (
             AsReduceTypedefs (FileBuffer, "typedef struct");
             break;
 
-
         case CVT_SPACES_TO_TABS4:
 
             AsTabify4 (FileBuffer);
             break;
-
 
         case CVT_SPACES_TO_TABS8:
 
@@ -773,8 +787,6 @@ AsGetFile (
     FILE                    *File;
     UINT32                  Size;
     char                    *Buffer;
-    int                     Seek1;
-    int                     Seek2;
     size_t                  Actual;
 
 
@@ -789,11 +801,8 @@ AsGetFile (
 
     /* Need file size to allocate a buffer */
 
-    Seek1 = fseek (File, 0L, SEEK_END);
-    Size = ftell (File);
-    Seek2 = fseek (File, 0L, SEEK_SET);
-
-    if (Seek1 || Seek2 || (Size == -1))
+    Size = CmGetFileSize (File);
+    if (Size == ACPI_UINT32_MAX)
     {
         printf ("Could not get file size for %s\n", Filename);
         goto ErrorExit;

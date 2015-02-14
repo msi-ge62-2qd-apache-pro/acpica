@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -167,7 +167,7 @@ Name (p407, Package() {
 		0x31, 0x09, 0x38, 0x31, 0x02, 0x38, 0x31, 0x06, 0x38, 0x31, 0x0a, 0x38, 0x79, 0x00},
 })
 
-Method(RT04)
+Method(RT04,, Serialized)
 {
 	Name(ts, "RT04")
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,7 +44,7 @@ Name(i100, 0xabcd1234)
 // that the product should distinguish Integer Data
 // from a reference.
 //
-Method(m4b1, 1)
+Method(m4b1, 1, Serialized)
 {
 	Name(ts, "m4b1")
 
@@ -53,39 +53,29 @@ Method(m4b1, 1)
 	Event(e000)
 
 	// Local Named Object
-	Method(m000, 1)
+	Method(m000, 1, Serialized)
 	{
 		Name(i000, 0x89abcdef)
 
 		// DerefOf
 
 		if (y083) {
-			DerefOf(i000)
+			Store (DerefOf(i000), Local1)
 			CH06(arg0, 0, 47)
 		}
 
 		// Index
-
-		Index(i000, 0)
-		CH06(arg0, 1, 47)
 
 		Index(i000, 0, Local1)
 		CH06(arg0, 2, 47)
 
 		// ConcatenateResTemplate
 
-		ConcatenateResTemplate(i000, ResourceTemplate(){})
-		CH06(arg0, 3, 47)
-
-		ConcatenateResTemplate(ResourceTemplate(){}, i000)
-		CH06(arg0, 4, 47)
-
 		ConcatenateResTemplate(i000, ResourceTemplate(){}, Local1)
 		CH06(arg0, 5, 47)
 
 		ConcatenateResTemplate(ResourceTemplate(){}, i000, Local1)
 		CH06(arg0, 6, 47)
-
 	}
 
 	// Global Named Object
@@ -94,25 +84,16 @@ Method(m4b1, 1)
 		// DerefOf
 
 		if (y083) {
-			DerefOf(i100)
+			Store (DerefOf(i100), Local1)
 			CH06(arg0, 7, 47)
 		}
 
 		// Index
 
-		Index(i100, 0)
-		CH06(arg0, 8, 47)
-
 		Index(i100, 0, Local1)
 		CH06(arg0, 9, 47)
 
 		// ConcatenateResTemplate
-
-		ConcatenateResTemplate(i100, ResourceTemplate(){})
-		CH06(arg0, 10, 47)
-
-		ConcatenateResTemplate(ResourceTemplate(){}, i100)
-		CH06(arg0, 11, 47)
 
 		ConcatenateResTemplate(i100, ResourceTemplate(){}, Local1)
 		CH06(arg0, 12, 47)
@@ -126,7 +107,7 @@ Method(m4b1, 1)
 	{
 		// DerefOf
 
-		DerefOf(arg1)
+		Store (DerefOf(arg1), Local1)
 		CH06(arg0, 14, 47)
 
 		// Release
@@ -146,16 +127,10 @@ Method(m4b1, 1)
 
 		// Acquire
 
-		Acquire(arg1, 0)
+		Store(Acquire(arg1, 0), Local1)
 		CH06(arg0, 18, 47)
 
 		// ConcatenateResTemplate
-
-		ConcatenateResTemplate(arg1, ResourceTemplate(){})
-		CH06(arg0, 19, 47)
-
-		ConcatenateResTemplate(ResourceTemplate(){}, arg1)
-		CH06(arg0, 20, 47)
 
 		ConcatenateResTemplate(arg1, ResourceTemplate(){}, Local1)
 		CH06(arg0, 21, 47)
@@ -165,20 +140,17 @@ Method(m4b1, 1)
 
 		// Index
 
-		Index(arg1, 0)
-		CH06(arg0, 23, 47)
-
 		Index(arg1, 0, Local1)
 		CH06(arg0, 24, 47)
 
 		// Wait
 
-		Wait(arg1, 0)
+		Store(Wait(arg1, 0), Local1)
 		CH06(arg0, 25, 47)
 
 		// Match
 
-		Match(arg1, MTR, 0, MTR, 0, 0)
+		Store (Match(arg1, MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 26, 47)
 	}
 
@@ -189,7 +161,7 @@ Method(m4b1, 1)
 
 		// DerefOf
 
-		DerefOf(Local0)
+		Store(DerefOf(Local0), Local1)
 		CH06(arg0, 27, 47)
 
 		// Release
@@ -209,16 +181,10 @@ Method(m4b1, 1)
 
 		// Acquire
 
-		Acquire(Local0, 0)
+		Store(Acquire(Local0, 0), Local1)
 		CH06(arg0, 31, 47)
 
 		// ConcatenateResTemplate
-
-		ConcatenateResTemplate(Local0, ResourceTemplate(){})
-		CH06(arg0, 32, 47)
-
-		ConcatenateResTemplate(ResourceTemplate(){}, Local0)
-		CH06(arg0, 33, 47)
 
 		ConcatenateResTemplate(Local0, ResourceTemplate(){}, Local1)
 		CH06(arg0, 34, 47)
@@ -228,48 +194,45 @@ Method(m4b1, 1)
 
 		// Index
 
-		Index(Local0, 0)
-		CH06(arg0, 36, 47)
-
 		Index(Local0, 0, Local1)
 		CH06(arg0, 37, 47)
 
 		// Wait
 
-		Wait(Local0, 0)
+		Store(Wait(Local0, 0), Local1)
 		CH06(arg0, 38, 47)
 
 		// Match
 
-		Match(Local0, MTR, 0, MTR, 0, 0)
+		Store (Match(Local0, MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 39, 47)
 	}
 
 	// An element of Package
-	Method(m004, 1)
+	Method(m004, 1, Serialized)
 	{
 		Name(p000, Package(){0x89abcdef})
 
 		// DeRefOf(Index(Package, Ind))
 
-		DerefOf(DeRefOf(Index(p000, 0)))
+		Store (DerefOf(DeRefOf(Index(p000, 0))), Local1)
 		CH06(arg0, 40, 47)
 
-		Index(DeRefOf(Index(p000, 0)), 0)
+		Store (Index(DeRefOf(Index(p000, 0)), 0), Local1)
 		CH06(arg0, 41, 47)
 
-		Match(DeRefOf(Index(p000, 0)), MTR, 0, MTR, 0, 0)
+		Store (Match(DeRefOf(Index(p000, 0)), MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 42, 47)
 
 		// DeRefOf(Index(Package, Ind, Dest))
 
-		DerefOf(DeRefOf(Index(p000, 0, Local0)))
+		Store (DerefOf(DeRefOf(Index(p000, 0, Local0))), Local1)
 		CH06(arg0, 43, 47)
 
-		Index(DeRefOf(Index(p000, 0, Local0)), 0)
+		Store (Index(DeRefOf(Index(p000, 0, Local0)), 0), Local1)
 		CH06(arg0, 44, 47)
 
-		Match(DeRefOf(Index(p000, 0, Local0)), MTR, 0, MTR, 0, 0)
+		Store (Match(DeRefOf(Index(p000, 0, Local0)), MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 45, 47)
 	}
 
@@ -285,23 +248,23 @@ Method(m4b1, 1)
 			return (1)
 		}
 
-		DerefOf(arg1)
+		Store (DerefOf(arg1), Local1)
 		CH03(ts, z093, 0, 0, 0)
 
-		DerefOf(DerefOf(arg1))
+		Store (DerefOf(DerefOf(arg1)), Local1)
 		CH06(arg0, 47, 47)
 
-		Index(DerefOf(arg1), 0)
+		Store (Index(DerefOf(arg1), 0), Local1)
 		CH06(arg0, 48, 47)
 
-		Match(DerefOf(arg1), MTR, 0, MTR, 0, 0)
+		Store (Match(DerefOf(arg1), MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 49, 47)
 
 		return (0)
 	}
 
 	// Result of Method invocation
-	Method(m006, 1)
+	Method(m006, 1, Serialized)
 	{
 		Name(i000, 0) // Label to check m000 invocations
 
@@ -319,7 +282,7 @@ Method(m4b1, 1)
 			}
 		}
 
-		DerefOf(m000(1))
+		Store (DerefOf(m000(1)), Local1)
 		CH06(arg0, 51, 47)
 		CH00(arg0, 1)
 
@@ -341,29 +304,29 @@ Method(m4b1, 1)
 			CH00(arg0, 4)
 		}
 
-		Acquire(m000(5), 0)
+		Store(Acquire(m000(5), 0), Local1)
 		CH06(arg0, 55, 47)
 		if (y600) {
 			CH00(arg0, 5)
 		}
 
-		Index(m000(6), 0)
+		Store (Index(m000(6), 0), Local1)
 		CH06(arg0, 56, 47)
 		CH00(arg0, 6)
 
-		Wait(m000(7), 0)
+		Store(Wait(m000(7), 0), Local1)
 		CH06(arg0, 57, 47)
 		if (y600) {
 			CH00(arg0, 7)
 		}
 
-		Match(m000(8), MTR, 0, MTR, 0, 0)
+		Store (Match(m000(8), MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 58, 47)
 		CH00(arg0, 8)
 	}
 
 	// Reference to Object as Result of Method invocation
-	Method(m007, 1)
+	Method(m007, 1, Serialized)
 	{
 		Name(i000, 0x89abcdef)
 
@@ -395,19 +358,19 @@ Method(m4b1, 1)
 
 			Store(0, i001)
 
-			DerefOf(m000(1, lpC0))
+			Store (DerefOf(m000(1, lpC0)), Local1)
 			CH03(ts, z093, Add(1, lpC0), 0, 0)
 			CH00(arg0, 1)
 
-			DerefOf(DerefOf(m000(2, lpC0)))
+			Store (DerefOf(DerefOf(m000(2, lpC0))), Local1)
 			CH06(arg0, Add(60, Local0), 47)
 			CH00(arg0, 2)
 
-			Index(DerefOf(m000(3, lpC0)), 0)
+			Store (Index(DerefOf(m000(3, lpC0)), 0), Local1)
 			CH06(arg0, Add(61, Local0), 47)
 			CH00(arg0, 3)
 
-			Match(DerefOf(m000(4, lpC0)), MTR, 0, MTR, 0, 0)
+			Store (Match(DerefOf(m000(4, lpC0)), MTR, 0, MTR, 0, 0), Local1)
 			CH06(arg0, Add(62, Local0), 47)
 			CH00(arg0, 4)
 

@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,7 +113,6 @@
  *
  *****************************************************************************/
 
-#define __DTCOMPILE_C__
 #define _DECLARE_DT_GLOBALS
 
 #include "aslcompiler.h"
@@ -213,8 +212,6 @@ DtDoCompile (
     Status = DtCompileDataTable (&FieldList);
     UtEndEvent (Event);
 
-    DtFreeFieldList ();
-
     if (ACPI_FAILURE (Status))
     {
         /* TBD: temporary error message. Msgs should come from function above */
@@ -237,11 +234,13 @@ DtDoCompile (
     /* Write the binary, then the optional hex file */
 
     DtOutputBinary (Gbl_RootTable);
-    LsDoHexOutput ();
+    HxDoHexOutput ();
     DtWriteTableToListing ();
 
 CleanupAndExit:
 
+    AcpiUtDeleteCaches ();
+    DtDeleteCaches ();
     CmCleanupAndExit ();
     return (Status);
 }
@@ -356,6 +355,7 @@ DtCompileDataTable (
     char                    *Signature;
     ACPI_TABLE_HEADER       *AcpiTableHeader;
     ACPI_STATUS             Status;
+    DT_FIELD                *RootField = *FieldList;
 
 
     /* Verify that we at least have a table signature and save it */
@@ -369,7 +369,7 @@ DtCompileDataTable (
         return (AE_ERROR);
     }
 
-    Gbl_Signature = UtLocalCalloc (ACPI_STRLEN (Signature) + 1);
+    Gbl_Signature = UtStringCacheCalloc (ACPI_STRLEN (Signature) + 1);
     strcpy (Gbl_Signature, Signature);
 
     /*
@@ -388,7 +388,7 @@ DtCompileDataTable (
         DtSetTableLength ();
         return (Status);
     }
-    else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_RSDP))
+    else if (ACPI_VALIDATE_RSDP_SIG (Signature))
     {
         Status = DtCompileRsdp (FieldList);
         return (Status);
@@ -426,7 +426,7 @@ DtCompileDataTable (
     if (!TableData || Gbl_CompileGeneric)
     {
         DtCompileGeneric ((void **) FieldList);
-        goto Out;
+        goto FinishHeader;
     }
 
     /* Dispatch to per-table compile */
@@ -463,7 +463,8 @@ DtCompileDataTable (
         return (AE_ERROR);
     }
 
-Out:
+FinishHeader:
+
     /* Set the final table length and then the checksum */
 
     DtSetTableLength ();
@@ -471,6 +472,8 @@ Out:
         ACPI_TABLE_HEADER, Gbl_RootTable->Buffer);
     DtSetTableChecksum (&AcpiTableHeader->Checksum);
 
+    DtDumpFieldList (RootField);
+    DtDumpSubtableList ();
     return (AE_OK);
 }
 
@@ -505,6 +508,7 @@ DtCompileTable (
     UINT8                   FieldType;
     UINT8                   *Buffer;
     UINT8                   *FlagBuffer = NULL;
+    char                    *String;
     UINT32                  CurrentFlagByteOffset = 0;
     ACPI_STATUS             Status;
 
@@ -514,18 +518,29 @@ DtCompileTable (
         return (AE_BAD_PARAMETER);
     }
 
+    /* Ignore optional subtable if name does not match */
+
+    if ((Info->Flags & DT_OPTIONAL) &&
+        ACPI_STRCMP ((*Field)->Name, Info->Name))
+    {
+        *RetSubtable = NULL;
+        return (AE_OK);
+    }
+
     Length = DtGetSubtableLength (*Field, Info);
     if (Length == ASL_EOF)
     {
         return (AE_ERROR);
     }
 
-    Subtable = UtLocalCalloc (sizeof (DT_SUBTABLE));
+    Subtable = UtSubtableCacheCalloc ();
 
     if (Length > 0)
     {
-        Subtable->Buffer = UtLocalCalloc (Length);
+        String = UtStringCacheCalloc (Length);
+        Subtable->Buffer = ACPI_CAST_PTR (UINT8, String);
     }
+
     Subtable->Length = Length;
     Subtable->TotalLength = Length;
     Buffer = Subtable->Buffer;
@@ -626,8 +641,6 @@ DtCompileTable (
             DtSetSubtableLength (InlineSubtable);
 
             ACPI_MEMCPY (Buffer, InlineSubtable->Buffer, FieldLength);
-            ACPI_FREE (InlineSubtable->Buffer);
-            ACPI_FREE (InlineSubtable);
             LocalField = *Field;
             break;
 

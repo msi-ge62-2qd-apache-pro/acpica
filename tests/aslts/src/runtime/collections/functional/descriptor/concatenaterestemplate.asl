@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -977,7 +977,7 @@ Name (p444, Package() {
 	Buffer () {0x22, 0x02, 0x00, 0x79, 0},
 })
 
-Method(RT1b)
+Method(RT1b,, Serialized)
 {
 	Name(ts, "RT1b")
 

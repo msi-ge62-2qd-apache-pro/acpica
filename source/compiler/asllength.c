@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "aslcompiler.h"
 #include "aslcompiler.y.h"
@@ -330,6 +329,7 @@ CgGenerateAmlOpcodeLength (
         break;
 
     default:
+
         /* All data opcodes must be above */
         break;
     }
@@ -398,6 +398,7 @@ CgGenerateAmlLengths (
         return;
 
     default:
+
         break;
     }
 

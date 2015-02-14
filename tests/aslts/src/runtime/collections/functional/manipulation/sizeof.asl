@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@
 Name(z041, 41)
 
 // Simplest test of SizeOf for all available type objects
-Method(m1ef)
+Method(m1ef,, Serialized)
 {
 	Name(ts, "m1ef")
 

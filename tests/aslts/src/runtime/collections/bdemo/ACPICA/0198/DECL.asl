@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,7 +36,7 @@
 
 Name(id24, 0)
 
-Method(mfa9) {
+Method(mfa9,, Serialized) {
 
 	Event(e900)
 	Event(e9Z0)
@@ -83,7 +83,7 @@ Method(mfa9) {
 		Store("========================================.", Debug)
 	}
 
-	Method(m001) {
+	Method(m001,, Serialized) {
 
 		Name(b000, Buffer(4) {})
 

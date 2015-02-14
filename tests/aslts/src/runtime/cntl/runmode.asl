@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -265,7 +265,7 @@ Name(y215, 0)	// Exception AE_BUFFER_OVERFLOW when IndexName Field exceeds 32 bi
 Name(y216, 0)	// exception AE_NOT_FOUND on CreateField under specific conditions
 Name(y217, 0)	// Dynamic OpRegion _REG method execution problem
 Name(y220, 0)	// Inconsistent "Access is available/unavailable" _REG method calls
-Name(y221, 0)	// Alternating access to OpRegions covering different ranges
+Name(y221, 1)	// Alternating access to OpRegions covering different ranges
 Name(y222, 0)	// Alternating access to OpRegions of different Address Spaces
 Name(y223, 1)	// DataTableRegion with the non-constant *Strings works since ACPICA release 20071211
 Name(y224, 0)	// AcpiExec is unable to emulate access to IndexField Objects
@@ -429,8 +429,8 @@ Name(X193, 1) // 32-bit mode optional storing of Not, NAnd, or NOr
 		  // ASL operators result to Buffer Field produces 64-bit
 Name(X194, 1) // Unexpected implicit result object conversion when the
 		  // Target operand of ToBuffer operator is a Named Buffer
-Name(X195, 1) // Increment and Decrement of an either String or Buffer
-		  // Object change the type of the Object to Integer (~ y501)
+Name(X195, 0) // Increment and Decrement of an either String or Buffer
+		  // Object will not change the type of the Object to Integer (~ y501)
 
 
 /*

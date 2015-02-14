@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -39,7 +39,7 @@
 
 Method(m81d)
 {
-	Method(m000)
+	Method(m000,, Serialized)
 	{
 		OperationRegion(OPR0, SystemMemory, 0, 0x30)
 

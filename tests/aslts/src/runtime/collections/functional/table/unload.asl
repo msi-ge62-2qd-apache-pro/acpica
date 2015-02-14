@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -84,7 +84,7 @@ Device(DTM1) {
 	// are checked in load.asl
 
 	// DDBHandle returned by Method call
-	Method(tst0, 1)
+	Method(tst0, 1, Serialized)
 	{
 		Name(HI0, 0)
 
@@ -162,7 +162,7 @@ Device(DTM1) {
 
 	// All namespace objects created as a result of the corresponding
 	// Load operation are absent in the namespace after UnLoad
-	Method(tst1, 1)
+	Method(tst1, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -418,7 +418,7 @@ Device(DTM1) {
 
 	// Exceptions when the parameter of the UnLoad operator
 	// is not of DDBHandle type
-	Method(tst3, 1)
+	Method(tst3, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -539,7 +539,7 @@ Device(DTM1) {
 	}
 
 	// Exceptions when UnLoad is executed with the same DDBHandle repeatedly
-	Method(tst4, 1)
+	Method(tst4, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -601,7 +601,7 @@ Device(DTM1) {
 	}
 
 	// Exceptions when the operand of UnLoad operator is absent
-	Method(tst5, 1)
+	Method(tst5, 1, Serialized)
 	{
 		Name(DDB0, 0)
 
@@ -633,7 +633,7 @@ Device(DTM1) {
 		if (SLCK) {
 			CH04(arg0, 0, 47, z175, 0x046, 0, 0) // AE_AML_OPERAND_TYPE
 		} else {
-			CH04(arg0, 0, 62, z175, 0x047, 0, 0) // AE_AML_NO_RETURN_VALUE
+			CH04(arg0, 0, 47, z175, 0x047, 0, 0) // AE_AML_OPERAND_TYPE
 		}
 
 		UnLoad(DDB0)
@@ -646,7 +646,7 @@ Device(DTM1) {
 	}
 }
 
-Method(TUL0)
+Method(TUL0,, Serialized)
 {
 	Name(ts, "TUL0")
 
@@ -676,7 +676,7 @@ Method(TUL0)
 }
 
 // Exceptional conditions
-Method(TUL1)
+Method(TUL1,, Serialized)
 {
 	Name(ts, "TUL1")
 

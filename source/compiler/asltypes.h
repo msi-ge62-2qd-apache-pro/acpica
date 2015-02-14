@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,7 +113,6 @@
  *
  *****************************************************************************/
 
-
 #ifndef __ASLTYPES_H
 #define __ASLTYPES_H
 
@@ -153,16 +152,17 @@
 
 typedef struct asl_method_info
 {
-    UINT8                   NumArguments;
-    UINT8                   LocalInitialized[ACPI_METHOD_NUM_LOCALS];
-    UINT8                   ArgInitialized[ACPI_METHOD_NUM_ARGS];
+    ACPI_PARSE_OBJECT       *Op;
+    struct asl_method_info  *Next;
     UINT32                  ValidArgTypes[ACPI_METHOD_NUM_ARGS];
     UINT32                  ValidReturnTypes;
     UINT32                  NumReturnNoValue;
     UINT32                  NumReturnWithValue;
-    ACPI_PARSE_OBJECT       *Op;
-    struct asl_method_info  *Next;
+    UINT8                   NumArguments;
+    UINT8                   LocalInitialized[ACPI_METHOD_NUM_LOCALS];
+    UINT8                   ArgInitialized[ACPI_METHOD_NUM_ARGS];
     UINT8                   HasBeenTyped;
+    UINT8                   ShouldBeSerialized;
 
 } ASL_METHOD_INFO;
 
@@ -236,13 +236,25 @@ typedef enum
     ASL_FILE_ASM_SOURCE_OUTPUT,
     ASL_FILE_C_SOURCE_OUTPUT,
     ASL_FILE_ASM_INCLUDE_OUTPUT,
-    ASL_FILE_C_INCLUDE_OUTPUT
+    ASL_FILE_C_INCLUDE_OUTPUT,
+    ASL_FILE_C_OFFSET_OUTPUT,
+    ASL_FILE_MAP_OUTPUT
 
 } ASL_FILE_TYPES;
 
 
-#define ASL_MAX_FILE_TYPE       13
+#define ASL_MAX_FILE_TYPE       15
 #define ASL_NUM_FILES           (ASL_MAX_FILE_TYPE + 1)
+
+
+/* Cache block structure for ParseOps and Strings */
+
+typedef struct asl_cache_info
+{
+    void                            *Next;
+    char                            Buffer[1];
+
+} ASL_CACHE_INFO;
 
 
 typedef struct asl_include_dir
@@ -266,7 +278,7 @@ typedef struct asl_error_msg
     char                        *Filename;
     char                        *SourceLine;
     UINT32                      FilenameLength;
-    UINT8                       MessageId;
+    UINT16                      MessageId;
     UINT8                       Level;
 
 } ASL_ERROR_MSG;
@@ -306,6 +318,37 @@ typedef struct asl_event_info
     BOOLEAN                     Valid;
 
 } ASL_EVENT_INFO;
+
+
+/* Hardware mapping file structures */
+
+typedef struct acpi_gpio_info
+{
+    struct acpi_gpio_info   *Next;
+    ACPI_PARSE_OBJECT       *Op;
+    char                    *DeviceName;
+    ACPI_NAMESPACE_NODE     *TargetNode;
+    UINT32                  References;
+    UINT32                  PinCount;
+    UINT32                  PinIndex;
+    UINT16                  PinNumber;
+    UINT8                   Type;
+    UINT8                   Direction;
+    UINT8                   Polarity;
+
+} ACPI_GPIO_INFO;
+
+typedef struct acpi_serial_info
+{
+    struct acpi_serial_info *Next;
+    ACPI_PARSE_OBJECT       *Op;
+    char                    *DeviceName;
+    ACPI_NAMESPACE_NODE     *TargetNode;
+    AML_RESOURCE            *Resource;
+    UINT32                  Speed;
+    UINT16                  Address;
+
+} ACPI_SERIAL_INFO;
 
 
 #endif  /* __ASLTYPES_H */

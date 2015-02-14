@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -38,7 +38,7 @@ Name(z066, 66)
 // arg4 - indication of ComputationalData
 // arg5 - Result
 // arg6 - ComputationalData
-Method(m4c1, 7)
+Method(m4c1, 7, Serialized)
 {
 	Name(tmp0, 0)
 	Name(tmp1, 0)

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Unexpected exception occurs on access to the Fields specified by BankField
  */
 
-	Method(mf0a)
+	Method(mf0a,, Serialized)
 	{
 		OperationRegion(r000, SystemMemory, 0x100, 0x100)
 		Field(r000, ByteAcc, NoLock, Preserve) { bnk0, 2 }
@@ -56,7 +56,7 @@
 		}
 	}
 
-	Method(mf0b)
+	Method(mf0b,, Serialized)
 	{
 		Name(i000, 4)
 		OperationRegion(r000, SystemMemory, 0x100, 0x100)
@@ -69,7 +69,7 @@
 		CH04("", 0, 68, 0, 0x003, 0, 0) // AE_AML_REGISTER_LIMIT
 	}
 
-	Method(mf0c)
+	Method(mf0c,, Serialized)
 	{
 		OperationRegion(r000, SystemMemory, 0x100, 0x100)
 		Field(r000, ByteAcc, NoLock, Preserve) { bnk0, 2 }
@@ -81,7 +81,7 @@
 		CH03("", 0, 0x005, 0, 0)
 	}
 
-	Method(mf0d)
+	Method(mf0d,, Serialized)
 	{
 		Name(i000, 0)
 		OperationRegion(r000, SystemMemory, 0x100, 0x100)
@@ -94,7 +94,7 @@
 		CH03("", 0, 0x007, 0, 0)
 	}
 
-	Method(mf0e)
+	Method(mf0e,, Serialized)
 	{
 		Name(i000, 0)
 		OperationRegion(r000, SystemMemory, 0x100, 0x100)

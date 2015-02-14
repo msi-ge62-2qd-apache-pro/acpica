@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -119,10 +119,6 @@
         ACPI_MODULE_NAME    ("antables")
 
 /* Local prototypes */
-
-ACPI_PHYSICAL_ADDRESS
-AeLocalGetRootPointer (
-    void);
 
 /* Non-AML tables that are constructed locally and installed */
 
@@ -250,7 +246,7 @@ AeBuildLocalTables (
     /* Build an RSDP */
 
     ACPI_MEMSET (&LocalRSDP, 0, sizeof (ACPI_TABLE_RSDP));
-    ACPI_MEMCPY (LocalRSDP.Signature, ACPI_SIG_RSDP, 8);
+    ACPI_MAKE_RSDP_SIG (LocalRSDP.Signature);
     ACPI_MEMCPY (LocalRSDP.OemId, "I_TEST", 6);
     LocalRSDP.Revision = 2;
     LocalRSDP.XsdtPhysicalAddress = ACPI_PTR_TO_PHYSADDR (LocalXSDT);
@@ -356,7 +352,7 @@ AeBuildLocalTables (
 
 /******************************************************************************
  *
- * FUNCTION:    AeLocalGetRootPointer
+ * FUNCTION:    AcpiOsGetRootPointer
  *
  * PARAMETERS:  None
  *
@@ -368,9 +364,9 @@ AeBuildLocalTables (
  *****************************************************************************/
 
 ACPI_PHYSICAL_ADDRESS
-AeLocalGetRootPointer (
+AcpiOsGetRootPointer (
     void)
 {
 
-    return ((ACPI_PHYSICAL_ADDRESS) &LocalRSDP);
+    return (ACPI_PTR_TO_PHYSADDR (&LocalRSDP));
 }

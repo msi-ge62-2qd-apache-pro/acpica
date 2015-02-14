@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
 Name(z123, 123)
 
 // Store to Global Named Objects, Constant and LocalX
-Method(m690)
+Method(m690,, Serialized)
 {
 	Name(ts, "m690")
 

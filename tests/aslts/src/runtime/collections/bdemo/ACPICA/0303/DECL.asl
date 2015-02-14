@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@ Method(m1ec)
 	// The usual case, it works
 	Method(m000)
 	{
-		Method(m100, 1)
+		Method(m100, 1, Serialized, 3)
 		{
 			Name(\i4z0, 0xabcd0000)
 
@@ -68,7 +68,7 @@ Method(m1ec)
 	// The case where Name(\i4z1, 0xabcd0000) is performed from If, it doesn't work.
 	Method(m001)
 	{
-		Method(m100, 1)
+		Method(m100, 1, Serialized)
 		{
 			if (LNot(arg0)) {
 				Name(\i4z1, 0xabcd0000)

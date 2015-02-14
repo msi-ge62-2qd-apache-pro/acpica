@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  * ROOT CAUSE
  */
 
-	Method(mf28)
+	Method(mf28,, Serialized)
 	{
 		Name(STR0, "STR0")
 		Name(STR1, "STR1")

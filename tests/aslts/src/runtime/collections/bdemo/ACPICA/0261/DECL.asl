@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Crash when DDBHandle parameter of Load is an Indexed Reference
  */
 
-Method(m028)
+Method(m028,, Serialized)
 {
 	Name(BUF0, Buffer() {
 
@@ -56,7 +56,7 @@ Method(m028)
 
 	External(\AUXZ)
 
-	Method(m000)
+	Method(m000,, Serialized)
 	{
 		Name(PAC0, Package(1){})
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z121, 121)
 
-Method(m617)
+Method(m617,, Serialized)
 {
 	Name(ts, "m617")
 
@@ -11817,13 +11817,13 @@ Method(m617)
 
 			CH03(arg0, z121, 0, 0, 0)
 
-			Index(m601(2, 6), arg1)
+			Store(Index(m601(2, 6), arg1), Local3)
 			CH04(arg0, 0, 85, z121, 9, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(3, 6), arg1)
+			Store(Index(m601(3, 6), arg1), Local3)
 			CH04(arg0, 0, 85, z121, 10, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(4, 0), arg1)
+			Store(Index(m601(4, 0), arg1), Local3)
 			CH04(arg0, 0, 85, z121, 11, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 		}
 
@@ -12639,7 +12639,7 @@ Method(m617)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Acquire operator ???
-	Method(m032, 2)
+	Method(m032, 2, Serialized)
 	{
 		Mutex(MTX0, 0)
 
@@ -12662,7 +12662,7 @@ Method(m617)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m033, 2)
+	Method(m033, 2, Serialized)
 	{
 		Event(EVT0)
 
@@ -12683,7 +12683,7 @@ Method(m617)
 	// String to Integer conversion of the String value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m034, 5)
+	Method(m034, 5, Serialized)
 	{
 		Name(ist0, 0)
 
@@ -24072,7 +24072,7 @@ Method(m617)
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Acquire operator
 
-	Method(m06c, 2)
+	Method(m06c, 2, Serialized)
 	{
 		Mutex(MTX0, 0)
 
@@ -24095,7 +24095,7 @@ Method(m617)
 
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m06d, 2)
+	Method(m06d, 2, Serialized)
 	{
 		Event(EVT0)
 
@@ -24116,7 +24116,7 @@ Method(m617)
 	// Buffer to Integer conversion of the Buffer value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m06e, 4)
+	Method(m06e, 4, Serialized)
 	{
 		Name(ist0, 0)
 

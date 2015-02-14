@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,7 +33,7 @@
 
 Name(z117, 117)
 
-Method(m618)
+Method(m618,, Serialized)
 {
 	Name(ts, "m618")
 
@@ -12012,13 +12012,13 @@ Method(m618)
 
 			CH03(arg0, z117, 0, 0, 0)
 
-			Index(m601(2, 6), Local1)
+			Store(Index(m601(2, 6), Local1), Local5)
 			CH04(arg0, 0, 85, z117, 9, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(3, 6), Local1)
+			Store(Index(m601(3, 6), Local1), Local5)
 			CH04(arg0, 0, 85, z117, 10, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(4, 0), Local1)
+			Store(Index(m601(4, 0), Local1), Local5)
 			CH04(arg0, 0, 85, z117, 11, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 		}
 
@@ -12851,7 +12851,7 @@ Method(m618)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Acquire operator ???
-	Method(m032, 1)
+	Method(m032, 1, Serialized)
 	{
 		Store("0321", Local3)
 
@@ -12876,7 +12876,7 @@ Method(m618)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m033, 1)
+	Method(m033, 1, Serialized)
 	{
 		Store("0321", Local1)
 
@@ -12899,7 +12899,7 @@ Method(m618)
 	// String to Integer conversion of the String value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m034, 1)
+	Method(m034, 1, Serialized)
 	{
 		Name(ist0, 0)
 
@@ -24446,7 +24446,7 @@ Method(m618)
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Acquire operator
 
-	Method(m06c, 1)
+	Method(m06c, 1, Serialized)
 	{
 		Store(Buffer(3){0x21, 0x03, 0x00}, Local3)
 
@@ -24471,7 +24471,7 @@ Method(m618)
 
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m06d, 1)
+	Method(m06d, 1, Serialized)
 	{
 		Store(Buffer(3){0x21, 0x03, 0x00}, Local1)
 
@@ -24494,7 +24494,7 @@ Method(m618)
 	// Buffer to Integer conversion of the Buffer value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m06e, 1)
+	Method(m06e, 1, Serialized)
 	{
 		Name(ist0, 0)
 

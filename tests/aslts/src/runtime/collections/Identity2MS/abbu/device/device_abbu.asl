@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z172, 172)
 
-Method(dvf2)
+Method(dvf2,, Serialized)
 {
 	Name(ts, "dvf2")
 	Device(d000) {
@@ -66,7 +66,7 @@ Method(dvf2)
  *
  * fail
  */
-Method(mf26)
+Method(mf26,, Serialized)
 {
 	Name(ts, "mf26")
 	Name(i000, 0xabcd0000)

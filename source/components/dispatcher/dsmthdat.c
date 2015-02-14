@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __DSMTHDAT_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -387,6 +385,7 @@ AcpiDsMethodDataGetNode (
         break;
 
     default:
+
         ACPI_ERROR ((AE_INFO, "Type %u is invalid", Type));
         return_ACPI_STATUS (AE_TYPE);
     }
@@ -544,7 +543,6 @@ AcpiDsMethodDataGetValue (
             return_ACPI_STATUS (AE_AML_UNINITIALIZED_ARG);
 
         case ACPI_REFCLASS_LOCAL:
-
             /*
              * No error message for this case, will be trapped again later to
              * detect and ignore cases of Store(LocalX,LocalX)

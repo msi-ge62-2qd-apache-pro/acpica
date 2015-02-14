@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -120,14 +120,12 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-/* mkdir/strlwr support */
+/* mkdir support */
 
 #ifdef WIN32
 #include <direct.h>
-
 #else
 #define mkdir(x) mkdir(x, 0770)
-char * strlwr(char* str);
 #endif
 
 
@@ -144,6 +142,7 @@ char * strlwr(char* str);
 #define FILE_TYPE_SOURCE                    1
 #define FILE_TYPE_HEADER                    2
 #define FILE_TYPE_DIRECTORY                 3
+#define FILE_TYPE_PATCH                     4
 
 #define CVT_COUNT_TABS                      0x00000001
 #define CVT_COUNT_NON_ANSI_COMMENTS         0x00000002
@@ -197,6 +196,7 @@ extern BOOLEAN                  Gbl_WidenDeclarations;
 extern BOOLEAN                  Gbl_IgnoreLoneLineFeeds;
 extern BOOLEAN                  Gbl_HasLoneLineFeeds;
 extern BOOLEAN                  Gbl_Cleanup;
+extern BOOLEAN                  Gbl_IgnoreTranslationEscapes;
 extern void                     *Gbl_StructDefs;
 
 #define PARAM_LIST(pl)          pl
@@ -251,6 +251,7 @@ typedef struct acpi_conversion_table
     ACPI_IDENTIFIER_TABLE       *SourceConditionalTable;
     ACPI_IDENTIFIER_TABLE       *SourceMacroTable;
     ACPI_TYPED_IDENTIFIER_TABLE *SourceStructTable;
+    ACPI_IDENTIFIER_TABLE       *SourceSpecialMacroTable;
     UINT32                      SourceFunctions;
 
     ACPI_STRING_TABLE           *HeaderStringTable;
@@ -258,7 +259,16 @@ typedef struct acpi_conversion_table
     ACPI_IDENTIFIER_TABLE       *HeaderConditionalTable;
     ACPI_IDENTIFIER_TABLE       *HeaderMacroTable;
     ACPI_TYPED_IDENTIFIER_TABLE *HeaderStructTable;
+    ACPI_IDENTIFIER_TABLE       *HeaderSpecialMacroTable;
     UINT32                      HeaderFunctions;
+
+    ACPI_STRING_TABLE           *PatchStringTable;
+    ACPI_IDENTIFIER_TABLE       *PatchLineTable;
+    ACPI_IDENTIFIER_TABLE       *PatchConditionalTable;
+    ACPI_IDENTIFIER_TABLE       *PatchMacroTable;
+    ACPI_TYPED_IDENTIFIER_TABLE *PatchStructTable;
+    ACPI_IDENTIFIER_TABLE       *PatchSpecialMacroTable;
+    UINT32                      PatchFunctions;
 
 } ACPI_CONVERSION_TABLE;
 
@@ -270,6 +280,20 @@ extern ACPI_CONVERSION_TABLE       CleanupConversionTable;
 extern ACPI_CONVERSION_TABLE       StatsConversionTable;
 extern ACPI_CONVERSION_TABLE       CustomConversionTable;
 extern ACPI_CONVERSION_TABLE       LicenseConversionTable;
+extern ACPI_CONVERSION_TABLE       IndentConversionTable;
+
+typedef
+char * (*AS_SCAN_CALLBACK) (
+    char                    *Buffer,
+    char                    *Filename,
+    UINT32                  LineNumber);
+
+typedef struct as_brace_info
+{
+    char                    *Operator;
+    UINT32                  Length;
+
+} AS_BRACE_INFO;
 
 
 /* Prototypes */
@@ -354,6 +378,11 @@ void
 AsRemoveEmptyBlocks (
     char                    *Buffer,
     char                    *Filename);
+
+void
+AsCleanupSpecialMacro (
+    char                    *Buffer,
+    char                    *Keyword);
 
 void
 AsCountSourceLines (
@@ -474,3 +503,7 @@ AsInsertCarriageReturns (
 void
 AsConvertToLineFeeds (
     char                    *Buffer);
+
+void
+AsStrlwr (
+    char                    *SrcString);

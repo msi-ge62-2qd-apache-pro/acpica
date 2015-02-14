@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: For a DDBHandle Object ObjectType unexpectedly results in AE_AML_INTERNAL
  */
 
-Method(m029)
+Method(m029,, Serialized)
 {
 	Name(BUF0, Buffer() {
 

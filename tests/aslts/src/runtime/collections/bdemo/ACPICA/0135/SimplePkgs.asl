@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@
  * Outstanding: 0x5C allocations after execution.
  */
 
-Method(mfc5)
+Method(mfc5,, Serialized)
 {
 	Name(num0, 12)	// different types of packages Pkg0 and Pkg1
 	Name(num1, 19)	// opcodes of additional assignments of packages Pkg0 and Pkg1

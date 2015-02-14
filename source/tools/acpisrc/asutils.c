@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -116,6 +116,40 @@
 #include "acpisrc.h"
 
 
+/*******************************************************************************
+ *
+ * FUNCTION:    AsStrlwr (strlwr)
+ *
+ * PARAMETERS:  SrcString       - The source string to convert
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Convert string to lowercase
+ *
+ * NOTE: This is not a POSIX function, so it appears here so that we don't have
+ * header file issues with the various hosts/compilers/clibs.
+ *
+ ******************************************************************************/
+
+void
+AsStrlwr (
+    char                    *SrcString)
+{
+    char                    *String;
+
+
+    /* Walk entire string, lowercasing the letters */
+
+    if (SrcString)
+    {
+        for (String = SrcString; *String; String++)
+        {
+            *String = (char) ACPI_TOLOWER (*String);
+        }
+    }
+}
+
+
 /******************************************************************************
  *
  * FUNCTION:    AsSkipUntilChar
@@ -170,7 +204,6 @@ AsSkipPastChar (
     }
 
     Buffer++;
-
     return (Buffer);
 }
 
@@ -211,7 +244,8 @@ AsReplaceData (
         if (LengthToRemove > 0)
         {
             Gbl_MadeChanges = TRUE;
-            memmove ((Buffer + LengthToAdd), (Buffer + LengthToRemove), (BufferLength - LengthToRemove));
+            memmove ((Buffer + LengthToAdd), (Buffer + LengthToRemove),
+                (BufferLength - LengthToRemove));
         }
     }
 

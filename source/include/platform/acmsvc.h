@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -216,6 +216,45 @@
 
 #if _MSC_VER > 1200 /* Versions above VC++ 6 */
 #pragma warning( disable : 4295 ) /* needed for acpredef.h array */
+#endif
+
+
+/* Debug support. Must be last in this file, do not move. */
+
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC /* Enables specific file/lineno for leaks */
+
+#include <stdlib.h>
+#include <malloc.h>
+#include <crtdbg.h>
+
+/*
+ * Debugging memory corruption issues with windows:
+ * Add #include <crtdbg.h> to accommon.h if necessary.
+ * Add _ASSERTE(_CrtCheckMemory()); where needed to test memory integrity.
+ * This can quickly localize the memory corruption.
+ */
+#define ACPI_DEBUG_INITIALIZE() \
+    _CrtSetDbgFlag (\
+        _CRTDBG_CHECK_ALWAYS_DF | \
+        _CRTDBG_ALLOC_MEM_DF | \
+        _CRTDBG_DELAY_FREE_MEM_DF | \
+        _CRTDBG_LEAK_CHECK_DF | \
+        _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG));
+
+#if 0
+/*
+ * _CrtSetBreakAlloc can be used to set a breakpoint at a particular
+ * memory leak, add to the macro above.
+ */
+Detected memory leaks!
+Dumping objects ->
+..\..\source\os_specific\service_layers\oswinxf.c(701) : {937} normal block at 0x002E9190, 40 bytes long.
+ Data: <                > 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+_CrtSetBreakAlloc (937);
+#endif
+
 #endif
 
 #endif /* __ACMSVC_H__ */

@@ -95,9 +95,9 @@ convert_to_unix_line_terminators()
 	# Convert all CR/LF pairs to Unix format (LF only)
 	#
 	cd $TEMP_DIR
-	echo Starting CR/LF to LF Conversion
-	find . -name "*" | xargs $DOS2UNIX
-	echo Completed CR/LF to LF Conversion
+	echo "Starting CR/LF to LF (UNIX) full source conversion"
+	find . -name "*" | xargs $DOS2UNIX -q
+	echo "Completed CR/LF to LF (UNIX) full source conversion"
 	cd ..
 }
 
@@ -108,9 +108,9 @@ convert_to_dos_line_terminators()
 	# Note: Checks shell scripts only (*.sh)
 	#
 	cd $TEMP_DIR
-	echo Starting LF to CR/LF Conversion
-	find . -name "*.sh" | xargs $UNIX2DOS
-	echo Completed LF to CR/LF Conversion
+	echo "Starting LF to CR/LF (DOS) script conversion"
+	find . -name "*.sh" | xargs $UNIX2DOS -q
+	echo "Completed LF to CR/LF (DOS) script conversion"
 	cd ..
 }
 
@@ -158,7 +158,7 @@ build_windows_package()
 	#
 	cd $TEMP_DIR
 	rm -r -f ../$TARGET_DIR/$PACKAGE_FILENAME
-	$ZIP_UTILITY -add -max -dir -sort=name ../$TARGET_DIR/$PACKAGE_FILENAME
+	$ZIP_UTILITY -silent -add -max -dir -sort=name ../$TARGET_DIR/$PACKAGE_FILENAME
 	cd ..
 }
 
@@ -213,6 +213,8 @@ generate_source_package ()
 	mkdir $TEMP_DIR/generate/release
 	mkdir $TEMP_DIR/generate/unix
 	mkdir $TEMP_DIR/generate/unix/acpibin
+	mkdir $TEMP_DIR/generate/unix/acpidump
+	mkdir $TEMP_DIR/generate/unix/acpiexamples
 	mkdir $TEMP_DIR/generate/unix/acpiexec
 	mkdir $TEMP_DIR/generate/unix/acpihelp
 	mkdir $TEMP_DIR/generate/unix/acpinames
@@ -258,6 +260,8 @@ generate_source_package ()
 	cp generate/unix/readme.txt             $TEMP_DIR/generate/unix/readme.txt
 	cp generate/unix/Makefile*              $TEMP_DIR/generate/unix
 	cp generate/unix/acpibin/Makefile       $TEMP_DIR/generate/unix/acpibin
+	cp generate/unix/acpidump/Makefile      $TEMP_DIR/generate/unix/acpidump
+	cp generate/unix/acpiexamples/Makefile  $TEMP_DIR/generate/unix/acpiexamples
 	cp generate/unix/acpiexec/Makefile      $TEMP_DIR/generate/unix/acpiexec
 	cp generate/unix/acpihelp/Makefile      $TEMP_DIR/generate/unix/acpihelp
 	cp generate/unix/acpinames/Makefile     $TEMP_DIR/generate/unix/acpinames
@@ -405,6 +409,7 @@ generate_binary_package()
 	cp -r documents/changes.txt     $TEMP_DIR/changes.txt
 	cp documents/aslcompiler.pdf    $TEMP_DIR
 	cp libraries/acpibin.exe        $TEMP_DIR
+	cp libraries/acpidump.exe       $TEMP_DIR
 	cp libraries/acpiexec.exe       $TEMP_DIR
 	cp libraries/acpihelp.exe       $TEMP_DIR
 	cp libraries/acpinames.exe      $TEMP_DIR

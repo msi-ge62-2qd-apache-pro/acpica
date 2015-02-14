@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@
  * Test remained as is (due to crash as a main symptom).
  */
 
-Method(mdbb)
+Method(mdbb,, Serialized)
 {
 	Name(b001, Buffer(200) {})
 

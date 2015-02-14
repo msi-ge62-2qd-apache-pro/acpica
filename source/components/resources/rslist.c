@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __RSLIST_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -269,6 +267,15 @@ AcpiRsConvertResourcesToAml (
                 "Invalid descriptor type (0x%X) in resource list",
                 Resource->Type));
             return_ACPI_STATUS (AE_BAD_DATA);
+        }
+
+        /* Sanity check the length. It must not be zero, or we loop forever */
+
+        if (!Resource->Length)
+        {
+            ACPI_ERROR ((AE_INFO,
+                "Invalid zero length descriptor in resource list\n"));
+            return_ACPI_STATUS (AE_AML_BAD_RESOURCE_LENGTH);
         }
 
         /* Perform the conversion */

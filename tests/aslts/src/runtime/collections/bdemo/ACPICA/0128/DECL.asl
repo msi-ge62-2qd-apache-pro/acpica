@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Copying the RefOf reference to Named object spoils that reference
  */
 
-Method(mf17)
+Method(mf17,, Serialized)
 {
 	Name(i000, 0x1234)
 
@@ -45,7 +45,7 @@ Method(mf17)
 	}
 }
 
-Method(mf18)
+Method(mf18,, Serialized)
 {
 	Name(ref0, 0)
 	Name(i000, 0x1234)
@@ -68,7 +68,7 @@ Method(mf18)
 	CH03("", 0, 0x002, 0, 0)
 }
 
-Method(mf9e)
+Method(mf9e,, Serialized)
 {
 	Name(i000, 0xabbc0000)
 	Name(ii00, 0xabbc0000)
@@ -98,7 +98,7 @@ Method(mf9e)
 	CH03("", 0, 0x007, 0, 0)
 }
 
-Method(mf9f)
+Method(mf9f,, Serialized)
 {
 	Name(ref0, 0)
 

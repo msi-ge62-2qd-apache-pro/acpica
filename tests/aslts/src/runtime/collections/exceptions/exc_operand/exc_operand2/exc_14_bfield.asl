@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -46,7 +46,7 @@ Name(bi01, Buffer() {0xa4,0xa5,0xa6,0xa7,0xb8,0xb9,0xba,0xbb,0xbc})
 // 47 - AE_AML_OPERAND_TYPE
 // See notes to m4b1 and m4b3
 //
-Method(m4be)
+Method(m4be,, Serialized)
 {
 	Name(ts, "m4be")
 
@@ -55,7 +55,7 @@ Method(m4be)
 	CreateField(bbf1, 58, 65, bf03)
 
 	// Local Named Object
-	Method(m000, 1)
+	Method(m000, 1, Serialized)
 	{
 		Name(bbf1, Buffer(20) {})
 		CreateField(bbf1, 11, 31, bf02)
@@ -67,21 +67,21 @@ Method(m4be)
 		// Like Integer behaviour
 
 		if (y083) {
-			DerefOf(bf02)
+			Store (DerefOf(bf02), Local1)
 			CH06(arg0, 0, 47)
 		}
 
-		Index(bf02, 0)
+		Store (Index(bf02, 0), Local1)
 		CH06(arg0, 1, 47)
 
 		// Like Buffer behaviour
 
 		if (y083) {
-			DerefOf(bf03)
+			Store (DerefOf(bf03), Local1)
 			CH06(arg0, 2, 47)
 		}
 
-		Index(bf03, 0)
+		Store (Index(bf03, 0), Local1)
 		if (y900) {
 			CH03(ts, z106, 0, 0, 0)
 		} else {
@@ -98,21 +98,21 @@ Method(m4be)
 		// Like Integer behaviour
 
 		if (y083) {
-			DerefOf(bf20)
+			Store (DerefOf(bf20), Local1)
 			CH06(arg0, 3, 47)
 		}
 
-		Index(bf20, 0)
+		Store (Index(bf20, 0), Local1)
 		CH06(arg0, 4, 47)
 
 		// Like Buffer behaviour
 
 		if (y083) {
-			DerefOf(bf21)
+			Store (DerefOf(bf21), Local1)
 			CH06(arg0, 5, 47)
 		}
 
-		Index(bf21, 0)
+		Store (Index(bf21, 0), Local1)
 		if (y900) {
 			CH03(ts, z106, 1, 0, 0)
 		} else {
@@ -133,13 +133,13 @@ Method(m4be)
 			return (1)
 		}
 
-		DerefOf(arg1)
+		Store (DerefOf(arg1), Local1)
 		CH03(ts, z106, 2, 0, 0)
 
-		DerefOf(DerefOf(arg1))
+		Store (DerefOf(DerefOf(arg1)), Local1)
 		CH06(arg0, 7, 47)
 
-		Index(DerefOf(arg1), 0)
+		Store (Index(DerefOf(arg1), 0), Local1)
 
 		if (arg2) {
 			// Like Buffer behaviour
@@ -153,14 +153,14 @@ Method(m4be)
 			CH06(arg0, 8, 47)
 		}
 
-		Match(DerefOf(arg1), MTR, 0, MTR, 0, 0)
+		Store (Match(DerefOf(arg1), MTR, 0, MTR, 0, 0), Local1)
 		CH06(arg0, 9, 47)
 
 		return (0)
 	}
 
 	// Reference to Object as Result of Method invocation
-	Method(m003, 1)
+	Method(m003, 1, Serialized)
 	{
 		Name(bbf1, Buffer(20) {})
 		CreateField(bbf1, 11, 31, bf02)
@@ -203,16 +203,16 @@ Method(m4be)
 
 			Store(0, i000)
 
-			DerefOf(m000(1, lpC0))
+			Store (DerefOf(m000(1, lpC0)), Local1)
 			CH03(ts, z106, Add(4, lpC0), 0, 0)
 			CH00(arg0, 1)
 
 
-			DerefOf(DerefOf(m000(2, lpC0)))
+			Store (DerefOf(DerefOf(m000(2, lpC0))), Local1)
 			CH06(arg0, Add(11, Local0), 47)
 			CH00(arg0, 2)
 
-			Index(DerefOf(m000(3, lpC0)), 0)
+			Store (Index(DerefOf(m000(3, lpC0)), 0), Local1)
 			if (Mod(lpC0, 2)) {
 				// Like Buffer behaviour
 				if (y900) {
@@ -226,7 +226,7 @@ Method(m4be)
 			}
 			CH00(arg0, 3)
 
-			Match(DerefOf(m000(4, lpC0)), MTR, 0, MTR, 0, 0)
+			Store (Match(DerefOf(m000(4, lpC0)), MTR, 0, MTR, 0, 0), Local1)
 			CH06(arg0, Add(13, Local0), 47)
 			CH00(arg0, 4)
 

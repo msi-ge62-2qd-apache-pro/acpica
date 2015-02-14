@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,7 +44,7 @@ Name(z146, 146)
  *         Name(n000, 0)
  * Error 1034 - ^ Name already exists in scope (N000)
  */
-Method(m101)
+Method(m101,, Serialized)
 {
 	Name(ts, "m101")
 
@@ -75,7 +75,7 @@ Method(m101)
  * Name (p000, Package(3) {0xabcd0000, 0xabcd0001, 0xabcd0002, 0xabcd0003})
  * Error 4046 - Initializer list too long ^
  */
-Method(m102)
+Method(m102,, Serialized)
 {
 	Name(ts, "m102")
 
@@ -90,7 +90,7 @@ Method(m102)
  * Exception on Acquire.
  * Access to inappropriate type data.
  */
-Method(m103)
+Method(m103,, Serialized)
 {
 	Name(ts, "m103")
 	Name(i900, 0xfe7cb391d65a0000)

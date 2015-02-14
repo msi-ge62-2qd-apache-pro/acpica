@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The sequence of evaluating Named object operands passed to method is violated
  */
 
-Method(m022)
+Method(m022,, Serialized)
 {
 	Name(i000, 0x00000001)
 	Name(i001, 0)

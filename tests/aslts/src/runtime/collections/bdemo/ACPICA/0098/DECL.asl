@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -38,7 +38,7 @@
 		Store(Local0, Debug)
 	}
 
-	Method(me52)
+	Method(me52,, Serialized)
 	{
 		Name(run0, 1)
 		Name(run1, 1)
@@ -201,7 +201,7 @@
 	 * exercised simultaneously  during one call to me55
 	 * method.
 	 */
-	Method(me55)
+	Method(me55,, Serialized)
 	{
 		Name(pd02, Package(32) {
 			0,

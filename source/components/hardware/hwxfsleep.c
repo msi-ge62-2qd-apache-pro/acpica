@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,6 +112,8 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
+
+#define EXPORT_ACPI_INTERFACES
 
 #include "acpi.h"
 #include "accommon.h"
@@ -339,13 +341,14 @@ AcpiHwSleepDispatch (
 
 
 #if (!ACPI_REDUCED_HARDWARE)
-
     /*
      * If the Hardware Reduced flag is set (from the FADT), we must
-     * use the extended sleep registers
+     * use the extended sleep registers (FADT). Note: As per the ACPI
+     * specification, these extended registers are to be used for HW-reduced
+     * platforms only. They are not general-purpose replacements for the
+     * legacy PM register sleep support.
      */
-    if (AcpiGbl_ReducedHardware ||
-        AcpiGbl_FADT.SleepControl.Address)
+    if (AcpiGbl_ReducedHardware)
     {
         Status = SleepFunctions->ExtendedFunction (SleepState);
     }
@@ -423,20 +426,24 @@ AcpiEnterSleepStatePrep (
     switch (SleepState)
     {
     case ACPI_STATE_S0:
+
         SstValue = ACPI_SST_WORKING;
         break;
 
     case ACPI_STATE_S1:
     case ACPI_STATE_S2:
     case ACPI_STATE_S3:
+
         SstValue = ACPI_SST_SLEEPING;
         break;
 
     case ACPI_STATE_S4:
+
         SstValue = ACPI_SST_SLEEP_CONTEXT;
         break;
 
     default:
+
         SstValue = ACPI_SST_INDICATOR_OFF; /* Default is off */
         break;
     }

@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,10 +113,9 @@
  *
  *****************************************************************************/
 
-#define __DTIO_C__
-
 #include "aslcompiler.h"
 #include "dtcompiler.h"
+#include "acapps.h"
 
 #define _COMPONENT          DT_COMPILER
         ACPI_MODULE_NAME    ("dtio")
@@ -150,6 +149,18 @@ DtDumpBuffer (
     UINT8                   *Buffer,
     UINT32                  Offset,
     UINT32                  Length);
+
+static void
+DtDumpSubtableInfo (
+    DT_SUBTABLE             *Subtable,
+    void                    *Context,
+    void                    *ReturnValue);
+
+static void
+DtDumpSubtableTree (
+    DT_SUBTABLE             *Subtable,
+    void                    *Context,
+    void                    *ReturnValue);
 
 
 /* States for DtGetNextLine */
@@ -192,7 +203,7 @@ DtTrim (
 
     if (!ACPI_STRCMP (String, " "))
     {
-        ReturnString = UtLocalCalloc (1);
+        ReturnString = UtStringCacheCalloc (1);
         return (ReturnString);
     }
 
@@ -240,7 +251,7 @@ DtTrim (
     /* Create the trimmed return string */
 
     Length = ACPI_PTR_DIFF (End, Start) + 1;
-    ReturnString = UtLocalCalloc (Length + 1);
+    ReturnString = UtStringCacheCalloc (Length + 1);
     if (ACPI_STRLEN (Start))
     {
         ACPI_STRNCPY (ReturnString, Start, Length);
@@ -347,31 +358,21 @@ DtParseLine (
 
     while (Start < Colon)
     {
-        if (*Start == ' ')
-        {
-            Start++;
-            continue;
-        }
-
-        /* Found left bracket, go to the right bracket */
-
         if (*Start == '[')
         {
+            /* Found left bracket, go to the right bracket */
+
             while (Start < Colon && *Start != ']')
             {
                 Start++;
             }
-
-            if (Start == Colon)
-            {
-                break;
-            }
-
-            Start++;
-            continue;
+        }
+        else if (*Start != ' ')
+        {
+            break;
         }
 
-        break;
+        Start++;
     }
 
     /*
@@ -439,7 +440,7 @@ DtParseLine (
 
     if ((Value && *Value) || IsNullString)
     {
-        Field = UtLocalCalloc (sizeof (DT_FIELD));
+        Field = UtFieldCacheCalloc ();
         Field->Name = Name;
         Field->Value = Value;
         Field->Line = Line;
@@ -449,11 +450,7 @@ DtParseLine (
 
         DtLinkField (Field);
     }
-    else /* Ignore this field, it has no valid data */
-    {
-        ACPI_FREE (Name);
-        ACPI_FREE (Value);
-    }
+    /* Else -- Ignore this field, it has no valid data */
 
     return (AE_OK);
 }
@@ -486,7 +483,7 @@ DtGetNextLine (
     UINT32                  State = DT_NORMAL_TEXT;
     UINT32                  CurrentLineOffset;
     UINT32                  i;
-    char                    c;
+    int                     c;
 
 
     for (i = 0; ;)
@@ -500,7 +497,7 @@ DtGetNextLine (
             UtExpandLineBuffers ();
         }
 
-        c = (char) getc (Handle);
+        c = getc (Handle);
         if (c == EOF)
         {
             switch (State)
@@ -512,6 +509,7 @@ DtGetNextLine (
                 break;
 
             default:
+
                 break;
             }
 
@@ -539,14 +537,16 @@ DtGetNextLine (
 
             /* Normal text, insert char into line buffer */
 
-            Gbl_CurrentLineBuffer[i] = c;
+            Gbl_CurrentLineBuffer[i] = (char) c;
             switch (c)
             {
             case '/':
+
                 State = DT_START_COMMENT;
                 break;
 
             case '"':
+
                 State = DT_START_QUOTED_STRING;
                 LineNotAllBlanks = TRUE;
                 i++;
@@ -561,6 +561,7 @@ DtGetNextLine (
                 break;
 
             case '\n':
+
                 CurrentLineOffset = Gbl_NextLineOffset;
                 Gbl_NextLineOffset = (UINT32) ftell (Handle);
                 Gbl_CurrentLineNumber++;
@@ -587,6 +588,7 @@ DtGetNextLine (
                 break;
 
             default:
+
                 if (c != ' ')
                 {
                     LineNotAllBlanks = TRUE;
@@ -601,26 +603,30 @@ DtGetNextLine (
 
             /* Insert raw chars until end of quoted string */
 
-            Gbl_CurrentLineBuffer[i] = c;
+            Gbl_CurrentLineBuffer[i] = (char) c;
             i++;
 
             switch (c)
             {
             case '"':
+
                 State = DT_NORMAL_TEXT;
                 break;
 
             case '\\':
+
                 State = DT_ESCAPE_SEQUENCE;
                 break;
 
             case '\n':
+
                 AcpiOsPrintf ("ERROR at line %u: Unterminated quoted string\n",
                     Gbl_CurrentLineNumber++);
                 State = DT_NORMAL_TEXT;
                 break;
 
             default:    /* Get next character */
+
                 break;
             }
             break;
@@ -629,7 +635,7 @@ DtGetNextLine (
 
             /* Just copy the escaped character. TBD: sufficient for table compiler? */
 
-            Gbl_CurrentLineBuffer[i] = c;
+            Gbl_CurrentLineBuffer[i] = (char) c;
             i++;
             State = DT_START_QUOTED_STRING;
             break;
@@ -641,21 +647,24 @@ DtGetNextLine (
             switch (c)
             {
             case '*':
+
                 State = DT_SLASH_ASTERISK_COMMENT;
                 break;
 
             case '/':
+
                 State = DT_SLASH_SLASH_COMMENT;
                 break;
 
             default:    /* Not a comment */
+
                 i++;    /* Save the preceding slash */
                 if (i >= Gbl_LineBufferSize)
                 {
                     UtExpandLineBuffers ();
                 }
 
-                Gbl_CurrentLineBuffer[i] = c;
+                Gbl_CurrentLineBuffer[i] = (char) c;
                 i++;
                 State = DT_NORMAL_TEXT;
                 break;
@@ -669,15 +678,18 @@ DtGetNextLine (
             switch (c)
             {
             case '\n':
+
                 Gbl_NextLineOffset = (UINT32) ftell (Handle);
                 Gbl_CurrentLineNumber++;
                 break;
 
             case '*':
+
                 State = DT_END_COMMENT;
                 break;
 
             default:
+
                 break;
             }
             break;
@@ -702,20 +714,24 @@ DtGetNextLine (
             switch (c)
             {
             case '/':
+
                 State = DT_NORMAL_TEXT;
                 break;
 
             case '\n':
+
                 CurrentLineOffset = Gbl_NextLineOffset;
                 Gbl_NextLineOffset = (UINT32) ftell (Handle);
                 Gbl_CurrentLineNumber++;
                 break;
 
             case '*':
+
                 /* Consume all adjacent asterisks */
                 break;
 
             default:
+
                 State = DT_SLASH_ASTERISK_COMMENT;
                 break;
             }
@@ -754,6 +770,7 @@ DtGetNextLine (
             break;
 
         default:
+
             DtFatal (ASL_MSG_COMPILER_INTERNAL, NULL, "Unknown input state");
             return (ASL_EOF);
         }
@@ -780,7 +797,6 @@ DtScanFile (
 {
     ACPI_STATUS             Status;
     UINT32                  Offset;
-    DT_FIELD                *Next;
 
 
     ACPI_FUNCTION_NAME (DtScanFile);
@@ -788,7 +804,11 @@ DtScanFile (
 
     /* Get the file size */
 
-    Gbl_InputByteCount = DtGetFileSize (Handle);
+    Gbl_InputByteCount = CmGetFileSize (Handle);
+    if (Gbl_InputByteCount == ACPI_UINT32_MAX)
+    {
+        AslAbort ();
+    }
 
     Gbl_CurrentLineNumber = 0;
     Gbl_CurrentLineOffset = 0;
@@ -810,28 +830,7 @@ DtScanFile (
 
     /* Dump the parse tree if debug enabled */
 
-    if (Gbl_DebugFlag)
-    {
-        Next = Gbl_FieldList;
-        DbgPrint (ASL_DEBUG_OUTPUT, "Tree:  %32s %32s %8s %8s %8s %8s %8s %8s\n\n",
-            "Name", "Value", "Line", "ByteOff", "NameCol", "Column", "TableOff", "Flags");
-
-        while (Next)
-        {
-            DbgPrint (ASL_DEBUG_OUTPUT, "Field: %32.32s %32.32s %.8X %.8X %.8X %.8X %.8X %.8X\n",
-                Next->Name,
-                Next->Value,
-                Next->Line,
-                Next->ByteOffset,
-                Next->NameColumn,
-                Next->Column,
-                Next->TableOffset,
-                Next->Flags);
-
-            Next = Next->Next;
-        }
-    }
-
+    DtDumpFieldList (Gbl_FieldList);
     return (Gbl_FieldList);
 }
 
@@ -888,7 +887,12 @@ DtOutputBinary (
     /* Walk the entire parse tree, emitting the binary data */
 
     DtWalkTableTree (RootTable, DtWriteBinary, NULL, NULL);
-    Gbl_TableLength = DtGetFileSize (Gbl_Files[ASL_FILE_AML_OUTPUT].Handle);
+
+    Gbl_TableLength = CmGetFileSize (Gbl_Files[ASL_FILE_AML_OUTPUT].Handle);
+    if (Gbl_TableLength == ACPI_UINT32_MAX)
+    {
+        AslAbort ();
+    }
 }
 
 
@@ -980,6 +984,125 @@ DtDumpBuffer (
     }
 
     FlPrintFile (FileId, "\n\n");
+}
+
+
+/******************************************************************************
+ *
+ * FUNCTION:    DtDumpFieldList
+ *
+ * PARAMETERS:  Field               - Root field
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Dump the entire field list
+ *
+ *****************************************************************************/
+
+void
+DtDumpFieldList (
+    DT_FIELD                *Field)
+{
+
+    if (!Gbl_DebugFlag || !Field)
+    {
+        return;
+    }
+
+    DbgPrint (ASL_DEBUG_OUTPUT,  "\nField List:\n"
+        "LineNo   ByteOff  NameCol  Column   TableOff "
+        "Flags    %32s : %s\n\n", "Name", "Value");
+    while (Field)
+    {
+        DbgPrint (ASL_DEBUG_OUTPUT,
+            "%.08X %.08X %.08X %.08X %.08X %.08X %32s : %s\n",
+            Field->Line, Field->ByteOffset, Field->NameColumn,
+            Field->Column, Field->TableOffset, Field->Flags,
+            Field->Name, Field->Value);
+
+        Field = Field->Next;
+    }
+
+    DbgPrint (ASL_DEBUG_OUTPUT,  "\n\n");
+}
+
+
+/******************************************************************************
+ *
+ * FUNCTION:    DtDumpSubtableInfo, DtDumpSubtableTree
+ *
+ * PARAMETERS:  DT_WALK_CALLBACK
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Info - dump a subtable tree entry with extra information.
+ *              Tree - dump a subtable tree formatted by depth indentation.
+ *
+ *****************************************************************************/
+
+static void
+DtDumpSubtableInfo (
+    DT_SUBTABLE             *Subtable,
+    void                    *Context,
+    void                    *ReturnValue)
+{
+
+    DbgPrint (ASL_DEBUG_OUTPUT,
+        "[%.04X] %.08X %.08X %.08X %.08X %.08X %p %p %p\n",
+        Subtable->Depth, Subtable->Length, Subtable->TotalLength,
+        Subtable->SizeOfLengthField, Subtable->Flags, Subtable,
+        Subtable->Parent, Subtable->Child, Subtable->Peer);
+}
+
+static void
+DtDumpSubtableTree (
+    DT_SUBTABLE             *Subtable,
+    void                    *Context,
+    void                    *ReturnValue)
+{
+
+    DbgPrint (ASL_DEBUG_OUTPUT,
+        "[%.04X] %*s%08X (%.02X) - (%.02X)\n",
+        Subtable->Depth, (4 * Subtable->Depth), " ",
+        Subtable, Subtable->Length, Subtable->TotalLength);
+}
+
+
+/******************************************************************************
+ *
+ * FUNCTION:    DtDumpSubtableList
+ *
+ * PARAMETERS:  None
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Dump the raw list of subtables with information, and also
+ *              dump the subtable list in formatted tree format. Assists with
+ *              the development of new table code.
+ *
+ *****************************************************************************/
+
+void
+DtDumpSubtableList (
+    void)
+{
+
+    if (!Gbl_DebugFlag || !Gbl_RootTable)
+    {
+        return;
+    }
+
+    DbgPrint (ASL_DEBUG_OUTPUT,
+        "Subtable Info:\n"
+        "Depth  Length   TotalLen LenSize  Flags    "
+        "This     Parent   Child    Peer\n\n");
+    DtWalkTableTree (Gbl_RootTable, DtDumpSubtableInfo, NULL, NULL);
+
+    DbgPrint (ASL_DEBUG_OUTPUT,
+        "\nSubtable Tree: (Depth, Subtable, Length, TotalLength)\n\n");
+    DtWalkTableTree (Gbl_RootTable, DtDumpSubtableTree, NULL, NULL);
+
+    DbgPrint (ASL_DEBUG_OUTPUT, "\n");
 }
 
 
@@ -1083,4 +1206,5 @@ DtWriteTableToListing (
     AcpiUtDumpBuffer (Buffer, Gbl_TableLength, DB_BYTE_DISPLAY, 0);
 
     AcpiOsRedirectOutput (stdout);
+    ACPI_FREE (Buffer);
 }

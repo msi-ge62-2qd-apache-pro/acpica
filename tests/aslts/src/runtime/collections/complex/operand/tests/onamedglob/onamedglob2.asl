@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -51,7 +51,7 @@
 
 Name(z087, 87)
 
-Method(m612)
+Method(m612,, Serialized)
 {
 	Name(ts, "m612")
 
@@ -11072,13 +11072,13 @@ Method(m612)
 
 			CH03(arg0, z087, 0, 0, 0)
 
-			Index(m601(2, 6), bf74)
+			Store(Index(m601(2, 6), bf74), Local3)
 			CH04(arg0, 0, 85, z087, 9, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(3, 6), bf74)
+			Store(Index(m601(3, 6), bf74), Local3)
 			CH04(arg0, 0, 85, z087, 10, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(4, 0), bf74)
+			Store(Index(m601(4, 0), bf74), Local3)
 			CH04(arg0, 0, 85, z087, 11, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 		}
 
@@ -11891,7 +11891,7 @@ Method(m612)
 	// Buffer Field to Integer conversion of the Buffer Field TimeoutValue
 	// (second) operand of the Acquire operator
 
-	Method(m06c, 1)
+	Method(m06c, 1, Serialized)
 	{
 		Mutex(MTX0, 0)
 
@@ -11914,7 +11914,7 @@ Method(m612)
 
 	// Buffer Field to Integer conversion of the Buffer Field TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m06d, 1)
+	Method(m06d, 1, Serialized)
 	{
 		Event(EVT0)
 
@@ -11935,7 +11935,7 @@ Method(m612)
 	// Buffer Field to Integer conversion of the Buffer Field value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m06e, 1)
+	Method(m06e, 1, Serialized)
 	{
 		Name(ist0, 0)
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Store to the Index reference immediately returned by Method doesn't work
  */
 
-Method(m126)
+Method(m126,, Serialized)
 {
 	Name(p000, Package() {1,2,3,4,5,6,7,8})
 

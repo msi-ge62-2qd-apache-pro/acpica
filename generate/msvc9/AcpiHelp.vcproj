@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="AcpiHelp"
 	ProjectGUID="{543CE235-637F-4302-BCD4-02C08A4277D9}"
+	RootNamespace="AcpiHelp"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -243,6 +244,15 @@
 				<File
 					RelativePath="..\..\source\tools\acpihelp\ahdecode.c"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="true"
+							AssemblerOutput="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\source\tools\acpihelp\ahmain.c"
@@ -254,7 +264,15 @@
 				Filter=".c"
 				>
 				<File
+					RelativePath="..\..\source\common\ahids.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\common\ahpredef.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\common\ahuuids.c"
 					>
 				</File>
 				<File
@@ -280,7 +298,63 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\os_specific\service_layers\oslibcfs.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\os_specific\service_layers\oswinxf.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							DisableLanguageExtensions="false"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utexcep.c"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utilities"
+				>
+				<File
+					RelativePath="..\..\source\components\utilities\utdebug.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utglobal.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\uthex.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utmath.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utpredef.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utprint.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utuuid.c"
 					>
 				</File>
 			</Filter>

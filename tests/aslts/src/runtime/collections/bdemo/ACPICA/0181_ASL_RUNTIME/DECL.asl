@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Failed to compiler specific Method
  */
 
-Method(me8b)
+Method(me8b,, Serialized)
 {
 	Name(i000, 0)
 	Method(mm20, 1, , , , {{IntObj}}) {Store(32, i000)}

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -2795,7 +2795,7 @@ Name (p455, Package() {
     }
 })
 
-Method(RT22)
+Method(RT22,, Serialized)
 {
 	Name(ts, "RT22")
 

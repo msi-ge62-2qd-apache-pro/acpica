@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@ Name(z162, 162)
  *
  * SUMMARY: Unexpected AE_STACK_OVERFLOW for a method call expression with nested calls
  */
-Method(ms00)
+Method(ms00,, Serialized)
 {
 	Name(ts, "ms00")
 
@@ -78,7 +78,7 @@ Method(ms00)
 /*
  * This is how MS actually works
  */
-Method(ms01, 1)
+Method(ms01, 1, Serialized)
 {
 	Name(ts, "ms01")
 	Name(i000, 0)
@@ -131,7 +131,7 @@ Method(ms01, 1)
 /*
  * This is how MS actually works
  */
-Method(ms02, 1)
+Method(ms02, 1, Serialized)
 {
 	Name(ts, "ms02")
 	Name(i000, 0)
@@ -181,7 +181,7 @@ Method(ms02, 1)
  *
  * SUMMARY: Pop result from bottom principle doesn't work
  */
-Method(ms03)
+Method(ms03,, Serialized)
 {
 	Name(i000, 0x11000000)
 	Name(i001, 0x00220000)

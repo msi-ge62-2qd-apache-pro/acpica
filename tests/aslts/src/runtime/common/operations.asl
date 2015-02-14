@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -575,7 +575,7 @@ Method(m481, 5, Serialized)
 // arg0-arg4 - parameters of operators
 // arg5      - miscellaneous
 // arg6      - opcode of operation
-Method(m482, 7)
+Method(m482, 7, Serialized)
 {
 ///////////////////
 //

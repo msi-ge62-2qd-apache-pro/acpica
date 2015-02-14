@@ -113,7 +113,6 @@
  *
  *****************************************************************************/
 
-
 /*
  * These interfaces are required in order to compile the ASL compiler under
  * Linux.
@@ -384,7 +383,6 @@ AcpiOsActualVprintf (
     const char              *Fmt,
     va_list                 Args)
 {
-    INT32                   Count = 0;
     UINT8                   Flags;
 
 
@@ -397,7 +395,7 @@ AcpiOsActualVprintf (
         {
             /* Output file is open, send the output there */
 
-            Count = vfprintf (AcpiGbl_DebugFile, Fmt, Args);
+            vfprintf (AcpiGbl_DebugFile, Fmt, Args);
         }
         else
         {
@@ -409,7 +407,7 @@ AcpiOsActualVprintf (
 
     if (Flags & ACPI_DB_CONSOLE_OUTPUT)
     {
-        Count = vfprintf (AcpiGbl_OutputFile, Fmt, Args);
+        vfprintf (AcpiGbl_OutputFile, Fmt, Args);
     }
 
     return;
@@ -1165,4 +1163,25 @@ AcpiOsActualSignal (
 
 
     return (AE_OK);
+}
+
+
+/******************************************************************************
+ *
+ * FUNCTION:    AcpiOsWaitEventsComplete
+ *
+ * PARAMETERS:  None
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Wait for all asynchronous events to complete. This
+ *              implementation does nothing.
+ *
+ *****************************************************************************/
+
+void
+AcpiOsWaitEventsComplete (
+    void)
+{
+    return;
 }

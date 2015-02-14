@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -124,7 +124,7 @@ Device(DTM0) {
 	// Originated from ssdt0.asl: iasl -tc ssdt0.asl
 	Name(BUF0, Buffer() {
 		0x53,0x53,0x44,0x54,0x34,0x00,0x00,0x00,  /* 00000000    "SSDT4..." */
-		0x02,0xDE,0x49,0x6E,0x74,0x65,0x6C,0x00,  /* 00000008    "..Intel." */
+		0x02,0x98,0x49,0x6E,0x74,0x65,0x6C,0x00,  /* 00000008    "..Intel." */
 		0x4D,0x61,0x6E,0x79,0x00,0x00,0x00,0x00,  /* 00000010    "Many...." */
 		0x01,0x00,0x00,0x00,0x49,0x4E,0x54,0x4C,  /* 00000018    "....INTL" */
 		0x15,0x12,0x06,0x20,0x14,0x0F,0x5C,0x53,  /* 00000020    "... ..\S" */
@@ -163,7 +163,7 @@ Device(DTM0) {
 	}
 
 	// components/utilities/utmisc.c AcpiUtGenerateChecksum() analog
-	Method(CHSM, 2)	// buf, len
+	Method(CHSM, 2, Serialized)	// buf, len
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -219,7 +219,7 @@ Device(DTM0) {
 	}
 
 	// Prepares and Loads the next Table of multiple Tables Load test
-	Method(LD)
+	Method(LD,, Serialized)
 	{
 		if (LNot(LLess(HI0N, HI0M))) {
 			Store("LD: too many tables loaded", Debug)
@@ -523,7 +523,7 @@ Device(DTM0) {
 	}
 
 	// DDBHandle storing into an Object by Reference in Argx
-	Method(tst3, 1)
+	Method(tst3, 1, Serialized)
 	{
 		Name(HI0, 0)
 
@@ -704,7 +704,7 @@ Device(DTM0) {
 		// Auxiliary method for ArgX, part1
 		// Arg1 - reference to store the DDBHandle
 		// Arg2 - OpRegion Object of a specified type
-		Method(m001, 3)
+		Method(m001, 3, Serialized)
 		{
 			OperationRegion(OPRm, 0xff, 0, 0x1000)
 
@@ -761,7 +761,7 @@ Device(DTM0) {
 		}
 
 		// Arg1 - OpRegion Object of a specified type
-		Method(m003, 2)
+		Method(m003, 2, Serialized)
 		{
 			Concatenate(arg0, "-m003", arg0)
 
@@ -886,7 +886,7 @@ Device(DTM0) {
 		RFU1, 0x2f8,
 	}
 
-	Method(tst8, 1)
+	Method(tst8, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1002,7 +1002,7 @@ Device(DTM0) {
 
 	External(\AUXD.M000, MethodObj)
 
-	Method(tst9, 1)
+	Method(tst9, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1243,7 +1243,7 @@ Device(DTM0) {
 		RFU3, 0x8f8,
 	}
 
-	Method(tstb, 1)
+	Method(tstb, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDBH, 0)
@@ -1383,7 +1383,7 @@ Device(DTM0) {
 
 	// Exceptions when an OpRegion passed as the Object
 	// parameter of Load is not of SystemMemory type
-	Method(tstc, 1)
+	Method(tstc, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1482,7 +1482,7 @@ Device(DTM0) {
 
 	// Exceptions when the table contained in an OpRegion
 	// (Field) is not an SSDT
-	Method(tstd, 1)
+	Method(tstd, 1, Serialized)
 	{
 		Name(HI0, 0)
 
@@ -1534,7 +1534,7 @@ Device(DTM0) {
 	// than the length of the respective OpRegion or Region Field,
 	// or less than the length of the Table Header
 	// Arg1: 0 - the 'greater' case, 1 - the 'less' case
-	Method(tste, 2)
+	Method(tste, 2, Serialized)
 	{
 		Name(HI0, 0)
 
@@ -1590,7 +1590,13 @@ Device(DTM0) {
 
 		// Load operator execution, OpRegion Field case
 		Load(RFU0, HI0)
-		CH04(arg0, 0, 42, z174, 0x096, 0, 0)	// AE_INVALID_TABLE_LENGTH
+		if(LNot(arg1)){
+			// If the table length in the header is larger than the buffer.
+			CH04(arg0, 0, 54, z174, 0x096, 0, 0)	// AE_AML_BUFFER_LIMIT
+		} else {
+			// If the table length is smaller than an ACPI table header.
+			CH04(arg0, 0, 42, z174, 0x096, 0, 0)    // AE_INVALID_TABLE_LENGTH
+		}
 
 		if (CondRefof(\SSS0, Local0)) {
 			err(arg0, z174, 0x097, 0, 0, "\\SSS0", 1)
@@ -1608,7 +1614,7 @@ Device(DTM0) {
 	}
 
 	// Exceptions when the checksum of the supplied SSDT is invalid
-	Method(tstf, 1)
+	Method(tstf, 1, Serialized)
 	{
 		Name(HI0, 0)
 
@@ -1669,8 +1675,9 @@ Device(DTM0) {
 		return (0)
 	}
 
-	// Object of any type can be used as the DDBHandle argument
-	Method(tstg, 1)
+	// Object of any type (expect Field Units and Buffer Fields)
+	// can be used as the DDBHandle argument
+	Method(tstg, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -1693,8 +1700,19 @@ Device(DTM0) {
 			}
 
 			Load(RFU0, arg2)
-			if (CH03(arg0, z174, 0x0b2, 0, 0)) {
-				return (1)
+			if (LOr(LEqual(arg3, c00d),	// Field Unit
+				LEqual(arg3, c016))) {	// Buffer Field
+
+				// AE_AML_OPERAND_TYPE
+				if (CH04(arg0, 2, 47, z174, 0x0e9, 0, 0)) {
+					return (1)
+				} else {
+					return (0)
+				}
+			} else {
+				if (CH03(arg0, z174, 0x0b2, 0, 0)) {
+					return (1)
+				}
 			}
 			if (y260) {
 				Store(ObjectType(arg2), Local0)
@@ -1795,7 +1813,7 @@ Device(DTM0) {
 
 	// AE_OWNER_ID_LIMIT exception when too many Tables loaded,
 	// Arg1: 0 - Load case, 1 - LoadTable case
-	Method(tsth, 2)
+	Method(tsth, 2, Serialized)
 	{
 		Name(MAXT, 0xf6)
 		Name(DDB1, 0)
@@ -1864,7 +1882,7 @@ Device(DTM0) {
 
 	// Exception when SSDT specified as the Object parameter
 	// of the Load operator is already loaded
-	Method(tsti, 1)
+	Method(tsti, 1, Serialized)
 	{
 		Name(HI0, 0)
 		Name(HI1, 0)
@@ -1935,7 +1953,7 @@ Device(DTM0) {
 
 	// Exception when there already is an previously created Object
 	// referred by the namepath of the new Object in the Table loaded
-	Method(tstj, 1)
+	Method(tstj, 1, Serialized)
 	{
 		Name(HI0, 0)
 		Name(HI1, 0)
@@ -2038,7 +2056,7 @@ Device(DTM0) {
 	}
 }
 
-Method(TLD0)
+Method(TLD0,, Serialized)
 {
 	Name(ts, "TLD0")
 
@@ -2131,7 +2149,7 @@ Method(TLD0)
 }
 
 // Exceptional conditions
-Method(TLD1)
+Method(TLD1,, Serialized)
 {
 	Name(ts, "TLD1")
 

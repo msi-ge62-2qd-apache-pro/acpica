@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,19 +34,19 @@
 
 	// Uninitialized element of Package
 
-	Method(me37)
+	Method(me37,, Serialized)
 	{
 		// Ref #1
 
 		Name(p000, Package(1){})
 
 
-		DeRefOf(Index(p000, 0))
+		Store(DeRefOf(Index(p000, 0)), Local1)
 
 
 		Index(p000, 0, Local0)
 		Store(Local0, Debug)
-		DeRefOf(Local0)
+		Store(DeRefOf(Local0), Local1)
 
 
 		Index(p000, 0, Local0)
@@ -62,7 +62,8 @@
 			// Ref #2
 
 			Store(arg0, Debug)
-			DeRefOf(arg0)
+			Store(DeRefOf(arg0), Local1)
+			CH04("", 2 , 62, 1, 0, 0 ,0)
 		} else {
 			Increment(DeRefOf(arg0))
 		}

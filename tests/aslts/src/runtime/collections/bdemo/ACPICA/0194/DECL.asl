@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -31,8 +31,29 @@
  *
  * SUMMARY: Incorrect length of result of ToBuffer in case it is stored into a Named Buffer
  */
+Method (bcmp, 2)
+{
+	Store(Sizeof(Arg0), Local0)
+	Store(Sizeof(Arg1), Local1)
 
-Method(mfa7, 1)
+	if (LGreater(Local0, Local1))
+	{
+		Store(Local1, Local0)
+	}
+	while(Local0) {
+		Decrement(Local0)
+		Store(Local0, Debug)
+		Store(DerefOf(Index(Arg0, Local0)), Local1)
+		Store(DerefOf(Index(Arg1, Local0)), Local2)
+		if (LNotEqual(Local1, Local2))
+		{
+			return (0)
+		}
+	}
+	return (1)
+}
+
+Method(mfa7, 1, Serialized)
 {
 	Name(b000, Buffer(1){0x3c})
 	Name(b001, Buffer(3){0x01, 0x02, 0x03})
@@ -43,13 +64,13 @@ Method(mfa7, 1)
 	if (arg0) {
 		Store("ToBuffer(b001, b000)", Debug)
 		ToBuffer(b001, b000)
-		if (LNotEqual(b000, bb01)) {
+		if (LNot(bcmp(b000, bb01))) {
 			err("", zFFF, 0x000, 0, 0, b000, bb01)
 		}
 	} else {
 		Store("ToBuffer(b000, b001)", Debug)
 		ToBuffer(b000, b001)
-		if (LNotEqual(b001, bb00)) {
+		if (Lnot(bcmp(b001, bb00))) {
 			err("", zFFF, 0x000, 0, 0, b001, bb00)
 		}
 	}

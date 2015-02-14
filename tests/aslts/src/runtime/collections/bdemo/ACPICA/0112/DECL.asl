@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@
 		Stall(arg0)
 	}
 
-	Method(me78)
+	Method(me78,, Serialized)
 	{
 		Name(i000, 0xB)
 		Store(i000, Local0)

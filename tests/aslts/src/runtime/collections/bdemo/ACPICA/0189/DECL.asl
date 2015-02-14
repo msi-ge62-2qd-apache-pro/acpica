@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The 1-byte buffer passed to ConcatenateResTemplate doesn't cause a run-time error
  */
 
-Method(mf7d)
+Method(mf7d,, Serialized)
 {
 	Name(RT00, ResourceTemplate () {IRQNoFlags () {1}})
 
@@ -40,13 +40,13 @@ Method(mf7d)
 
 	CH03("", 0, 0x000, 0, 0)
 
-	ConcatenateResTemplate(RT00, Local0)
+	Store(ConcatenateResTemplate(RT00, Local0), Local1)
 
 	CH04("", 0, 0xff, 0, 0x001, 0, 0)
 
 	Store(Buffer(){0x78}, Local0)
 
-	ConcatenateResTemplate(RT00, Local0)
+	Store(ConcatenateResTemplate(RT00, Local0), Local1)
 
 	CH04("", 0, 0xff, 0, 0x002, 0, 0)
 }

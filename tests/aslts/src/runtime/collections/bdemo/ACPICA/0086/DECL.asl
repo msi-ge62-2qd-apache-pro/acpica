@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,38 +37,38 @@
 		if (0) {
 			// 1 Outstanding allocation
 
-			ToString("qwrtyu")
+			Store(ToString("qwrtyu"), Local0)
 
 		} elseif (0) {
 
 			// 6 Outstanding allocations
 
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
 		} else {
 
 			// 17 Outstanding allocations
 
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
-			ToString("qwrtyu")
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
+			Store(ToString("qwrtyu"), Local0)
 		}
 	}

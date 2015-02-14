@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: CopyObject of ThermalZone works incorrectly
  */
 
-Method(m020)
+Method(m020,, Serialized)
 {
 	Name(i000, 0xabcd0000)
 	Name(i001, 0xabcd0001)
@@ -68,23 +68,5 @@ Method(m020)
 		err("", zFFF, 0x003, 0, 0, Local0, c009)
 	}
 	CH03("", 0, 0x004, 0, 0)
-
-	/*
-	 * This bdemo shows only 'Outstanding allocations':
-	 * - q
-	 *	004790B8 Len 0028   utcache-414 [Node] TZ00
-	 *	00479178 Len 0028   utcache-414 [Node] TZ00
-	 *	004798E8 Len 0028   utcache-414 [Node] TZ00
-	 * ACPI Error (uttrack-0719): 3(3) Outstanding allocations [20060040]
-	 *
-	 * Check error manually,
-	 * and when the cause is fixed remove call to err() below.
-	 */
-
-	Store("Have no method to detect presence of error, only 'Outstanding allocations',", Debug)
-	Store("so, force unconditional error message.", Debug)
-
-	// Report error message
-	m02a()
 }
 

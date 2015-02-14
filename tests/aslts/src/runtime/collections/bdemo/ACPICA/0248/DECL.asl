@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -72,7 +72,7 @@ Method(m02d)
 		}
 	}
 
-	Method(m1a9)
+	Method(m1a9,, Serialized)
 	{
 		Name(sw00, 1)
 		Name(hg00, 0) // if non-zero - the test hangs
@@ -145,7 +145,7 @@ Method(m02d)
 /*
  * It is Functional:Reference:ref07.asl:Method(m1d5)
  */
-Method(m03d)
+Method(m03d,, Serialized)
 {
 	Name(i001, 0)
 	Name(p000, Package(2) {0x77, 0x88})

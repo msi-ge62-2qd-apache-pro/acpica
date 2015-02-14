@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: No exception when StartIndex in Match operator is equal to or greater than the size of SourcePackage
  */
 
-	Method(mf05)
+	Method(mf05,, Serialized)
 	{
 		Name(p000, Package(2){0, 1})
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,7 +61,7 @@
 
 Method(m1e8)
 {
-	Method(m306, 2)
+	Method(m306, 2, Serialized)
 	{
 		Name(i000, 0)
 		Name(i001, 0)

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The normal work with mutexes is broken after the mutex Release order violation
  */
 
-Method(m02f)
+Method(m02f,, Serialized)
 {
 	Mutex(T500, 5)
 	Mutex(T600, 6)
@@ -102,7 +102,7 @@ Method(m02f)
 		/* (7) */
 		Store("Releasing mutex of level 5: T500 (Level 5, index 0)", Debug)
 		Release(T500)
-		CH04("", 0, 65, 0, 0x007, 0, 0) // AE_AML_MUTEX_NOT_ACQUIRED
+		CH03("", 0, 0x007, 0, 0)
 	}
 
 	Method(mm00)

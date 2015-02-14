@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -164,7 +164,14 @@ AsLowerCaseString (
          * Check for translation escape string -- means to ignore
          * blocks of code while replacing
          */
-        SubString2 = strstr (SubBuffer, AS_START_IGNORE);
+        if (Gbl_IgnoreTranslationEscapes)
+        {
+            SubString2 = NULL;
+        }
+        else
+        {
+            SubString2 = strstr (SubBuffer, AS_START_IGNORE);
+        }
 
         if ((SubString2) &&
             (SubString2 < SubString1))

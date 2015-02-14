@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -45,7 +45,7 @@ Method(mdd8)
 
 	CH03("", 0, 0x000, 0, 0)
 
-	Concatenate(Local0, Local1)
+	Store(Concatenate(Local0, Local1), Local2)
 
 	/*
 	 * No restriction on the length of String objects now:

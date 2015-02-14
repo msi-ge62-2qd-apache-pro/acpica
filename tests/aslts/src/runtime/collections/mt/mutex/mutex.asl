@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -62,7 +62,7 @@ and Ctl Thread do mf00()
  * arg1 - ID of current thread
  * arg2 - Index of current thread
  */
-Method(mf01, 3)
+Method(mf01, 3, Serialized)
 {
 	/* Initialization of multithreading interconnection */
 

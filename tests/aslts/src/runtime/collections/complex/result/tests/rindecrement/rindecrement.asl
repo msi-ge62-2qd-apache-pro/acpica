@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,7 +36,7 @@ Name(z125, 125)
 // into different kinds of Target Objects by means of the specified
 // either Increment or Decrement operator
 // m692(<op (Increment/Decrement)>, <exc. conditions>)
-Method(m692, 2)
+Method(m692, 2, Serialized)
 {
 	Name(ts, "m692")
 
@@ -181,7 +181,7 @@ Method(m692, 2)
 	}
 
 	// Output statistics
-	Method(m002, 1)
+	Method(m002, 1, Serialized)
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -302,9 +302,8 @@ Method(m692, 2)
 		// Target must save type
 		if (LNotEqual(Local2, arg2)) {
 			// Types mismatch Target/Target on storing
-			if (LAnd(LEqual(arg2, c009),	// Target (Result) type is Integer
-					// Source (Target) type is String, Buffer
-					Lor(LEqual(arg3, c00a), LEqual(arg3, c00b)))) {
+			// Target (Result) type should keep the original type
+			if (LOr(LEqual(arg3, c00a), LEqual(arg3, c00b))) {
 				if (X195) {
 					err(arg0, z125, 4, 0, 0, Local2, arg2)
 				}
@@ -466,7 +465,7 @@ Method(m692, 2)
 	// as an immediate operand in Increment/Decrement operators
 	// m008(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>)
-	Method(m008, 6)
+	Method(m008, 6, Serialized)
 	{
 		// Source Named Object
 		Name(SRC0, 0)
@@ -562,10 +561,10 @@ Method(m692, 2)
 			Return (1)
 		}
 
-		if (LEqual(arg4, 0)) {			// Increment
-				Increment(Local1)
+		if (LEqual(arg4, 0)) {		// Increment
+			Increment(Local1)
 		} elseif (LEqual(arg4, 1)) {	// Decrement
-				Decrement(Local1)
+			Decrement(Local1)
 		} else {
 			// Unexpected Kind of Op (0 - Increment, 1 - Decrement)
 			err(Concatenate(arg0, terr), z125, 25, 0, 0, arg4, 0)
@@ -573,9 +572,20 @@ Method(m692, 2)
 		}
 
 		if (arg5) {
-			// Exception is expected
-			if (LNot(CH06(arg0, 26, 0xff))) {
-				if (STCS) {m000(2, 0x100, arg2, arg3)}
+			if (LAnd(SLCK, LAnd(LEqual(ToInteger(arg3), 0),
+					    LEqual(ToInteger(arg2), 1)))) {
+				// In slack mode, [Uninitialized] object
+				// will be converted to Integer 0, thus no
+				// exception caused by implicit source
+				// conversion.
+				if (CH03(arg0, z125, 26, arg3, arg2)) {
+					if (STCS) {m000(2, 0x100, arg2, arg3)}
+				}
+			} else {
+				// Exception is expected
+				if (LNot(CH06(arg0, 26, 0xff))) {
+					if (STCS) {m000(2, 0x100, arg2, arg3)}
+				}
 			}
 		} elseif (CH03(arg0, z125, 27, arg3, arg2)) {
 			// Processing caused unexpected exception
@@ -622,7 +632,7 @@ Method(m692, 2)
 			Return (1)
 		}
 
-		if (LEqual(arg4, 0)) {			// Increment
+		if (LEqual(arg4, 0)) {		// Increment
 			Store(m100(Local1), Local2)
 		} elseif (LEqual(arg4, 1)) {	// Decrement
 			Store(m101(Local1), Local2)
@@ -633,9 +643,20 @@ Method(m692, 2)
 		}
 
 		if (arg5) {
-			// Exception is expected
-			if (LNot(CH06(arg0, 30, 0xff))) {
-				if (STCS) {m000(2, 0x100, arg2, arg3)}
+			if (LAnd(SLCK, LAnd(LEqual(ToInteger(arg3), 0),
+					    LEqual(ToInteger(arg2), 1)))) {
+				// In slack mode, [Uninitialized] object
+				// will be converted to Integer 0, thus no
+				// exception caused by implicit source
+				// conversion.
+				if (CH03(arg0, z125, 30, arg3, arg2)) {
+					if (STCS) {m000(2, 0x100, arg2, arg3)}
+				}
+			} else {
+				// Exception is expected
+				if (LNot(CH06(arg0, 30, 0xff))) {
+					if (STCS) {m000(2, 0x100, arg2, arg3)}
+				}
 			}
 		} elseif (CH03(arg0, z125, 31, arg3, arg2)) {
 			// Processing caused unexpected exception
@@ -653,7 +674,7 @@ Method(m692, 2)
 	// as an immediate operand in Increment/Decrement operators
 	// m00b(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>)
-	Method(m00b, 6)
+	Method(m00b, 6, Serialized)
 	{
 		// Source Named Object
 		Name(SRC0, 0)

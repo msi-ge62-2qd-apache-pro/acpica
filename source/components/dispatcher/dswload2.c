@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __DSWLOAD2_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -308,7 +306,7 @@ AcpiDsLoad2BeginOp (
              */
             ACPI_WARNING ((AE_INFO,
                 "Type override - [%4.4s] had invalid type (%s) "
-                "for Scope operator, changed to type ANY\n",
+                "for Scope operator, changed to type ANY",
                 AcpiUtGetNodeName (Node), AcpiUtGetTypeName (Node->Type)));
 
             Node->Type = ACPI_TYPE_ANY;
@@ -568,7 +566,6 @@ AcpiDsLoad2EndOp (
         Status = AcpiDsCreateBufferField (Op, WalkState);
         break;
 
-
      case AML_TYPE_NAMED_FIELD:
         /*
          * If we are executing a method, initialize the field
@@ -597,11 +594,11 @@ AcpiDsLoad2EndOp (
             break;
 
         default:
+
             /* All NAMED_FIELD opcodes must be handled above */
             break;
         }
         break;
-
 
      case AML_TYPE_NAMED_SIMPLE:
 
@@ -633,13 +630,13 @@ AcpiDsLoad2EndOp (
             Status = AcpiExCreateEvent (WalkState);
             break;
 
-
         case AML_ALIAS_OP:
 
             Status = AcpiExCreateAlias (WalkState);
             break;
 
         default:
+
             /* Unknown opcode */
 
             Status = AE_OK;
@@ -724,12 +721,10 @@ AcpiDsLoad2EndOp (
             }
             break;
 
-
         case AML_NAME_OP:
 
             Status = AcpiDsCreateNode (WalkState, Node, Op);
             break;
-
 
         case AML_METHOD_OP:
             /*
@@ -768,17 +763,16 @@ AcpiDsLoad2EndOp (
 #endif /* ACPI_NO_METHOD_EXECUTION */
 
         default:
+
             /* All NAMED_COMPLEX opcodes must be handled above */
             break;
         }
         break;
 
-
     case AML_CLASS_INTERNAL:
 
         /* case AML_INT_NAMEPATH_OP: */
         break;
-
 
     case AML_CLASS_METHOD_CALL:
 
@@ -819,6 +813,7 @@ AcpiDsLoad2EndOp (
 
 
     default:
+
         break;
     }
 

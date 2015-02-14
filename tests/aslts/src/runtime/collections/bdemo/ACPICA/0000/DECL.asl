@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Logical operators return True equal to One but not Ones
  */
 
-Method(md9a)
+Method(md9a,, Serialized)
 {
 	Name(ON00, 0xffffffffffffffff)
 

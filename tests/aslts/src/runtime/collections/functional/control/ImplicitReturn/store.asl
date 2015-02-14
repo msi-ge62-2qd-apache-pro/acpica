@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
 
 Name(z138, 138)
 
-Method(mf6c)
+Method(mf6c,, Serialized)
 {
 	Name(fl00, 0)
 	Name(i000, 0xabcd0000)
@@ -131,7 +131,7 @@ Method(mf6c)
 		}
 	}
 
-	Method(m007)
+	Method(m007,, Serialized)
 	{
 		Name(i000, 0)
 		Name(num, 0)
@@ -377,7 +377,7 @@ Method(mf6c)
 	}
 }
 
-Method(mf6e)
+Method(mf6e,, Serialized)
 {
 	Name(fl00, 0)
 	Name(i000, 0xaaaa0000)
@@ -391,9 +391,9 @@ Method(mf6e)
 			Return (0)
 		}
 		Increment(i002)
-		Add(0xaaaa0003, 0)
-		Subtract(0xaaaa0004, 0)
-		Multiply(0xaaaa0005, 1)
+		Store(Add(0xaaaa0003, 0), Local1)
+		Store(Subtract(0xaaaa0004, 0), Local1)
+		Store(Multiply(0xaaaa0005, 1), Local1)
 		Store(0xaaaa0006, i001)
 	}
 
@@ -404,9 +404,9 @@ Method(mf6e)
 		}
 		if (Store(0xaaaa0007, i001)) {
 			Increment(i002)
-			Add(0xaaaa0008, 0)
-			Subtract(0xaaaa0009, 0)
-			Multiply(0xaaaa000a, 1)
+			Store(Add(0xaaaa0008, 0), Local1)
+			Store(Subtract(0xaaaa0009, 0), Local1)
+			Store(Multiply(0xaaaa000a, 1), Local1)
 			Store(0xaaaa000d, i001)
 			Decrement(i001)
 		}
@@ -420,9 +420,9 @@ Method(mf6e)
 		if (Add(0xaaaa000d, 0)) {
 		if (0xaaaa000e) {
 			Increment(i002)
-			Add(0xaaaa000f, 0)
-			Subtract(0xaaaa0010, 0)
-			Multiply(0xaaaa0011, 1)
+			Store(Add(0xaaaa000f, 0), Local1)
+			Store(Subtract(0xaaaa0010, 0), Local1)
+			Store(Multiply(0xaaaa0011, 1), Local1)
 			Store(0xaaaa0012, i001)
 			Increment(i001)
 		}}
@@ -435,11 +435,11 @@ Method(mf6e)
 		}
 		while (Subtract(0xaaaa0014, 0)) {
 			Increment(i002)
-			Add(0xaaaa0015, 0)
-			Subtract(0xaaaa0016, 0)
-			Multiply(0xaaaa0017, 1)
+			Store(Add(0xaaaa0015, 0), Local1)
+			Store(Subtract(0xaaaa0016, 0), Local1)
+			Store(Multiply(0xaaaa0017, 1), Local1)
 			Store(0xaaaa0018, i001)
-			Multiply(0xaaaa0019, 1)
+			Store(Multiply(0xaaaa0019, 1), Local1)
 			Break
 		}
 	}
@@ -488,7 +488,7 @@ Method(mf6e)
 		}
 	}
 
-	Method(m009)
+	Method(m009,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 
@@ -603,7 +603,7 @@ Method(mf6e)
 	Name(i006, 0x11220000)
 	Name(i007, 0x33440000)
 
-	Method(m005, 1)
+	Method(m005, 1, Serialized)
 	{
           Name(r001, 1)
           Name(r002, 1)
@@ -753,11 +753,10 @@ Method(mf6e)
           Store(m00b(), i000)
           if (tmp0) {
               CH03("", z138, 0x051, 0, 0)
-              if (y263) {
-                  Store(0xabcd0008, Local0)
-              } else {
-                  Store(Ones, Local0)
-              }
+              // Oct 2013, David Box
+              // Implicit return for logical opertions (LNot, LEqual, ...)
+              // returns logical value of the operation
+              Store(Ones, Local0)
               if (LNotEqual(i000, Local0)) {
                   err("", z138, 0x052, 0, 0, i000, Local0)
               }
@@ -774,11 +773,10 @@ Method(mf6e)
           Store(m00c(), i000)
           if (tmp0) {
               CH03("", z138, 0x055, 0, 0)
-              if (y263) {
-                  Store(0xabcd0008, Local0)
-              } else {
-                  Store(Zero, Local0)
-              }
+              // Oct 2013, David Box
+              // Implicit return for logical opertions (LNot, LEqual, ...)
+              // returns logical value of the operation
+              Store(Zero, Local0)
               if (LNotEqual(i000, Local0)) {
                   err("", z138, 0x056, 0, 0, i000, Local0)
               }
@@ -808,11 +806,10 @@ Method(mf6e)
           Store(m00e(), i000)
           if (tmp0) {
               CH03("", z138, 0x05d, 0, 0)
-              if (y263) {
-                  Store(0xabcd0008, Local0)
-              } else {
-                  Store(Ones, Local0)
-              }
+              // Oct 2013, David Box
+              // Implicit return for logical opertions (LNot, LEqual, ...)
+              // returns logical value of the operation
+              Store(Ones, Local0)
               if (LNotEqual(i000, Local0)) {
                   err("", z138, 0x05e, 0, 0, i000, Local0)
               }
@@ -829,11 +826,10 @@ Method(mf6e)
           Store(m00f(), i000)
           if (tmp0) {
               CH03("", z138, 0x061, 0, 0)
-              if (y263) {
-                  Store(0xabcd0008, Local0)
-              } else {
-                  Store(Zero, Local0)
-              }
+              // Oct 2013, David Box
+              // Implicit return for logical opertions (LNot, LEqual, ...)
+              // returns logical value of the operation
+              Store(Zero, Local0)
               if (LNotEqual(i000, Local0)) {
                   err("", z138, 0x062, 0, 0, i000, Local0)
               }
@@ -1108,7 +1104,7 @@ Method(mf6e)
 }
 
 // Reproduces specific implicit return conditions
-Method(mff1)
+Method(mff1,, Serialized)
 {
 	Name(fl00, 0)
 	Name(i000, 0)

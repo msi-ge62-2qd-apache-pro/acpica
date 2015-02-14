@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,7 +50,7 @@ Method(m1a3, 5)
 }
 
 // Check that all the data (global) are not corrupted
-Method(m1a6)
+Method(m1a6,, Serialized)
 {
 	Name(ts, "m1a6")
 
@@ -471,7 +471,7 @@ Method(m1aa, 5)
 
 // Check and restore the global data after writing into them
 
-Method(m1ab)
+Method(m1ab,, Serialized)
 {
 	Name(ts, "m1ab")
 
@@ -553,7 +553,7 @@ Method(m1ac)
 // arg1 - check for non-computational data
 // arg2 - check Field Unit and Buffer Field
 // arg3 - elements of Package are RefOf_References
-Method(m1af, 4)
+Method(m1af, 4, Serialized)
 {
 	Name(ts, "m1af")
 

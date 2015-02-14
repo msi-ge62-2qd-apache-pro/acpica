@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,13 +32,13 @@
  * SUMMARY: ToString updates the LocalX value (if it is zero) passed as Length parameter
  */
 
-Method(mda4)
+Method(mda4,, Serialized)
 {
 	Name(B000, Buffer(4) {0x21, 0x21, 0x21, 0x21})
 
 	Store(0, Local0)
 
-	ToString(B000, Local0)
+	ToString(B000, Local0, Local1)
 
 	if (LNotequal(Local0, 0)) {
 		err("", zFFF, 0x000, 0, 0, Local0, 0)

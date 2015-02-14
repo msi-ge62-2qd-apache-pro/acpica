@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -136,18 +136,11 @@
 #define ACPI_SET64(ptr, val)            (*ACPI_CAST64 (ptr) = (UINT64) (val))
 
 /*
- * printf() format helpers
+ * printf() format helper. This macros is a workaround for the difficulties
+ * with emitting 64-bit integers and 64-bit pointers with the same code
+ * for both 32-bit and 64-bit hosts.
  */
-
-/* Split 64-bit integer into two 32-bit values. Use with %8.8X%8.8X */
-
 #define ACPI_FORMAT_UINT64(i)           ACPI_HIDWORD(i), ACPI_LODWORD(i)
-
-#if ACPI_MACHINE_WIDTH == 64
-#define ACPI_FORMAT_NATIVE_UINT(i)      ACPI_FORMAT_UINT64(i)
-#else
-#define ACPI_FORMAT_NATIVE_UINT(i)      0, (i)
-#endif
 
 
 /*
@@ -397,10 +390,12 @@
  * where a pointer to an object of type ACPI_OPERAND_OBJECT can also
  * appear. This macro is used to distinguish them.
  *
- * The "Descriptor" field is the first field in both structures.
+ * The "DescriptorType" field is the second field in both structures.
  */
+#define ACPI_GET_DESCRIPTOR_PTR(d)      (((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer)
+#define ACPI_SET_DESCRIPTOR_PTR(d, p)   (((ACPI_DESCRIPTOR *)(void *)(d))->Common.CommonPointer = (p))
 #define ACPI_GET_DESCRIPTOR_TYPE(d)     (((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType)
-#define ACPI_SET_DESCRIPTOR_TYPE(d, t)  (((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = t)
+#define ACPI_SET_DESCRIPTOR_TYPE(d, t)  (((ACPI_DESCRIPTOR *)(void *)(d))->Common.DescriptorType = (t))
 
 /*
  * Macros for the master AML opcode table
@@ -447,10 +442,11 @@
  * the plist contains a set of parens to allow variable-length lists.
  * These macros are used for both the debug and non-debug versions of the code.
  */
-#define ACPI_ERROR_NAMESPACE(s, e)      AcpiUtNamespaceError (AE_INFO, s, e);
-#define ACPI_ERROR_METHOD(s, n, p, e)   AcpiUtMethodError (AE_INFO, s, n, p, e);
-#define ACPI_WARN_PREDEFINED(plist)     AcpiUtPredefinedWarning plist
-#define ACPI_INFO_PREDEFINED(plist)     AcpiUtPredefinedInfo plist
+#define ACPI_ERROR_NAMESPACE(s, e)          AcpiUtNamespaceError (AE_INFO, s, e);
+#define ACPI_ERROR_METHOD(s, n, p, e)       AcpiUtMethodError (AE_INFO, s, n, p, e);
+#define ACPI_WARN_PREDEFINED(plist)         AcpiUtPredefinedWarning plist
+#define ACPI_INFO_PREDEFINED(plist)         AcpiUtPredefinedInfo plist
+#define ACPI_BIOS_ERROR_PREDEFINED(plist)   AcpiUtPredefinedBiosError plist
 
 #else
 
@@ -460,138 +456,9 @@
 #define ACPI_ERROR_METHOD(s, n, p, e)
 #define ACPI_WARN_PREDEFINED(plist)
 #define ACPI_INFO_PREDEFINED(plist)
+#define ACPI_BIOS_ERROR_PREDEFINED(plist)
 
 #endif /* ACPI_NO_ERROR_MESSAGES */
-
-/*
- * Debug macros that are conditionally compiled
- */
-#ifdef ACPI_DEBUG_OUTPUT
-
-/*
- * Function entry tracing
- *
- * The name of the function is emitted as a local variable that is
- * intended to be used by both the entry trace and the exit trace.
- */
-
-/* Helper macro */
-
-#define ACPI_TRACE_ENTRY(Name, Function, Cast, Param) \
-    ACPI_FUNCTION_NAME (Name) \
-    Function (ACPI_DEBUG_PARAMETERS, Cast (Param))
-
-/* The actual entry trace macros */
-
-#define ACPI_FUNCTION_TRACE(Name) \
-    ACPI_FUNCTION_NAME(Name) \
-    AcpiUtTrace (ACPI_DEBUG_PARAMETERS)
-
-#define ACPI_FUNCTION_TRACE_PTR(Name, Pointer) \
-    ACPI_TRACE_ENTRY (Name, AcpiUtTracePtr, (void *), Pointer)
-
-#define ACPI_FUNCTION_TRACE_U32(Name, Value) \
-    ACPI_TRACE_ENTRY (Name, AcpiUtTraceU32, (UINT32), Value)
-
-#define ACPI_FUNCTION_TRACE_STR(Name, String) \
-    ACPI_TRACE_ENTRY (Name, AcpiUtTraceStr, (char *), String)
-
-#define ACPI_FUNCTION_ENTRY() \
-    AcpiUtTrackStackPtr()
-
-
-/*
- * Function exit tracing
- *
- * These macros include a return statement. This is usually considered
- * bad form, but having a separate exit macro before the actual return
- * is very ugly and difficult to maintain.
- *
- * One of the FUNCTION_TRACE macros above must be used in conjunction
- * with these macros so that "_AcpiFunctionName" is defined.
- *
- * Note: the DO_WHILE0 macro is used to prevent some compilers from
- * complaining about these constructs. On other compilers the do...while
- * adds some extra code, so this feature is optional.
- */
-#ifdef ACPI_USE_DO_WHILE_0
-#define ACPI_DO_WHILE0(a)               do a while(0)
-#else
-#define ACPI_DO_WHILE0(a)               a
-#endif
-
-/* Exit trace helper macro */
-
-#define ACPI_TRACE_EXIT(Function, Cast, Param) \
-    ACPI_DO_WHILE0 ({ \
-        Function (ACPI_DEBUG_PARAMETERS, Cast (Param)); \
-        return ((Param)); \
-    })
-
-/* The actual exit macros */
-
-#define return_VOID \
-    ACPI_DO_WHILE0 ({ \
-        AcpiUtExit (ACPI_DEBUG_PARAMETERS); \
-        return; \
-    })
-
-#define return_ACPI_STATUS(Status) \
-    ACPI_TRACE_EXIT (AcpiUtStatusExit, (ACPI_STATUS), Status)
-
-#define return_PTR(Pointer) \
-    ACPI_TRACE_EXIT (AcpiUtPtrExit, (UINT8 *), Pointer)
-
-#define return_VALUE(Value) \
-    ACPI_TRACE_EXIT (AcpiUtValueExit, (UINT64), Value)
-
-
-/* Conditional execution */
-
-#define ACPI_DEBUG_EXEC(a)              a
-#define ACPI_DEBUG_ONLY_MEMBERS(a)      a;
-#define _VERBOSE_STRUCTURES
-
-
-/* Various object display routines for debug */
-
-#define ACPI_DUMP_STACK_ENTRY(a)        AcpiExDumpOperand((a), 0)
-#define ACPI_DUMP_OPERANDS(a, b ,c)     AcpiExDumpOperands(a, b, c)
-#define ACPI_DUMP_ENTRY(a, b)           AcpiNsDumpEntry (a, b)
-#define ACPI_DUMP_PATHNAME(a, b, c, d)  AcpiNsDumpPathname(a, b, c, d)
-#define ACPI_DUMP_BUFFER(a, b)          AcpiUtDebugDumpBuffer((UINT8 *) a, b, DB_BYTE_DISPLAY, _COMPONENT)
-
-#else
-/*
- * This is the non-debug case -- make everything go away,
- * leaving no executable debug code!
- */
-#define ACPI_DEBUG_EXEC(a)
-#define ACPI_DEBUG_ONLY_MEMBERS(a)
-#define ACPI_FUNCTION_TRACE(a)
-#define ACPI_FUNCTION_TRACE_PTR(a, b)
-#define ACPI_FUNCTION_TRACE_U32(a, b)
-#define ACPI_FUNCTION_TRACE_STR(a, b)
-#define ACPI_FUNCTION_EXIT
-#define ACPI_FUNCTION_STATUS_EXIT(s)
-#define ACPI_FUNCTION_VALUE_EXIT(s)
-#define ACPI_FUNCTION_ENTRY()
-#define ACPI_DUMP_STACK_ENTRY(a)
-#define ACPI_DUMP_OPERANDS(a, b, c)
-#define ACPI_DUMP_ENTRY(a, b)
-#define ACPI_DUMP_TABLES(a, b)
-#define ACPI_DUMP_PATHNAME(a, b, c, d)
-#define ACPI_DUMP_BUFFER(a, b)
-#define ACPI_DEBUG_PRINT(pl)
-#define ACPI_DEBUG_PRINT_RAW(pl)
-
-#define return_VOID                     return
-#define return_ACPI_STATUS(s)           return(s)
-#define return_VALUE(s)                 return(s)
-#define return_PTR(s)                   return(s)
-
-#endif /* ACPI_DEBUG_OUTPUT */
-
 
 #if (!ACPI_REDUCED_HARDWARE)
 #define ACPI_HW_OPTIONAL_FUNCTION(addr)     addr
@@ -610,32 +477,6 @@
 #else
 #define ACPI_DEBUGGER_EXEC(a)
 #endif
-
-
-/*
- * Memory allocation tracking (DEBUG ONLY)
- */
-#define ACPI_MEM_PARAMETERS         _COMPONENT, _AcpiModuleName, __LINE__
-
-#ifndef ACPI_DBG_TRACK_ALLOCATIONS
-
-/* Memory allocation */
-
-#define ACPI_ALLOCATE(a)            AcpiUtAllocate((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-#define ACPI_ALLOCATE_ZEROED(a)     AcpiUtAllocateZeroed((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-#define ACPI_FREE(a)                AcpiOsFree(a)
-#define ACPI_MEM_TRACKING(a)
-
-#else
-
-/* Memory allocation */
-
-#define ACPI_ALLOCATE(a)            AcpiUtAllocateAndTrack((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-#define ACPI_ALLOCATE_ZEROED(a)     AcpiUtAllocateZeroedAndTrack((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-#define ACPI_FREE(a)                AcpiUtFreeAndTrack(a, ACPI_MEM_PARAMETERS)
-#define ACPI_MEM_TRACKING(a)        a
-
-#endif /* ACPI_DBG_TRACK_ALLOCATIONS */
 
 
 /*

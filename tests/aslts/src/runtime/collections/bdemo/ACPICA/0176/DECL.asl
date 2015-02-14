@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Store-to-Debug an element of Package having reference to itself results in an infinite loop
  */
 
-	Method(me59)
+	Method(me59,, Serialized)
 	{
 		Name(p000, Package(32) { 0, p000 })
 
@@ -41,7 +41,7 @@
 		Store(Local0, Debug)
 	}
 
-	Method(me5a)
+	Method(me5a,, Serialized)
 	{
 		Name(p000, Package(32) { 0, p000 })
 

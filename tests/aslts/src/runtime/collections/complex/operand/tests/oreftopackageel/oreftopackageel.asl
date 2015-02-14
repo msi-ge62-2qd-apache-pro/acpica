@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
 
 Name(z119, 119)
 
-Method(m61a)
+Method(m61a,, Serialized)
 {
 	Name(ts, "m61a")
 
@@ -11820,13 +11820,13 @@ Method(m61a)
 
 			CH03(arg0, z119, 0, 0, 0)
 
-			Index(m601(2, 6), Derefof(m604(2, 2, 20, 1)))
+			Store(Index(m601(2, 6), Derefof(m604(2, 2, 20, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 9, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(3, 6), Derefof(m604(2, 2, 20, 1)))
+			Store(Index(m601(3, 6), Derefof(m604(2, 2, 20, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 10, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(4, 0), Derefof(m604(2, 2, 20, 1)))
+			Store(Index(m601(4, 0), Derefof(m604(2, 2, 20, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 11, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 		}
 
@@ -12642,7 +12642,7 @@ Method(m61a)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Acquire operator ???
-	Method(m032, 1)
+	Method(m032, 1, Serialized)
 	{
 		Mutex(MTX0, 0)
 
@@ -12665,7 +12665,7 @@ Method(m61a)
 
 	// String to Integer conversion of the String TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m033, 1)
+	Method(m033, 1, Serialized)
 	{
 		Event(EVT0)
 
@@ -12686,7 +12686,7 @@ Method(m61a)
 	// String to Integer conversion of the String value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m034, 1)
+	Method(m034, 1, Serialized)
 	{
 		Name(ist0, 0)
 
@@ -23242,13 +23242,13 @@ Method(m61a)
 
 			CH03(arg0, z119, 0, 0, 0)
 
-			Index(m601(2, 6), Derefof(m604(2, 3, 14, 1)))
+			Store(Index(m601(2, 6), Derefof(m604(2, 3, 14, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 9, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(3, 6), Derefof(m604(2, 3, 14, 1)))
+			Store(Index(m601(3, 6), Derefof(m604(2, 3, 14, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 10, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 
-			Index(m601(4, 0), Derefof(m604(2, 3, 14, 1)))
+			Store(Index(m601(4, 0), Derefof(m604(2, 3, 14, 1))), Local3)
 			CH04(arg0, 0, 85, z119, 11, 0, 0)	// AE_INDEX_TO_NOT_ATTACHED
 		}
 
@@ -24065,7 +24065,7 @@ Method(m61a)
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Acquire operator
 
-	Method(m06c, 1)
+	Method(m06c, 1, Serialized)
 	{
 		Mutex(MTX0, 0)
 
@@ -24088,7 +24088,7 @@ Method(m61a)
 
 	// Buffer to Integer conversion of the Buffer TimeoutValue
 	// (second) operand of the Wait operator
-	Method(m06d, 1)
+	Method(m06d, 1, Serialized)
 	{
 		Event(EVT0)
 
@@ -24109,7 +24109,7 @@ Method(m61a)
 	// Buffer to Integer conversion of the Buffer value
 	// of Predicate of the Method execution control statements
 	// (If, ElseIf, While)
-	Method(m06e, 1)
+	Method(m06e, 1, Serialized)
 	{
 		Name(ist0, 0)
 

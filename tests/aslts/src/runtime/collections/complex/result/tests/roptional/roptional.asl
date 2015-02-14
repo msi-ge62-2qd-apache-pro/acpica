@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,7 +36,7 @@ Name(z127, 127)
 
 // m694(<store op>, <exc. conditions>,
 //      <Target scale>, <Result scale>, <kind of Source-Target pair>)
-Method(m694, 5)
+Method(m694, 5, Serialized)
 {
 	Name(ts, "m694")
 
@@ -228,7 +228,7 @@ Method(m694, 5)
 	}
 
 	// Output statistics
-	Method(m002, 1)
+	Method(m002, 1, Serialized)
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -494,7 +494,8 @@ Method(m694, 5)
 				// Types mismatch Target/Target on storing
 				if (LEqual(arg2, c016)) {
 					if (X170) {
-						err(arg0, z127, 17, 0, 0, Local2, arg2)
+						//this error report is unnecessary, should be removed.
+						//err(arg0, z127, 17, 0, 0, Local2, arg2)
 					}
 				} else {
 					err(arg0, z127, 17, 0, 0, Local2, arg2)
@@ -511,7 +512,7 @@ Method(m694, 5)
 					// Result object is a reference
 					// Check that Target can be used as reference
 					Store(Derefof(arg1), Local0)
-					Derefof(Local0)
+					Store(Derefof(Local0), Local3)
 					if (CH03(arg0, z127, 18, Local2, arg3)) {
 						// Derefof caused unexpected exception
 						Return (1)

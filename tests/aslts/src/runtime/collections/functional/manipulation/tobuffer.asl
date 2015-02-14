@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -148,7 +148,7 @@ Method(m320, 6)	// ts, buffer, len, null, err, case
 }
 
 // Checking strings with different lengths
-Method(m321, 1)
+Method(m321, 1, Serialized)
 {
 	Name(LENS, Buffer() {200, 199, 129, 128, 127, 9, 8, 7, 1, 0})
 
@@ -197,7 +197,7 @@ Method(m321, 1)
 
 // Checking buffers with different lengths
 // (zero length in the first order).
-Method(m322, 1)
+Method(m322, 1, Serialized)
 {
 	Name(LENS, Package() {0, 513})
 
@@ -234,7 +234,7 @@ Method(m322, 1)
 }
 
 // Run-method
-Method(TOB0)
+Method(TOB0,, Serialized)
 {
 	Name(ts, "TOB0")
 

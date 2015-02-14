@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -39,7 +39,7 @@
  */
 
 // No outstanding allocations
-Method(mdfa)
+Method(mdfa,, Serialized)
 {
 	OperationRegion(r001, SystemMemory, 0x10, 0x10)
 
@@ -50,11 +50,11 @@ Method(mdfa)
 	Store(1, f001)
 	Store(2, f002)
 
-	Add(f001, f002)
+	Store(Add(f001, f002), Local0)
 }
 
 // Outstanding: 0x1 allocations after execution
-Method(mdfb)
+Method(mdfb,, Serialized)
 {
 	OperationRegion(r001, SystemMemory, 0x10, 0x10)
 
@@ -65,39 +65,39 @@ Method(mdfb)
 	Store(1, f001)
 	Store(2, f002)
 
-	Add(f001, f002)
+	Store(Add(f001, f002), Local0)
 }
 
 // No outstanding allocations
 Method(mdfc)
 {
-	Add(1, 2)
+	Store(Add(1, 2), Local0)
 }
 
 // Outstanding: 0x1 allocations after execution
 Method(mdfd)
 {
-	Add(1, "2")
+	Store(Add(1, "2"), Local0)
 }
 
 // Outstanding: 0x1 allocations after execution
 Method(mdfe)
 {
-	Add("1", 2)
+	Store(Add("1", 2), Local0)
 }
 
 // Outstanding: 0x2 allocations after execution
 Method(mdff)
 {
-	Add("1", "2")
+	Store(Add("1", "2"), Local0)
 }
 
 // Outstanding: 0x1 allocations after execution
-Method(me00)
+Method(me00,, Serialized)
 {
 	Name(b000, Buffer() {0x91})
 
-	Add(b000, 2)
+	Store(Add(b000, 2), Local0)
 }
 
 Method(me01)

@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __EXNAMES_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -406,7 +404,6 @@ AcpiExGetNameString (
             HasPrefix = TRUE;
             break;
 
-
         case AML_PARENT_PREFIX:
 
             /* Increment past possibly multiple parent prefixes */
@@ -423,7 +420,6 @@ AcpiExGetNameString (
 
             HasPrefix = TRUE;
             break;
-
 
         default:
 
@@ -460,7 +456,6 @@ AcpiExGetNameString (
             }
             break;
 
-
         case AML_MULTI_NAME_PREFIX_OP:
 
             ACPI_DEBUG_PRINT ((ACPI_DB_LOAD, "MultiNamePrefix at %p\n",
@@ -492,7 +487,6 @@ AcpiExGetNameString (
 
             break;
 
-
         case 0:
 
             /* NullName valid as of 8-12-98 ASL/AML Grammar Update */
@@ -514,7 +508,6 @@ AcpiExGetNameString (
             }
 
             break;
-
 
         default:
 

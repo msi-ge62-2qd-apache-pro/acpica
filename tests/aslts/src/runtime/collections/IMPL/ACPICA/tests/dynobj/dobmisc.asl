@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z140, 140)
 
-Method(m375)
+Method(m375,, Serialized)
 {
 	// The Created Objects benchmark Package
 	Name(pp00, Package(1) {})
@@ -66,7 +66,7 @@ Method(m375)
 
 /* to be implemented, now arbitrary operation only */
 
-	Add(0, 1)
+	Store(Add(0, 1), Local2)
 
 	// Use NamedX for _TCI-begin statistics Package
 	// not to touch the LOCAL_REFERENCE entry.

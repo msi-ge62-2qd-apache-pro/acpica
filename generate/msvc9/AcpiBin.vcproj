@@ -286,6 +286,10 @@
 				Name="Common"
 				>
 				<File
+					RelativePath="..\..\source\common\cmfsize.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\Common\getopt.c"
 					>
 					<FileConfiguration
@@ -306,6 +310,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\os_specific\service_layers\oslibcfs.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\os_specific\service_layers\oswinxf.c"
@@ -359,6 +367,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utbuffer.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utcache.c"
 					>
 					<FileConfiguration
@@ -383,24 +395,6 @@
 				<File
 					RelativePath="..\..\source\components\utilities\utdebug.c"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories=""
-							PreprocessorDefinitions=""
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utdecode.c"
@@ -539,6 +533,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utprint.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utstate.c"
 					>
 					<FileConfiguration
@@ -559,6 +557,10 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\source\components\utilities\utstring.c"
+					>
 				</File>
 				<File
 					RelativePath="..\..\source\components\utilities\utxferror.c"

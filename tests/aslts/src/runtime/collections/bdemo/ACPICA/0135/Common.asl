@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -64,7 +64,7 @@ Method(mfe8)
  * arg0 - Package
  * arg1 - number of elements in arg0
  */
-Method(mfe7, 2)
+Method(mfe7, 2, Serialized)
 {
 	Name(lpN0, 0)
 	Name(lpC0, 0)
@@ -4062,7 +4062,7 @@ Method(mfc6, 7, Serialized)
  * arg4 - type of access through the IRefs
  * arg5 - index of error (inside the file)
  */
-Method(mfcc, 6)
+Method(mfcc, 6, Serialized)
 {
 	Name(lpN0, 0)
 	Name(lpC0, 0)
@@ -4112,7 +4112,7 @@ Method(mfcc, 6)
  * arg4 - type of access through the IRefs
  * arg5 - index of error (inside the file)
  */
-Method(mfce, 6)
+Method(mfce, 6, Serialized)
 {
 	Name(lpN0, 0)
 	Name(lpC0, 0)

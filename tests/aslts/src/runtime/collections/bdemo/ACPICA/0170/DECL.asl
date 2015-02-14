@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  *          see if to rewrite it for Fields but not for BufferFields
  */
 
-	Method(mf5c)
+	Method(mf5c,, Serialized)
 	{
 		Name(b010, Buffer(4) {1,0x77,3,4})
 		CreateField(b010, 8, 8, bf90)
@@ -45,7 +45,7 @@
 			err("", zFFF, 0x000, 0, 0, Local0, 14)
 		} else {
 
-			CopyObject(0x9999992b, bf90)
+			Store(0x9999992b, bf90)
 
 			Store(ObjectType(bf90), Local1)
 

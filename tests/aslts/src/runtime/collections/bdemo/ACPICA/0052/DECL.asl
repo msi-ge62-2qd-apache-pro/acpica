@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The EdgeLevel offset of Interrupt macro (_HE) is specified as 25-th bit but actually it is implemented as 24-th bit
  */
 
-Method(mddd)
+Method(mddd,, Serialized)
 {
 	Name(RT00,
 		ResourceTemplate () {

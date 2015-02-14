@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,9 +37,9 @@
  * crash of AcpiExec.
  */
 
-Method(m81c)
+Method(m81c,, Serialized)
 {
-	Method(m000, 1)
+	Method(m000, 1, Serialized)
 	{
 		OperationRegion(OPR0, SystemMemory, 0, 0x10)
 
@@ -48,7 +48,7 @@ Method(m81c)
 
 	OperationRegion(OPR1, SystemMemory, 0, 0x10)
 
-	Method(m001)
+	Method(m001,, Serialized)
 	{
 		Field(OPR1, ByteAcc, NoLock, WriteAsZeros) {
 			rfu0, 8,

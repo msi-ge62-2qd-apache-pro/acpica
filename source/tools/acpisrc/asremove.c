@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -245,7 +245,14 @@ AsRemoveConditionalCompile (
          * Check for translation escape string -- means to ignore
          * blocks of code while replacing
          */
-        Comment = strstr (SubString, AS_START_IGNORE);
+        if (Gbl_IgnoreTranslationEscapes)
+        {
+            Comment = NULL;
+        }
+        else
+        {
+            Comment = strstr (SubString, AS_START_IGNORE);
+        }
 
         if ((Comment) &&
             (Comment < SubBuffer))
@@ -682,4 +689,119 @@ AsRemoveDebugMacros (
     AsReplaceString ("return_ACPI_STATUS",  "return", REPLACE_WHOLE_WORD, Buffer);
     AsReplaceString ("return_acpi_status",  "return", REPLACE_WHOLE_WORD, Buffer);
     AsReplaceString ("return_VALUE",        "return", REPLACE_WHOLE_WORD, Buffer);
+}
+
+
+/******************************************************************************
+ *
+ * FUNCTION:    AsCleanupSpecialMacro
+ *
+ * DESCRIPTION: For special macro invocations (invoked without ";" at the end
+ *              of the lines), do the following:
+ *              1. Remove spaces appended by indent at the beginning of lines.
+ *              2. Add an empty line between two special macro invocations.
+ *
+ ******************************************************************************/
+
+void
+AsCleanupSpecialMacro (
+    char                    *Buffer,
+    char                    *Keyword)
+{
+    char                    *SubString;
+    char                    *SubBuffer;
+    char                    *CommentEnd;
+    int                     NewLine;
+    int                     NestLevel;
+
+
+    SubBuffer = Buffer;
+    SubString = Buffer;
+
+    while (SubString)
+    {
+        SubString = strstr (SubBuffer, Keyword);
+
+        if (SubString)
+        {
+            /* Find start of the macro parameters */
+
+            while (*SubString != '(')
+            {
+                SubString++;
+            }
+            SubString++;
+
+            NestLevel = 1;
+            while (*SubString)
+            {
+                if (*SubString == '(')
+                {
+                    NestLevel++;
+                }
+                else if (*SubString == ')')
+                {
+                    NestLevel--;
+                }
+
+                SubString++;
+
+                if (NestLevel == 0)
+                {
+                    break;
+                }
+            }
+
+SkipLine:
+
+            /* Find end of the line */
+
+            NewLine = FALSE;
+            while (!NewLine && *SubString)
+            {
+                if (*SubString == '\n' && *(SubString - 1) != '\\')
+                {
+                    NewLine = TRUE;
+                }
+                SubString++;
+            }
+
+            /* Find end of the line */
+
+            if (*SubString == '#' || *SubString == '\n')
+            {
+                goto SkipLine;
+            }
+
+            SubBuffer = SubString;
+
+            /* Find start of the non-space */
+
+            while (*SubString == ' ')
+            {
+                SubString++;
+            }
+
+            /* Find end of the line */
+
+            if (*SubString == '#' || *SubString == '\n')
+            {
+                goto SkipLine;
+            }
+
+            /* Find end of the line */
+
+            if (*SubString == '/' || *SubString == '*')
+            {
+                CommentEnd = strstr (SubString, "*/");
+                if (CommentEnd)
+                {
+                    SubString = CommentEnd + 2;
+                    goto SkipLine;
+                }
+            }
+
+            SubString = AsRemoveData (SubBuffer, SubString);
+        }
+    }
 }

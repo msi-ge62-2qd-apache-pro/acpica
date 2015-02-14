@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -124,7 +124,7 @@ Device (D294) {
 		Return (0)
 	}
 
-	Method(CHSM, 2)	// buf, len
+	Method(CHSM, 2, Serialized)	// buf, len
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -170,7 +170,7 @@ Device (D294) {
 	}
 
 	// Prepares and Loads the next Table of multiple Tables Load test
-	Method(LD)
+	Method(LD,, Serialized)
 	{
 		if (LNot(LLess(HI0N, HI0M))) {
 			Store("LD: too many tables loaded", Debug)
@@ -231,7 +231,7 @@ Device (D294) {
 		Return (0)
 	}
 
-	Method(TST0)
+	Method(TST0,, Serialized)
 	{
 		Name(MAXT, 0xfa)
 		Name(DDB1, 0)

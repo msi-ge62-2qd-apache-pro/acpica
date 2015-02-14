@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __PSXFACE_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -222,7 +220,7 @@ AcpiPsStartTrace (
     }
 
     if ((!AcpiGbl_TraceMethodName) ||
-        (AcpiGbl_TraceMethodName != Info->ResolvedNode->Name.Integer))
+        (AcpiGbl_TraceMethodName != Info->Node->Name.Integer))
     {
         goto Exit;
     }
@@ -277,7 +275,7 @@ AcpiPsStopTrace (
     }
 
     if ((!AcpiGbl_TraceMethodName) ||
-        (AcpiGbl_TraceMethodName != Info->ResolvedNode->Name.Integer))
+        (AcpiGbl_TraceMethodName != Info->Node->Name.Integer))
     {
         goto Exit;
     }
@@ -340,14 +338,14 @@ AcpiPsExecuteMethod (
 
     /* Validate the Info and method Node */
 
-    if (!Info || !Info->ResolvedNode)
+    if (!Info || !Info->Node)
     {
         return_ACPI_STATUS (AE_NULL_ENTRY);
     }
 
     /* Init for new method, wait on concurrency semaphore */
 
-    Status = AcpiDsBeginMethodExecution (Info->ResolvedNode, Info->ObjDesc, NULL);
+    Status = AcpiDsBeginMethodExecution (Info->Node, Info->ObjDesc, NULL);
     if (ACPI_FAILURE (Status))
     {
         return_ACPI_STATUS (Status);
@@ -367,7 +365,7 @@ AcpiPsExecuteMethod (
      */
     ACPI_DEBUG_PRINT ((ACPI_DB_PARSE,
         "**** Begin Method Parse/Execute [%4.4s] **** Node=%p Obj=%p\n",
-        Info->ResolvedNode->Name.Ascii, Info->ResolvedNode, Info->ObjDesc));
+        Info->Node->Name.Ascii, Info->Node, Info->ObjDesc));
 
     /* Create and init a Root Node */
 
@@ -389,7 +387,7 @@ AcpiPsExecuteMethod (
         goto Cleanup;
     }
 
-    Status = AcpiDsInitAmlWalk (WalkState, Op, Info->ResolvedNode,
+    Status = AcpiDsInitAmlWalk (WalkState, Op, Info->Node,
                 Info->ObjDesc->Method.AmlStart,
                 Info->ObjDesc->Method.AmlLength, Info, Info->PassNumber);
     if (ACPI_FAILURE (Status))

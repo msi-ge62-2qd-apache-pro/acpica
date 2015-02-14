@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,9 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-
-#define __CMCLIB_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -380,8 +377,6 @@ AcpiUtStrcmp (
 }
 
 
-#ifdef ACPI_FUTURE_IMPLEMENTATION
-/* Not used at this time */
 /*******************************************************************************
  *
  * FUNCTION:    AcpiUtStrchr (strchr)
@@ -412,7 +407,7 @@ AcpiUtStrchr (
 
     return (NULL);
 }
-#endif
+
 
 /*******************************************************************************
  *

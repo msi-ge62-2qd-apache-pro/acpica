@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z178, 178)
 
-Method(m0fc, 1)
+Method(m0fc, 1, Serialized)
 {
 	Name(ts, "m0fc")
 
@@ -372,7 +372,7 @@ Method(m0fc, 1)
 	}
 }
 
-Method(m0fe, 1)
+Method(m0fe, 1, Serialized)
 {
 	Name(ts, "m0fe")
 

@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "acpi.h"
 #include "accommon.h"
@@ -286,7 +285,6 @@ AcpiDmDecodeInternalObject (
                 ACPI_FORMAT_UINT64 (ObjDesc->Integer.Value));
         break;
 
-
     case ACPI_TYPE_STRING:
 
         AcpiOsPrintf ("(%u) \"%.24s",
@@ -302,7 +300,6 @@ AcpiDmDecodeInternalObject (
         }
         break;
 
-
     case ACPI_TYPE_BUFFER:
 
         AcpiOsPrintf ("(%u)", ObjDesc->Buffer.Length);
@@ -311,7 +308,6 @@ AcpiDmDecodeInternalObject (
             AcpiOsPrintf (" %2.2X", ObjDesc->Buffer.Pointer[i]);
         }
         break;
-
 
     default:
 
@@ -355,14 +351,17 @@ AcpiDmDecodeNode (
     /* These types have no attached object */
 
     case ACPI_TYPE_DEVICE:
+
         AcpiOsPrintf (" Device");
         break;
 
     case ACPI_TYPE_THERMAL:
+
         AcpiOsPrintf (" Thermal Zone");
         break;
 
     default:
+
         AcpiDmDecodeInternalObject (AcpiNsGetAttachedObject (Node));
         break;
     }
@@ -407,12 +406,10 @@ AcpiDmDisplayInternalObject (
         AcpiOsPrintf ("<Parser>  ");
         break;
 
-
     case ACPI_DESC_TYPE_NAMED:
 
         AcpiDmDecodeNode ((ACPI_NAMESPACE_NODE *) ObjDesc);
         break;
-
 
     case ACPI_DESC_TYPE_OPERAND:
 
@@ -447,7 +444,6 @@ AcpiDmDisplayInternalObject (
                 }
                 break;
 
-
             case ACPI_REFCLASS_ARG:
 
                 AcpiOsPrintf ("%X ", ObjDesc->Reference.Value);
@@ -459,7 +455,6 @@ AcpiDmDisplayInternalObject (
                     AcpiDmDecodeInternalObject (ObjDesc);
                 }
                 break;
-
 
             case ACPI_REFCLASS_INDEX:
 
@@ -492,7 +487,6 @@ AcpiDmDisplayInternalObject (
                 }
                 break;
 
-
             case ACPI_REFCLASS_REFOF:
 
                 if (!ObjDesc->Reference.Object)
@@ -518,19 +512,16 @@ AcpiDmDisplayInternalObject (
                 }
                 break;
 
-
             case ACPI_REFCLASS_NAME:
 
                 AcpiDmDecodeNode (ObjDesc->Reference.Node);
                 break;
-
 
             case ACPI_REFCLASS_DEBUG:
             case ACPI_REFCLASS_TABLE:
 
                 AcpiOsPrintf ("\n");
                 break;
-
 
             default:    /* Unknown reference class */
 
@@ -539,7 +530,6 @@ AcpiDmDisplayInternalObject (
             }
             break;
 
-
         default:
 
             AcpiOsPrintf ("<Obj>            ");
@@ -547,7 +537,6 @@ AcpiDmDisplayInternalObject (
             break;
         }
         break;
-
 
     default:
 

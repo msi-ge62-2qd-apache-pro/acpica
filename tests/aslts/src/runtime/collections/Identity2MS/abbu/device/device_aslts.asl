@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
 
 Name(z173, 173)
 
-Method(dvf2)
+Method(dvf2,, Serialized)
 {
 	Name(ts, "dvf2")
 	Device(d000) {
@@ -64,7 +64,7 @@ Method(dvf2)
  *   Named element of Package, perhaps, is not implemented by MS,
  *   i000 in Package(){i000} is, on MS, the same as Package(){"i000"}.
  */
-Method(mf26)
+Method(mf26,, Serialized)
 {
 	Name(ts, "mf26")
 	Name(i000, 0xabcd0000)

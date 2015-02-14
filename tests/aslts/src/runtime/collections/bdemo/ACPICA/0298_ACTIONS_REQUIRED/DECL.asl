@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -57,7 +57,7 @@ Method(m1e7)
 	Store(RefOf(p000), Local2) // L0(0x004d5ec8, 0x123), L2 (0x004d5dc8, res of RefOf)
 	Store(DerefOf(Local2), Local3)
 	Store("Sit 1: Local2 contains bad object there!!!!!", Debug)
-	LAnd(0xabcd0000, 0xabcd0001)
+	Store(LAnd(0xabcd0000, 0xabcd0001), Local5)
 	Decrement(Local0) // L0(0x004d5ec8, 0x123), L2 (0x004d5dc8, 0xCACA)
 	Store("============================== 0", Debug)
 	Store(Local0, Debug)

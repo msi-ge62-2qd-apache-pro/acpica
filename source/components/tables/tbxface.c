@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Module Name: tbxface - ACPI table oriented external interfaces
+ * Module Name: tbxface - ACPI table-oriented external interfaces
  *
  *****************************************************************************/
 
@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,7 +113,7 @@
  *
  *****************************************************************************/
 
-#define __TBXFACE_C__
+#define EXPORT_ACPI_INTERFACES
 
 #include "acpi.h"
 #include "accommon.h"
@@ -158,7 +158,7 @@ AcpiAllocateRootTable (
  *                                    array is dynamically allocated.
  *              InitialTableCount   - Size of InitialTableArray, in number of
  *                                    ACPI_TABLE_DESC structures
- *              AllowRealloc        - Flag to tell Table Manager if resize of
+ *              AllowResize         - Flag to tell Table Manager if resize of
  *                                    pre-allocated array is allowed. Ignored
  *                                    if InitialTableArray is NULL.
  *
@@ -189,8 +189,8 @@ AcpiInitializeTables (
 
 
     /*
-     * Set up the Root Table Array
-     * Allocate the table array if requested
+     * Setup the Root Table Array and allocate the table array
+     * if requested
      */
     if (!InitialTableArray)
     {
@@ -233,7 +233,7 @@ AcpiInitializeTables (
     return_ACPI_STATUS (Status);
 }
 
-ACPI_EXPORT_SYMBOL (AcpiInitializeTables)
+ACPI_EXPORT_SYMBOL_INIT (AcpiInitializeTables)
 
 
 /*******************************************************************************
@@ -276,7 +276,7 @@ AcpiReallocateRootTable (
     return_ACPI_STATUS (Status);
 }
 
-ACPI_EXPORT_SYMBOL (AcpiReallocateRootTable)
+ACPI_EXPORT_SYMBOL_INIT (AcpiReallocateRootTable)
 
 
 /*******************************************************************************
@@ -333,7 +333,7 @@ AcpiGetTableHeader (
         {
             if ((AcpiGbl_RootTableList.Tables[i].Flags &
                     ACPI_TABLE_ORIGIN_MASK) ==
-                ACPI_TABLE_ORIGIN_MAPPED)
+                ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL)
             {
                 Header = AcpiOsMapMemory (
                             AcpiGbl_RootTableList.Tables[i].Address,
@@ -376,9 +376,10 @@ ACPI_EXPORT_SYMBOL (AcpiGetTableHeader)
  *              Instance            - Which instance (for SSDTs)
  *              OutTable            - Where the pointer to the table is returned
  *
- * RETURN:      Status and pointer to table
+ * RETURN:      Status and pointer to the requested table
  *
- * DESCRIPTION: Finds and verifies an ACPI table.
+ * DESCRIPTION: Finds and verifies an ACPI table. Table must be in the
+ *              RSDT/XSDT.
  *
  ******************************************************************************/
 
@@ -415,7 +416,7 @@ AcpiGetTable (
             continue;
         }
 
-        Status = AcpiTbVerifyTable (&AcpiGbl_RootTableList.Tables[i]);
+        Status = AcpiTbValidateTable (&AcpiGbl_RootTableList.Tables[i]);
         if (ACPI_SUCCESS (Status))
         {
             *OutTable = AcpiGbl_RootTableList.Tables[i].Pointer;
@@ -437,9 +438,10 @@ ACPI_EXPORT_SYMBOL (AcpiGetTable)
  * PARAMETERS:  TableIndex          - Table index
  *              Table               - Where the pointer to the table is returned
  *
- * RETURN:      Status and pointer to the table
+ * RETURN:      Status and pointer to the requested table
  *
- * DESCRIPTION: Obtain a table by an index into the global table list.
+ * DESCRIPTION: Obtain a table by an index into the global table list. Used
+ *              internally also.
  *
  ******************************************************************************/
 
@@ -475,7 +477,7 @@ AcpiGetTableByIndex (
     {
         /* Table is not mapped, map it */
 
-        Status = AcpiTbVerifyTable (&AcpiGbl_RootTableList.Tables[TableIndex]);
+        Status = AcpiTbValidateTable (&AcpiGbl_RootTableList.Tables[TableIndex]);
         if (ACPI_FAILURE (Status))
         {
             (void) AcpiUtReleaseMutex (ACPI_MTX_TABLES);
@@ -500,7 +502,7 @@ ACPI_EXPORT_SYMBOL (AcpiGetTableByIndex)
  *
  * RETURN:      Status
  *
- * DESCRIPTION: Install table event handler
+ * DESCRIPTION: Install a global table event handler.
  *
  ******************************************************************************/
 
@@ -556,7 +558,7 @@ ACPI_EXPORT_SYMBOL (AcpiInstallTableHandler)
  *
  * RETURN:      Status
  *
- * DESCRIPTION: Remove table event handler
+ * DESCRIPTION: Remove a table event handler
  *
  ******************************************************************************/
 

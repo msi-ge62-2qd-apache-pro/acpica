@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,7 +33,7 @@
  */
 
 Name(z006, 6)
-
+Name(MSLP, 2000)	// Max sleep (ms) defined in acconfig.h, Oct 2013
 
 // Verifying 1-parameter, 0-result operator
 //
@@ -57,6 +57,13 @@ Method(m0c8, 6)
 
 		switch (arg4) {
 			case (0) {
+				if (LLess(MSLP, Local0)) {
+					// Exceeding max allowable sleep time
+					Store("m0c8: Note, argument exceeds max defined time for Sleep.",
+					      Debug);
+					Break
+				}
+
 				Store(Timer, Local1)
 				Sleep(Local0)
 				Store(Timer, Local2)
@@ -131,7 +138,7 @@ Method(m0c8, 6)
 }
 
 // Sleep. Sleep n milliseconds (yields the processor)
-Method(m0c9)
+Method(m0c9,, Serialized)
 {
 	Name(ts, "m0c9")
 
@@ -150,7 +157,7 @@ Method(m0c9)
 }
 
 // Stall. Delay n microseconds (does not yield the processor)
-Method(m0ca)
+Method(m0ca,, Serialized)
 {
 	Name(ts, "m0ca")
 
@@ -171,7 +178,7 @@ Method(m0ca)
 }
 
 // Wait. The calling method blocks while waiting for the event to be signaled
-Method(m0cb)
+Method(m0cb,, Serialized)
 {
 	Name(ts, "m0cb")
 
@@ -204,7 +211,7 @@ Method(m0cb)
 }
 
 // Handle and summarize the Timer-times package.
-Method(m0cc, 3)
+Method(m0cc, 3, Serialized)
 {
 	Name(n000, 0)
 	Name(ncur, 0)
@@ -346,7 +353,7 @@ Method(m0cc, 3)
 //
 //  ndcr - # lower than previous
 //  nspl - # splashes exceeding the adjacent point by 2 or more times
-Method(m0cd)
+Method(m0cd,, Serialized)
 {
 	Name(ts, "m0cd")
 
@@ -379,7 +386,7 @@ Method(m0cd)
 }
 
 // Timer with Name
-Method(m0ce)
+Method(m0ce,, Serialized)
 {
 	Name(ts, "m0ce")
 
@@ -701,7 +708,7 @@ Method(m0ce)
 }
 
 // Timer with LocalX
-Method(m0cf)
+Method(m0cf,, Serialized)
 {
 	Name(ts, "m0cf")
 

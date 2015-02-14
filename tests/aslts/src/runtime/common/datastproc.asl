@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -192,7 +192,7 @@ Method(m387, 4)
 // arg1 - type of it
 // arg2 - absolute index of file initiating the checking
 // arg3 - index of checking (inside the file)
-Method(m390, 4)
+Method(m390, 4, Serialized)
 {
 	Name(ts, "m390")
 
@@ -211,7 +211,7 @@ Method(m390, 4)
 // arg1 - type of it
 // arg2 - absolute index of file initiating the checking
 // arg3 - index of checking (inside the file)
-Method(m391, 4)
+Method(m391, 4, Serialized)
 {
 	Name(ts, "m391")
 

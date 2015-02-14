@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@
 
 Name(id23, 0xabcd0000)
 
-Method (mf78)
+Method (mf78,, Serialized)
 {
 	CH03("", 0, 0x000, 0, 0)
 
@@ -58,7 +58,7 @@ Method (mf78)
  * ATTENTION: i9z8 should be unique in the namespace,
  *            not declared somewhere else in the NS tree.
  */
-Method (mf85)
+Method (mf85,, Serialized)
 {
 	CH03("", 0, 0x004, 0, 0)
 

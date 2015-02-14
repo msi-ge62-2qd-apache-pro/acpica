@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -114,7 +114,7 @@ Name(VFLG,		// Counters of the Valid Flags
 //	     EmbeddedControl | SMBus | SystemCMOS | PciBarTarget |
 //       IPMI | GeneralPurposeIo | GenericSerialBus
 // Flag: 1/0 - turn on/off accessing operation regions of that Space
-Method(_REG, 2)
+Method(_REG, 2, Serialized)
 {
 	Name(dbgf, 1)
 
@@ -244,7 +244,7 @@ Device(DOR0) {
 
 	// Specific Operation Regions availability notification Method
 	// \DOR0._REG(RegionSpaceKeyword, Flag)
-	Method(_REG, 2)
+	Method(_REG, 2, Serialized)
 	{
 		Name(dbgf, 1)
 
@@ -316,7 +316,7 @@ Device(DOR1) {
 	// Specific Operation Regions availability notification Method
 	// \DOR1._REG(RegionSpaceKeyword, Flag)
     OperationRegion(JUNK, SystemMemory, 0x2000, 0x100)
-	Method(_REG, 2)
+	Method(_REG, 2, Serialized)
 	{
 		Name(dbgf, 1)
 
@@ -327,10 +327,10 @@ Device(DOR1) {
 		Increment(IREG)
 	}
 
-	Method(M000) {
+	Method(M000,, Serialized) {
 		// Dynamic Operation Regions availability notification Method
 		// \DOR1.M000._REG(RegionSpaceKeyword, Flag)
-		Method(_REG, 2)
+		Method(_REG, 2, Serialized)
 		{
 			Name(dbgf, 1)
 
@@ -509,7 +509,7 @@ Method(m702, 1)
 // Check Overlapping of OpRegions
 // m703(CallChain)
 // CallChain: String
-Method(m703, 1)
+Method(m703, 1, Serialized)
 {
 	Concatenate(arg0, "-m703", arg0)
 
@@ -552,7 +552,7 @@ Method(m703, 1)
 // Create Region Field about Region Length in length
 // and check possible exception
 // m70c(CallChain, Task, Index)
-Method(m70c, 3)
+Method(m70c, 3, Serialized)
 {
 	OperationRegion(OPRm, 0xff, 0, 0x1000)
 
@@ -580,6 +580,7 @@ Method(m70c, 3)
 	m70d(arg2, b000)
 
 	if (LEqual(Local3, 0x02 /* PCI_Config */)) {}
+	elseif (LEqual(Local3, 0x03 /* EmbbededControl */)) {}
 	elseif (LEqual(Local3, 0x04 /* SMBus */)) {}
 	elseif (LEqual(Local3, 0x05 /* SystemCMOS */)) {}
 	elseif (LEqual(Local3, 0x06 /* PciBarTarget */)) {}
@@ -591,7 +592,7 @@ Method(m70c, 3)
 		CH03(arg0, z141, 24, arg2, Local3)
 
 		Store(ObjectType(Derefof(Local6)), Local0)
-		Store(c00d, Local1)
+		Store(c00b, Local1)
 		if (LNotEqual(Local0, Local1)) {
 			err(arg0, z141, 25, 0, 0, Local0, Local1)
 		} else {
@@ -665,7 +666,7 @@ Method(m70e, 5, Serialized)
 // Create Region Fields in two overlapping Regions
 // and check overlapping parts to be shared
 // m70f(CallChain, OpRegion0, OpRegion1, RangeNum, ErrNum)
-Method(m70f, 5)
+Method(m70f, 5, Serialized)
 {
 	OperationRegion(OPRm, 0xff, 0, 0x1000)
 	OperationRegion(OPRn, 0xff, 0, 0x1000)
@@ -712,7 +713,7 @@ Method(m70f, 5)
 // actually refer the different locations
 // m704(CallChain)
 // CallChain: String
-Method(m704, 1)
+Method(m704, 1, Serialized)
 {
 	Method(CHCK, 4)
 	{
@@ -930,7 +931,7 @@ Method(m705, 1, Serialized)
 // Check non-Integer OpRegion arguments
 // m706(CallChain)
 // CallChain: String
-Method(m706, 1)
+Method(m706, 1, Serialized)
 {
 	Name(off0, 0xfedcba987654321f)
 	Name(offb, Buffer(8){0x1f, 0x32,, 0x54, 0x76, 0x98, 0xba, 0xdc, 0xfe})
@@ -964,7 +965,7 @@ Method(m706, 1)
 
 	Name(i000, 0x12345678)
 
-	Method(m000, 4) {
+	Method(m000, 4, Serialized) {
 		OperationRegion(OPR4, SystemMemory, arg1, arg2)
 
 		Field(OPR4, AnyAcc, NoLock, Preserve) {
@@ -1015,7 +1016,83 @@ Method(m706, 1)
 	m000(arg0, offs, lens, 45)
 }
 
-Method(ORC0)
+// Overlapping Operation Regions algorithm test
+// Test the 3 conditional cases of overlap
+// Test done only in SystemMemory
+Method(m707, 1, Serialized)
+{
+	OperationRegion(RGN0, SystemMemory, 0x100, 0x8)
+	OperationRegion(RGN1, SystemMemory, 0xFB, 0x8)
+	OperationRegion(RGN2, SystemMemory, 0x105, 0x8)
+	OperationRegion(RGN3, SystemMemory, 0xF9, 0x16)
+	OperationRegion(RGN4, SystemMemory, 0xF9, 0x16)
+
+	// Starting Field
+	Field (RGN0, ByteAcc, NoLock, Preserve) {
+		Offset(0x1), FU00, 0x30
+	}
+
+	// Overlap start of RGN0
+	Field (RGN1, ByteAcc, NoLock, Preserve) {
+		Offset(0x2), FU10, 0x30
+	}
+
+	// Overlap end of RGN0
+	Field (RGN2, ByteAcc, NoLock, Preserve) {
+		FU20, 0x30
+	}
+
+	// Overlap both start of RGN1 and end of RGN2
+	Field (RGN3, ByteAcc, NoLock, Preserve) {
+		FU30, 0x30,
+		Offset(0x8), FU31, 0x10,
+		Offset(0xC), FU32, 0x10,
+		Offset(0x10), FU33, 0x30
+	}
+
+	// Single Field spanning RGN3 area
+	Field (RGN4, ByteAcc, NoLock, Preserve) {
+		FU40, 0xB0
+	}
+
+	Name(b000, Buffer(0x6){})
+	Name(b001, Buffer(0x2){})
+
+	// Starting region write
+	m70d(1, b000)
+	Store(b000, FU00)
+
+	// New region overlapping the left
+	m70d(2, b000)
+	Store(b000, FU10)
+
+	// New region overlapping the right
+	m70d(3, b000)
+	Store(b000, FU20)
+
+	// New region overlapping left and right with writes
+	// at various locations
+	m70d(4, b000)
+	Store(b000, FU30)
+
+	m70d(5, b001)
+	Store(b001, FU31)
+
+	m70d(6, b001)
+	Store(b001, FU32)
+
+	m70d(7, b000)
+	Store(b000, FU33)
+
+	Store(FU40, Local0)
+	Store(Buffer(){4,4,4,4,4,4,2,2,5,5,1,1,6,6,3,3,7,7,7,7,7,7}, Local1)
+
+	if (LNotEqual(Local0, Local1)) {
+		err(arg0, z141, 43, 0, 0, Local0, Local1)
+	}
+}
+
+Method(ORC0,, Serialized)
 {
 	Name(ts, "ORC0")
 
@@ -1063,4 +1140,8 @@ Method(ORC0)
 	// Non-Integer OpRegion arguments
 	SRMT("m706")
 	m706(ts)
+
+	// Overlapping OpRegions algorithm test
+	SRMT("m707")
+	m707(ts)
 }

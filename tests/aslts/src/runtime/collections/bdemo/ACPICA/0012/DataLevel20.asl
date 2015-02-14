@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -45,7 +45,7 @@ Method(m12b)
 /*
  * 0 - Check different ways to pass String
  */
-Method(mdac)
+Method(mdac,, Serialized)
 {
 	Method(mm00)
 	{
@@ -122,7 +122,7 @@ Method(mdac)
 /*
  * 1 - Check different ways to specify elements of NameSpace
  */
-Method(mf89)
+Method(mf89,, Serialized)
 {
 	Name(i010, 0xaabc0123)
 	Processor(pr01, 0, 0xFFFFFFFF, 0)
@@ -175,7 +175,7 @@ Method(mf89)
 /*
  * 2 - Check access to calculated type objects - DerefOf(<String>)
  */
-Method(mf8a)
+Method(mf8a,, Serialized)
 {
 	Name(b002, Buffer(){ 1, 2, 3, 4, 0x95, 6, 7, 8})
 	Name(bb02, Buffer(){ 1, 2, 3, 4, 0x95, 6, 7, 8})
@@ -207,7 +207,7 @@ Method(mf8a)
 /*
  * 3 - Check access to special type objects - DerefOf(<String>)
  */
-Method(mf8b)
+Method(mf8b,, Serialized)
 {
 	Event(e003)
 	Mutex(mx03, 0)
@@ -253,7 +253,7 @@ Method(mf8b)
 /*
  * 4 - Check DerefOf(<Not-String>) - calculated type objects
  */
-Method(mf8c)
+Method(mf8c,, Serialized)
 {
 	Name(b004, Buffer(){ 1, 2, 3, 4, 0x95, 6, 7, 8})
 	Name(i004, 0xabbc0000)
@@ -296,7 +296,7 @@ Method(mf8d)
  * 6 - Check different ways to pass String (mdac
  * but without Store). Check - no exceptions.
  */
-Method(mf8e)
+Method(mf8e,, Serialized)
 {
 	Method(mm60)
 	{
@@ -323,31 +323,31 @@ Method(mf8e)
 
 	CH03("", 0, 0x04a, 0, 0)
 
-	DerefOf("b006")
+	Store(DerefOf("b006"), Local2)
 
-	DerefOf(Local0)
+	Store(DerefOf(Local0), Local2)
 
-	DerefOf(Local7)
+	Store(DerefOf(Local7), Local2)
 
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
-	DerefOf(s006)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
+	Store(DerefOf(s006), Local2)
 
-	DerefOf(mm60())
+	Store(DerefOf(mm60()), Local2)
 
-	DerefOf(mm61(ss06))
+	Store(DerefOf(mm61(ss06)), Local2)
 
-	DerefOf(ToString("b006"))
+	Store(DerefOf(ToString("b006")), Local2)
 
-	DerefOf(Store("b006", Local6))
+	Store(DerefOf(Store("b006", Local6)), Local2)
 
-	DerefOf(i006)
+	Store(DerefOf(i006), Local2)
 
 	CH03("", 0, 0x04b, 0, 0)
 }
@@ -355,7 +355,7 @@ Method(mf8e)
 /*
  * 7 - Check access to special type objects - DerefOf(<String>)
  */
-Method(mf8f)
+Method(mf8f,, Serialized)
 {
 	Event(e007)
 	Mutex(mx07, 0)
@@ -368,38 +368,52 @@ Method(mf8f)
 	// Checkings
 
 	CH03("", 0, 0x04c, 0, 0)
-	DerefOf("e007")
-	CH03("", 0, 0x04d, 0, 0)
+	Store(DerefOf("e007"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x04d, 0, 0)
+	}
 
 	CH03("", 0, 0x04e, 0, 0)
-	DerefOf("mx07")
-	CH03("", 0, 0x04f, 0, 0)
+	Store(DerefOf("mx07"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x04f, 0, 0)
+	}
 
 	CH03("", 0, 0x050, 0, 0)
-	DerefOf("d007")
-	CH03("", 0, 0x051, 0, 0)
+	Store(DerefOf("d007"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x051, 0, 0)
+	}
 
 	CH03("", 0, 0x052, 0, 0)
-	DerefOf("tz07")
-	CH03("", 0, 0x053, 0, 0)
+	Store(DerefOf("tz07"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x053, 0, 0)
+	}
 
 	CH03("", 0, 0x054, 0, 0)
-	DerefOf("pr07")
-	CH03("", 0, 0x055, 0, 0)
+	Store(DerefOf("pr07"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x055, 0, 0)
+	}
 
 	CH03("", 0, 0x056, 0, 0)
-	DerefOf("r007")
-	CH03("", 0, 0x057, 0, 0)
+	Store(DerefOf("r007"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x057, 0, 0)
+	}
 
 	CH03("", 0, 0x058, 0, 0)
-	DerefOf("pw07")
-	CH03("", 0, 0x059, 0, 0)
+	Store(DerefOf("pw07"), Local2)
+	if(LNot(SLCK)){
+		CH04("", 0, 47, 0, 0x059, 0, 0)
+	}
 }
 
 /*
  * 8 - Check DerefOf(<Not-String>) - calculated type objects
  */
-Method(mf90)
+Method(mf90,, Serialized)
 {
 	Name(b008, Buffer(){ 1, 2, 3, 4, 0x95, 6, 7, 8})
 	Name(i008, 0xabbc0000)
@@ -408,15 +422,15 @@ Method(mf90)
 	// Checkings
 
 	CH03("", 0, 0x05a, 0, 0)
-	DerefOf(b008)
+	Store(DerefOf(b008), Local2)
 	CH04("", 0, 0xff, 0, 0x05b, 0, 0)
 
 	CH03("", 0, 0x05c, 0, 0)
-	DerefOf(i008)
+	Store(DerefOf(i008), Local2)
 	CH04("", 0, 0xff, 0, 0x05d, 0, 0)
 
 	CH03("", 0, 0x05e, 0, 0)
-	DerefOf(p008)
+	Store(DerefOf(p008), Local2)
 	CH04("", 0, 0xff, 0, 0x05f, 0, 0)
 }
 
@@ -426,26 +440,26 @@ Method(mf90)
 Method(mf91)
 {
 	CH03("", 0, 0x060, 0, 0)
-	DerefOf("0123")
+	Store(DerefOf("0123"), Local2)
 	CH04("", 0, 0xff, 0, 0x061, 0, 0)
 
 	CH03("", 0, 0x062, 0, 0)
-	DerefOf("zxcvbnm,./;'\][0123")
+	Store(DerefOf("zxcvbnm,./;'\][0123"), Local2)
 	CH04("", 0, 0xff, 0, 0x063, 0, 0)
 
 	CH03("", 0, 0x064, 0, 0)
-	DerefOf("mf_d")
+	Store(DerefOf("mf_d"), Local2)
 	CH04("", 0, 0xff, 0, 0x065, 0, 0)
 
 	CH03("", 0, 0x066, 0, 0)
-	DerefOf("b009")
+	Store(DerefOf("b009"), Local2)
 	CH04("", 0, 0xff, 0, 0x067, 0, 0)
 }
 
 /*
  * a - Check access to special type objects - DerefOf(<String>)
  */
-Method(mfa0)
+Method(mfa0,, Serialized)
 {
 	Name(b00a, Buffer() {0xb0,0xb1,0xb2,0xb3,0xb4})
 	OperationRegion(r00a, SystemMemory, 0x100, 0x100)
@@ -485,7 +499,7 @@ Method(mfa0)
 }
 
 // b
-Method(mfa1)
+Method(mfa1,, Serialized)
 {
 	Name(b00b, Buffer() {0xb0,0xb1,0xb2,0xb3,0xb4})
 	OperationRegion(r00b, SystemMemory, 0x100, 0x100)
@@ -529,7 +543,7 @@ Method(mfa1)
 }
 
 // c
-Method(mfa2)
+Method(mfa2,, Serialized)
 {
 	Event(e00c)
 	Mutex(mx0c, 0)
@@ -542,31 +556,31 @@ Method(mfa2)
 	// Checkings
 
 	CH03("", 0, 0x08a, 0, 0)
-	DerefOf(e00c)
+	Store(DerefOf(e00c), Local2)
 	CH04("", 0, 0xff, 0, 0x08b, 0, 0)
 
 	CH03("", 0, 0x08c, 0, 0)
-	DerefOf(mx0c)
+	Store(DerefOf(mx0c), Local2)
 	CH04("", 0, 0xff, 0, 0x08d, 0, 0)
 
 	CH03("", 0, 0x08e, 0, 0)
-	DerefOf(d00c)
+	Store(DerefOf(d00c), Local2)
 	CH04("", 0, 0xff, 0, 0x08f, 0, 0)
 
 	CH03("", 0, 0x090, 0, 0)
-	DerefOf(tz0c)
+	Store(DerefOf(tz0c), Local2)
 	CH04("", 0, 0xff, 0, 0x091, 0, 0)
 
 	CH03("", 0, 0x092, 0, 0)
-	DerefOf(pr0c)
+	Store(DerefOf(pr0c), Local2)
 	CH04("", 0, 0xff, 0, 0x093, 0, 0)
 
 	CH03("", 0, 0x094, 0, 0)
-	DerefOf(r00c)
+	Store(DerefOf(r00c), Local2)
 	CH04("", 0, 0xff, 0, 0x095, 0, 0)
 
 	CH03("", 0, 0x096, 0, 0)
-	DerefOf(pw0c)
+	Store(DerefOf(pw0c), Local2)
 	CH04("", 0, 0xff, 0, 0x097, 0, 0)
 }
 

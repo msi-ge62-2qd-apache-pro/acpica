@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The result of Interrupt Resource Template macro is incorrect when ResourceSource is omitted
  */
 
-Method(m107)
+Method(m107,, Serialized)
 {
 	Name (RT00,	ResourceTemplate () {
 		Interrupt (ResourceConsumer, Edge, ActiveLow, Shared,

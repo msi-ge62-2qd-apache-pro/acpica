@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -44,36 +44,36 @@
 
 		Store("Test 0", Debug)
 		CH03("", 0, 0x000, 0, 0)
-		Add(arg0, 1)
-		CH04("", 0, 47, 0, 0x001, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg0, 1), Local5)
+		CH04("", 1, 47, 0, 0x001, 0, 0) // AE_AML_OPERAND_TYPE
 
 		Store("Test 1", Debug)
 		CH03("", 0, 0x002, 0, 0)
-		Add(arg1, 1)
-		CH04("", 0, 47, 0, 0x003, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg1, 1), Local5)
+		CH04("", 1, 47, 0, 0x003, 0, 0) // AE_AML_OPERAND_TYPE
 
 		Store("Test 2", Debug)
 		CH03("", 0, 0x004, 0, 0)
-		Add(arg2, 1)
-		CH04("", 0, 47, 0, 0x005, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg2, 1), Local5)
+		CH04("", 1, 47, 0, 0x005, 0, 0) // AE_AML_OPERAND_TYPE
 
 		Store("Test 3", Debug)
 		CH03("", 0, 0x006, 0, 0)
-		Add(arg3, 1)
-		CH04("", 0, 47, 0, 0x007, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg3, 1), Local5)
+		CH04("", 1, 47, 0, 0x007, 0, 0) // AE_AML_OPERAND_TYPE
 
 		Store("Test 4", Debug)
 		CH03("", 0, 0x008, 0, 0)
-		Add(arg4, 1)
-		CH04("", 0, 47, 0, 0x009, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg4, 1), Local5)
+		CH04("", 1, 47, 0, 0x009, 0, 0) // AE_AML_OPERAND_TYPE
 
 		Store("Test 5", Debug)
 		CH03("", 0, 0x00a, 0, 0)
-		Add(arg5, 1)
-		CH04("", 0, 47, 0, 0x00b, 0, 0) // AE_AML_OPERAND_TYPE
+		Store(Add(arg5, 1), Local5)
+		CH04("", 1, 47, 0, 0x00b, 0, 0) // AE_AML_OPERAND_TYPE
 	}
 
-	Method(me7a)
+	Method(me7a,, Serialized)
 	{
 		Name(p000, Package(){0x00, 0x01, 0x02, 0x03, 0x04})
 		Name(p001, Package(){0x10, 0x11, 0x12, 0x13, 0x14})

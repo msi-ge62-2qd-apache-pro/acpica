@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,7 +50,7 @@
 
 	// gr1.asl
 
-	Method(mf54)
+	Method(mf54,, Serialized)
 	{
 		Name(p000, Package() {
 			  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
@@ -114,7 +114,7 @@
 
 	// gr3.asl
 
-	Method(mf57)
+	Method(mf57,, Serialized)
 	{
 		Name(i000, 0)
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The jumping over levels in releasing mutexes is not prohibited
  */
 
-Method(m039)
+Method(m039,, Serialized)
 {
 	Mutex(MX07, 7)
 	Mutex(MX08, 8)

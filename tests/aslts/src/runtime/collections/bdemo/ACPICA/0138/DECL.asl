@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  * ROOT CAUSE
  */
 
-	Method(mf29)
+	Method(mf29,, Serialized)
 	{
 		Name(b000, Buffer(12){})
 		CreateField(b000,  0, 72, bf00)

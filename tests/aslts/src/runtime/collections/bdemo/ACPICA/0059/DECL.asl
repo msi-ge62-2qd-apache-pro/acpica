@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: String to Buffer conversion doesn't reduce the size of resulting Buffer
  */
 
-Method(mdf9)
+Method(mdf9,, Serialized)
 {
 	// Table 17-8 Object Conversion Rules,
 	// String -->> Buffer Rule:

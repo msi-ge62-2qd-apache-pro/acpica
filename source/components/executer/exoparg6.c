@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -114,8 +114,6 @@
  *
  *****************************************************************************/
 
-#define __EXOPARG6_C__
-
 #include "acpi.h"
 #include "accommon.h"
 #include "acinterp.h"
@@ -203,7 +201,6 @@ AcpiExDoMatch (
         break;
 
     case MATCH_MEQ:
-
         /*
          * True if equal: (P[i] == M)
          * Change to:     (M == P[i])
@@ -217,7 +214,6 @@ AcpiExDoMatch (
         break;
 
     case MATCH_MLE:
-
         /*
          * True if less than or equal: (P[i] <= M) (P[i] NotGreater than M)
          * Change to:                  (M >= P[i]) (M NotLess than P[i])
@@ -232,7 +228,6 @@ AcpiExDoMatch (
         break;
 
     case MATCH_MLT:
-
         /*
          * True if less than: (P[i] < M)
          * Change to:         (M > P[i])
@@ -246,7 +241,6 @@ AcpiExDoMatch (
         break;
 
     case MATCH_MGE:
-
         /*
          * True if greater than or equal: (P[i] >= M) (P[i] NotLess than M)
          * Change to:                     (M <= P[i]) (M NotGreater than P[i])
@@ -261,7 +255,6 @@ AcpiExDoMatch (
         break;
 
     case MATCH_MGT:
-
         /*
          * True if greater than: (P[i] > M)
          * Change to:            (M < P[i])
@@ -401,12 +394,10 @@ AcpiExOpcode_6A_0T_1R (
         }
         break;
 
-
     case AML_LOAD_TABLE_OP:
 
         Status = AcpiExLoadTableOp (WalkState, &ReturnDesc);
         break;
-
 
     default:
 

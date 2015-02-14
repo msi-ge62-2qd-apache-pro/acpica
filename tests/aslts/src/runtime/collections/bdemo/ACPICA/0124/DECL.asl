@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: No exception when the Index argument on Index() operator is out of the Source
  */
 
-	Method(mf06)
+	Method(mf06,, Serialized)
 	{
 		Name(p000, Package(2){0, 1})
 		Name(b000, Buffer(3){2, 3, 4})
@@ -42,16 +42,16 @@
 		// c) Modulo(Index, 0x100000000) < Size.
 
 		CH03("", 0, 0x000, 0, 0)
-		Index(p000, 0x100000001)
-		CH04("", 0, 55, 0, 0x001, 0, 0) // AE_AML_PACKAGE_LIMIT
+		Store(Index(p000, 0x100000001), Local0)
+		CH04("", 1, 55, 0, 0x001, 0, 0) // AE_AML_PACKAGE_LIMIT
 
 		CH03("", 0, 0x002, 0, 0)
-		Index(b000, 0x100000002)
-		CH04("", 0, 54, 0, 0x003, 0, 0) // AE_AML_BUFFER_LIMIT
+		Store(Index(b000, 0x100000002), Local0)
+		CH04("", 1, 54, 0, 0x003, 0, 0) // AE_AML_BUFFER_LIMIT
 
 		CH03("", 0, 0x004, 0, 0)
-		Index(s000, 0x100000003)
-		CH04("", 0, 61, 0, 0x005, 0, 0) // AE_AML_STRING_LIMIT
+		Store(Index(s000, 0x100000003), Local0)
+		CH04("", 1, 61, 0, 0x005, 0, 0) // AE_AML_STRING_LIMIT
 	}
 
 

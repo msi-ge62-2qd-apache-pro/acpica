@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  * Check absence of crash..
  */
 
-	Method(mf3f, 1)
+	Method(mf3f, 1, Serialized)
 	{
 		Name(b000, Buffer(arg0){})
 		Name(b001, Buffer(7){1,2,3,4,5,6,7})
@@ -47,7 +47,7 @@
 
 		// 1.
 
-		Concatenate(b000, b001)
+		Store(Concatenate(b000, b001), Local1)
 		Store("Ok: Concatenate(<Default empty buffer>, ...)", Debug)
 
 		Concatenate(b000, b001, Local0)
@@ -62,7 +62,7 @@
 		Store(Sizeof(Local0), Debug)
 
 		Store("Try: Concatenate(<Mid empty buffer result object>, ...)", Debug)
-		Concatenate(Local0, b001)
+		Store(Concatenate(Local0, b001), Local1)
 		Store("Ok: Concatenate(<Mid empty buffer result object>, ...)", Debug)
 
 		Concatenate(Local0, b001, Local0)
@@ -71,7 +71,7 @@
 		}
 	}
 
-	Method(mf40)
+	Method(mf40,, Serialized)
 	{
 		Name(s000, "")
 		Name(s001, "String1")
@@ -84,7 +84,7 @@
 
 		// 3.
 
-		Concatenate(s000, s001)
+		Store(Concatenate(s000, s001), Local1)
 		Store("Ok: Concatenate(<Default empty string>, ...)", Debug)
 
 		Concatenate(s000, s001, Local0)
@@ -99,7 +99,7 @@
 		Store(Sizeof(Local0), Debug)
 
 		Store("Try: Concatenate(<Mid empty string result object>, ...)", Debug)
-		Concatenate(Local0, s001)
+		Store(Concatenate(Local0, s001), Local1)
 		Store("Ok: Concatenate(<Mid empty string result object>, ...)", Debug)
 
 		Concatenate(Local0, s001, Local0)

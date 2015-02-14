@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The manner parameters are passed to method in ACPICA contradicts to MS
  */
 
-Method(m023)
+Method(m023,, Serialized)
 {
 	Name(i000, 0xabcd0000)
 	Method(mm00, 1)

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * of Methods.
  */
 
-Method(md6e, 1)
+Method(md6e, 1, Serialized)
 {
 	Name(p504, Package(arg0) {})
 
@@ -46,7 +46,7 @@ Method(md6e, 1)
 		10)                // maximal number of written elements to be verified
 }
 
-Method(md6f, 1)
+Method(md6f, 1, Serialized)
 {
 	Name(p505, Package(arg0) {})
 
@@ -60,7 +60,7 @@ Method(md6f, 1)
 		10)                // maximal number of written elements to be verified
 }
 
-Method(md70, 1)
+Method(md70, 1, Serialized)
 {
 	Name(p506, Package(arg0) {})
 
@@ -74,7 +74,7 @@ Method(md70, 1)
 		10)                // maximal number of written elements to be verified
 }
 
-Method(md71, 1)
+Method(md71, 1, Serialized)
 {
 	Name(p000, Package(arg0) {})
 
@@ -88,7 +88,7 @@ Method(md71, 1)
 		10)                // maximal number of written elements to be verified
 }
 
-Method(md72, 1)
+Method(md72, 1, Serialized)
 {
 	Name(p000, Package(arg0) {})
 

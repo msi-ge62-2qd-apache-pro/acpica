@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
 
 Method(m1ea)
 {
-Method(m19c)
+Method(m19c,, Serialized)
 {
 	Name(rpt0, 0)
 
@@ -82,13 +82,13 @@ Method(m19c)
 
 	Name(c000, 3)
 
-	Method(m100)
+	Method(m100,, Serialized)
 	{
 		Name(c100, 3)
-		Method(m200)
+		Method(m200,, Serialized)
 		{
 			Name(c200, 3)
-			Method(m300)
+			Method(m300,, Serialized)
 			{
 				Name(c300, 3)
 				Method(m400)

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -109,7 +109,7 @@ DefinitionBlock("extra.aml", "DSDT", 0x1, "INTEL", "ABCDE", 0x1)
 	/*
 	 * Reset POUT service to the initial state
 	 */
-	Method(RST9)
+	Method(RST9,, Serialized)
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)

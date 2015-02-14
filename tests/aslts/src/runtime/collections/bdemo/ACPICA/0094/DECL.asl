@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Invalid result of Index operator passed with the immediate image of String
  */
 
-	Method(me44, 1)
+	Method(me44, 1, Serialized)
 	{
 		Name(s000, "qwrtyuiop")
 

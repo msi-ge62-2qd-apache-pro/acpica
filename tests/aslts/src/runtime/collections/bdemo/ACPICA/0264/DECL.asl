@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -45,7 +45,7 @@
 
 Method(m025)
 {
-	Method(m000)
+	Method(m000,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })
@@ -66,7 +66,7 @@ Specify then what should be there the result of Store operation above?
 		CH03("", 0, 0x001, 0, 0)
 	}
 
-	Method(m001)
+	Method(m001,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })
@@ -76,7 +76,7 @@ Specify then what should be there the result of Store operation above?
 		CH03("", 0, 0x003, 0, 0)
 	}
 
-	Method(m002)
+	Method(m002,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })
@@ -87,7 +87,7 @@ Specify then what should be there the result of Store operation above?
 		CH03("", 0, 0x005, 0, 0)
 	}
 
-	Method(m003)
+	Method(m003,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })
@@ -98,7 +98,7 @@ Specify then what should be there the result of Store operation above?
 		CH03("", 0, 0x007, 0, 0)
 	}
 
-	Method(m004)
+	Method(m004,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })
@@ -109,7 +109,7 @@ Specify then what should be there the result of Store operation above?
 		CH03("", 0, 0x009, 0, 0)
 	}
 
-	Method(m005)
+	Method(m005,, Serialized)
 	{
 		Name(i000, 0xabcd0000)
 		Name(p000, Package() { i000 })

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  * ROOT CAUSE
  */
 
-	Method(mf27)
+	Method(mf27,, Serialized)
 	{
 		Name(b000, Buffer(1){0x3c})
 		Name(b001, Buffer(3){0x01, 0x02, 0x03})

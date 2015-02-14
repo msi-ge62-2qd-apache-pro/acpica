@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "acpi.h"
 #include "accommon.h"
@@ -304,9 +303,11 @@ AcpiDbSingleStep (
     {
     case AML_CLASS_UNKNOWN:
     case AML_CLASS_ARGUMENT:    /* constants, literals, etc. do nothing */
+
         return (AE_OK);
 
     default:
+
         /* All other opcodes -- continue */
         break;
     }
@@ -480,6 +481,9 @@ AcpiDbInitialize (
     ACPI_STATUS             Status;
 
 
+    ACPI_FUNCTION_TRACE (DbInitialize);
+
+
     /* Init globals */
 
     AcpiGbl_DbBuffer            = NULL;
@@ -499,7 +503,7 @@ AcpiDbInitialize (
     AcpiGbl_DbBuffer = AcpiOsAllocate (ACPI_DEBUG_BUFFER_SIZE);
     if (!AcpiGbl_DbBuffer)
     {
-        return (AE_NO_MEMORY);
+        return_ACPI_STATUS (AE_NO_MEMORY);
     }
     ACPI_MEMSET (AcpiGbl_DbBuffer, 0, ACPI_DEBUG_BUFFER_SIZE);
 
@@ -522,14 +526,14 @@ AcpiDbInitialize (
         if (ACPI_FAILURE (Status))
         {
             AcpiOsPrintf ("Could not get debugger mutex\n");
-            return (Status);
+            return_ACPI_STATUS (Status);
         }
 
         Status = AcpiUtAcquireMutex (ACPI_MTX_DEBUG_CMD_READY);
         if (ACPI_FAILURE (Status))
         {
             AcpiOsPrintf ("Could not get debugger mutex\n");
-            return (Status);
+            return_ACPI_STATUS (Status);
         }
 
         /* Create the debug execution thread to execute commands */
@@ -537,8 +541,8 @@ AcpiDbInitialize (
         Status = AcpiOsExecute (OSL_DEBUGGER_THREAD, AcpiDbExecuteThread, NULL);
         if (ACPI_FAILURE (Status))
         {
-            AcpiOsPrintf ("Could not start debugger thread\n");
-            return (Status);
+            ACPI_EXCEPTION ((AE_INFO, Status, "Could not start debugger thread"));
+            return_ACPI_STATUS (Status);
         }
     }
 
@@ -548,7 +552,7 @@ AcpiDbInitialize (
         AcpiGbl_DbOpt_stats = FALSE;
     }
 
-    return (AE_OK);
+    return_ACPI_STATUS (AE_OK);
 }
 
 
@@ -572,7 +576,12 @@ AcpiDbTerminate (
     if (AcpiGbl_DbBuffer)
     {
         AcpiOsFree (AcpiGbl_DbBuffer);
+        AcpiGbl_DbBuffer = NULL;
     }
+
+    /* Ensure that debug output is now disabled */
+
+    AcpiGbl_DbOutputFlags = ACPI_DB_DISABLE_OUTPUT;
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The type returned by ObjectType for Object created by Field operator is not Field
  */
 
-Method(mda5)
+Method(mda5,, Serialized)
 {
 	OperationRegion(r000, SystemMemory, 0x125, 256)
 	Field (r000, ByteAcc, NoLock, Preserve) {f000, 32}

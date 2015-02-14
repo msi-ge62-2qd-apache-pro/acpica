@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -114,10 +114,9 @@
  *****************************************************************************/
 
 #include "acpibin.h"
+#include "acapps.h"
 
 
-FILE                        *File1;
-FILE                        *File2;
 ACPI_TABLE_HEADER           Header1;
 ACPI_TABLE_HEADER           Header2;
 
@@ -150,72 +149,6 @@ AbPrintHeadersInfo (
     ACPI_TABLE_HEADER       *Header,
     ACPI_TABLE_HEADER       *Header2);
 
-ACPI_PHYSICAL_ADDRESS
-AeLocalGetRootPointer (
-    void);
-
-
-/*******************************************************************************
- *
- * FUNCTION:    UtHexCharToValue
- *
- * PARAMETERS:  HexChar         - Hex character in Ascii
- *
- * RETURN:      The binary value of the hex character
- *
- * DESCRIPTION: Perform ascii-to-hex translation
- *
- ******************************************************************************/
-
-static UINT8
-UtHexCharToValue (
-    int                     HexChar,
-    UINT8                   *OutBinary)
-{
-
-    if (HexChar >= 0x30 && HexChar <= 0x39)
-    {
-        *OutBinary = (UINT8) (HexChar - 0x30);
-        return (1);
-    }
-
-    else if (HexChar >= 0x41 && HexChar <= 0x46)
-    {
-        *OutBinary = (UINT8) (HexChar - 0x37);
-        return (1);
-    }
-
-    else if (HexChar >= 0x61 && HexChar <= 0x66)
-    {
-        *OutBinary = (UINT8) (HexChar - 0x57);
-        return (1);
-    }
-    return (0);
-}
-
-static UINT8
-AbHexByteToBinary (
-    char                    *HexString,
-    char                    *OutBinary)
-{
-    UINT8                   Local1;
-    UINT8                   Local2;
-
-
-    if (!UtHexCharToValue (HexString[0], &Local1))
-    {
-        return (0);
-    }
-    if (!UtHexCharToValue (HexString[1], &Local2))
-    {
-        return (0);
-    }
-
-    *OutBinary = (UINT8) ((Local1 << 4) | Local2);
-    return (2);
-
-}
-
 
 /******************************************************************************
  *
@@ -230,7 +163,7 @@ AbValidateHeader (
     ACPI_TABLE_HEADER       *Header)
 {
 
-    if (!AcpiUtValidAcpiName (* (UINT32 *) &Header->Signature))
+    if (!AcpiUtValidAcpiName (Header->Signature))
     {
         printf ("Header signature is invalid\n");
         return (FALSE);
@@ -258,23 +191,24 @@ AcpiTbSumTable (
     void                    *Buffer,
     UINT32                  Length)
 {
-    const UINT8             *limit;
-    const UINT8             *rover;
-    UINT8                   sum = 0;
+    const UINT8             *Limit;
+    const UINT8             *Rover;
+    UINT8                   Sum = 0;
 
 
     if (Buffer && Length)
     {
         /* Buffer and Length are valid */
 
-        limit = (UINT8 *) Buffer + Length;
+        Limit = (UINT8 *) Buffer + Length;
 
-        for (rover = Buffer; rover < limit; rover++)
+        for (Rover = Buffer; Rover < Limit; Rover++)
         {
-            sum = (UINT8) (sum + *rover);
+            Sum = (UINT8) (Sum + *Rover);
         }
     }
-    return (sum);
+
+    return (Sum);
 }
 
 
@@ -301,10 +235,10 @@ AbPrintHeaderInfo (
     printf ("Length            : %8.8X\n",    Header->Length);
     printf ("Revision          : %2.2X\n",    Header->Revision);
     printf ("Checksum          : %2.2X\n",    Header->Checksum);
-    printf ("OEM ID            : %6.6s\n",    Header->OemId);
-    printf ("OEM Table ID      : %8.8s\n",    Header->OemTableId);
+    printf ("OEM ID            : %.6s\n",     Header->OemId);
+    printf ("OEM Table ID      : %.8s\n",     Header->OemTableId);
     printf ("OEM Revision      : %8.8X\n",    Header->OemRevision);
-    printf ("ASL Compiler ID   : %4.4s\n",    Header->AslCompilerId);
+    printf ("ASL Compiler ID   : %.4s\n",     Header->AslCompilerId);
     printf ("Compiler Revision : %8.8X\n",    Header->AslCompilerRevision);
     printf ("\n");
 }
@@ -321,10 +255,10 @@ AbPrintHeadersInfo (
     printf ("Length             %8.8X : %8.8X\n",    Header->Length, Header2->Length);
     printf ("Revision           %8.2X : %2.2X\n",    Header->Revision, Header2->Revision);
     printf ("Checksum           %8.2X : %2.2X\n",    Header->Checksum, Header2->Checksum);
-    printf ("OEM ID             %8.6s : %6.6s\n",    Header->OemId, Header2->OemId);
-    printf ("OEM Table ID       %8.8s : %8.8s\n",    Header->OemTableId, Header2->OemTableId);
+    printf ("OEM ID             %8.6s : %.6s\n",     Header->OemId, Header2->OemId);
+    printf ("OEM Table ID       %8.8s : %.8s\n",     Header->OemTableId, Header2->OemTableId);
     printf ("OEM Revision       %8.8X : %8.8X\n",    Header->OemRevision, Header2->OemRevision);
-    printf ("ASL Compiler ID    %8.4s : %4.4s\n",    Header->AslCompilerId, Header2->AslCompilerId);
+    printf ("ASL Compiler ID    %8.4s : %.4s\n",     Header->AslCompilerId, Header2->AslCompilerId);
     printf ("Compiler Revision  %8.8X : %8.8X\n",    Header->AslCompilerRevision, Header2->AslCompilerRevision);
     printf ("\n");
 }
@@ -340,22 +274,25 @@ AbPrintHeadersInfo (
 
 void
 AbDisplayHeader (
-    char                    *File1Path)
+    char                    *FilePath)
 {
     UINT32                  Actual;
+    FILE                    *File;
 
 
-    File1 = fopen (File1Path, "rb");
-    if (!File1)
+    File = fopen (FilePath, "rb");
+    if (!File)
     {
-        printf ("Could not open file %s\n", File1Path);
+        printf ("Could not open file %s\n", FilePath);
         return;
     }
 
-    Actual = fread (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File1);
+    Actual = fread (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File);
+    fclose (File);
+
     if (Actual != sizeof (ACPI_TABLE_HEADER))
     {
-        printf ("File %s does not contain an ACPI table header\n", File1Path);
+        printf ("File %s does not contain a valid ACPI table header\n", FilePath);
         return;
     }
 
@@ -378,30 +315,31 @@ AbDisplayHeader (
 
 void
 AbComputeChecksum (
-    char                    *File1Path)
+    char                    *FilePath)
 {
     UINT32                  Actual;
     ACPI_TABLE_HEADER       *Table;
     UINT8                   Checksum;
+    FILE                    *File;
 
 
-    File1 = fopen (File1Path, "rb");
-    if (!File1)
+    File = fopen (FilePath, "rb");
+    if (!File)
     {
-        printf ("Could not open file %s\n", File1Path);
+        printf ("Could not open file %s\n", FilePath);
         return;
     }
 
-    Actual = fread (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File1);
+    Actual = fread (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File);
     if (Actual < sizeof (ACPI_TABLE_HEADER))
     {
-        printf ("File %s does not contain an ACPI table header\n", File1Path);
-        return;
+        printf ("File %s does not contain a valid ACPI table header\n", FilePath);
+        goto Exit1;
     }
 
     if (!AbValidateHeader (&Header1))
     {
-        return;
+        goto Exit1;
     }
 
     if (!Gbl_TerseMode)
@@ -414,18 +352,18 @@ AbComputeChecksum (
     Table = AcpiOsAllocate (Header1.Length);
     if (!Table)
     {
-        printf ("could not allocate\n");
-        return;
+        printf ("Could not allocate buffer for table\n");
+        goto Exit1;
     }
 
     /* Read the entire table, including header */
 
-    fseek (File1, 0, SEEK_SET);
-    Actual = fread (Table, 1, Header1.Length, File1);
+    fseek (File, 0, SEEK_SET);
+    Actual = fread (Table, 1, Header1.Length, File);
     if (Actual != Header1.Length)
     {
-        printf ("could not read table, length %u\n", Header1.Length);
-        return;
+        printf ("Could not read table, length %u\n", Header1.Length);
+        goto Exit2;
     }
 
     /* Compute the checksum for the table */
@@ -437,32 +375,41 @@ AbComputeChecksum (
 
     if (Header1.Checksum == Checksum)
     {
-        printf ("Checksum ok in AML file, not updating\n");
-        return;
+        printf ("Checksum OK in AML file, not updating\n");
+        goto Exit2;
     }
 
     /* Open the target file for writing, to update checksum */
 
-    fclose (File1);
-    File1 = fopen (File1Path, "r+b");
-    if (!File1)
+    fclose (File);
+    File = fopen (FilePath, "r+b");
+    if (!File)
     {
-        printf ("Could not open file %s for writing\n", File1Path);
-        return;
+        printf ("Could not open file %s for writing\n", FilePath);
+        goto Exit2;
     }
 
     /* Set the checksum, write the new header */
 
     Header1.Checksum = Checksum;
 
-    Actual = fwrite (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File1);
+    Actual = fwrite (&Header1, 1, sizeof (ACPI_TABLE_HEADER), File);
     if (Actual != sizeof (ACPI_TABLE_HEADER))
     {
         printf ("Could not write updated table header\n");
-        return;
+        goto Exit2;
     }
 
     printf ("Wrote new checksum\n");
+
+Exit2:
+    AcpiOsFree (Table);
+
+Exit1:
+    if (File)
+    {
+        fclose (File);
+    }
     return;
 }
 
@@ -487,6 +434,9 @@ AbCompareAmlFiles (
     UINT8                   Char2;
     UINT8                   Mismatches = 0;
     BOOLEAN                 HeaderMismatch = FALSE;
+    FILE                    *File1;
+    FILE                    *File2;
+    int                     Status = -1;
 
 
     File1 = fopen (File1Path, "rb");
@@ -500,7 +450,7 @@ AbCompareAmlFiles (
     if (!File2)
     {
         printf ("Could not open file %s\n", File2Path);
-        return (-1);
+        goto Exit1;
     }
 
     /* Read the ACPI header from each file */
@@ -509,20 +459,20 @@ AbCompareAmlFiles (
     if (Actual1 != sizeof (ACPI_TABLE_HEADER))
     {
         printf ("File %s does not contain an ACPI table header\n", File1Path);
-        return (-1);
+        goto Exit2;
     }
 
     Actual2 = fread (&Header2, 1, sizeof (ACPI_TABLE_HEADER), File2);
     if (Actual2 != sizeof (ACPI_TABLE_HEADER))
     {
         printf ("File %s does not contain an ACPI table header\n", File2Path);
-        return (-1);
+        goto Exit2;
     }
 
     if ((!AbValidateHeader (&Header1)) ||
         (!AbValidateHeader (&Header2)))
     {
-        return (-1);
+        goto Exit2;
     }
 
     /* Table signatures must match */
@@ -530,7 +480,7 @@ AbCompareAmlFiles (
     if (*((UINT32 *) Header1.Signature) != *((UINT32 *) Header2.Signature))
     {
         printf ("Table signatures do not match\n");
-        return (-1);
+        goto Exit2;
     }
 
     if (!Gbl_TerseMode)
@@ -562,7 +512,7 @@ AbCompareAmlFiles (
             if (Mismatches > 100)
             {
                 printf ("100 Mismatches: Too many mismatches\n");
-                return (-1);
+                goto Exit2;
             }
         }
 
@@ -594,7 +544,14 @@ AbCompareAmlFiles (
     }
 
     printf ("%u Mismatches found\n", Mismatches);
-    return (0);
+    Status = 0;
+
+Exit2:
+    fclose (File2);
+
+Exit1:
+    fclose (File1);
+    return (Status);
 }
 
 
@@ -614,8 +571,6 @@ AbGetFile (
     FILE                    *File;
     UINT32                  Size;
     char                    *Buffer = NULL;
-    int                     Seek1;
-    int                     Seek2;
     size_t                  Actual;
 
 
@@ -630,11 +585,8 @@ AbGetFile (
 
     /* Need file size to allocate a buffer */
 
-    Seek1 = fseek (File, 0L, SEEK_END);
-    Size = ftell (File);
-    Seek2 = fseek (File, 0L, SEEK_SET);
-
-    if (Seek1 || Seek2 || (Size == -1))
+    Size = CmGetFileSize (File);
+    if (Size == ACPI_UINT32_MAX)
     {
         printf ("Could not get file size (seek) for %s\n", Filename);
         goto ErrorExit;
@@ -682,25 +634,32 @@ AbDumpAmlFile (
     char                    *File2Path)
 {
     char                    *FileBuffer;
-    UINT32                  FileSize = 0;
     FILE                    *FileOutHandle;
+    UINT32                  FileSize = 0;
+    int                     Status = -1;
 
 
     /* Get the entire AML file, validate header */
 
     FileBuffer = AbGetFile (File1Path, &FileSize);
-    printf ("File %s contains 0x%X bytes\n\n", File1Path, FileSize);
+    if (!FileBuffer)
+    {
+        return (-1);
+    }
+
+    printf ("Input file:  %s contains %u (0x%X) bytes\n",
+        File1Path, FileSize, FileSize);
 
     FileOutHandle = fopen (File2Path, "wb");
     if (!FileOutHandle)
     {
         printf ("Could not open file %s\n", File2Path);
-        return (-1);
+        goto Exit1;
     }
 
     if (!AbValidateHeader ((ACPI_TABLE_HEADER *) FileBuffer))
     {
-        return (-1);
+        goto Exit2;
     }
 
     /* Convert binary AML to text, using common dump buffer routine */
@@ -711,133 +670,22 @@ AbDumpAmlFile (
     AcpiOsPrintf ("%4.4s @ 0x%8.8X\n",
         ((ACPI_TABLE_HEADER *) FileBuffer)->Signature, 0);
 
-    AcpiDbgLevel = ACPI_UINT32_MAX;
-    AcpiUtDebugDumpBuffer ((UINT8 *) FileBuffer, FileSize,
-        DB_BYTE_DISPLAY, ACPI_UINT32_MAX);
+    AcpiUtDumpBuffer ((UINT8 *) FileBuffer, FileSize, DB_BYTE_DISPLAY, 0);
 
-    return (0);
-}
+    /* Summary for the output file */
 
+    FileSize = CmGetFileSize (FileOutHandle);
+    printf ("Output file: %s contains %u (0x%X) bytes\n\n",
+        File2Path, FileSize, FileSize);
 
-/******************************************************************************
- *
- * FUNCTION:    AbExtractAmlFile
- *
- * DESCRIPTION: Extract a binary AML file from a text file (as produced by the
- *              DumpAmlFile procedure or the "acpidump" table utility.
- *
- ******************************************************************************/
+    Status = 0;
 
-int
-AbExtractAmlFile (
-    char                    *TableSig,
-    char                    *File1Path,
-    char                    *File2Path)
-{
-    char                    *Table;
-    char                    Value;
-    UINT32                  i;
-    FILE                    *FileHandle;
-    FILE                    *FileOutHandle;
-    UINT32                  Count = 0;
-    int                     Scanned;
-
-
-    /* Open in/out files. input is in text mode, output is in binary mode */
-
-    FileHandle = fopen (File1Path, "rt");
-    if (!FileHandle)
-    {
-        printf ("Could not open file %s\n", File1Path);
-        return (-1);
-    }
-
-    FileOutHandle = fopen (File2Path, "w+b");
-    if (!FileOutHandle)
-    {
-        printf ("Could not open file %s\n", File2Path);
-        return (-1);
-    }
-
-    /* Force input table sig to uppercase */
-
-    AcpiUtStrupr (TableSig);
-
-
-    /* TBD: examine input for ASCII */
-
-
-    /* We have an ascii file, grab one line at a time */
-
-    while (fgets (Buffer, BUFFER_SIZE, FileHandle))
-    {
-        /* The 4-char ACPI signature appears at the beginning of a line */
-
-        if (ACPI_COMPARE_NAME (Buffer, TableSig))
-        {
-            printf ("Found table [%4.4s]\n", TableSig);
-
-            /*
-             * Eat all lines in the table, of the form:
-             *   <offset>: <16 bytes of hex data, separated by spaces> <ASCII representation> <newline>
-             *
-             * Example:
-             *
-             *   02C0: 5F 53 42 5F 4C 4E 4B 44 00 12 13 04 0C FF FF 08  _SB_LNKD........
-             *
-             */
-            while (fgets (Buffer, BUFFER_SIZE, FileHandle))
-            {
-                /* Get past the offset, terminated by a colon */
-
-                Table = strchr (Buffer, ':');
-                if (!Table)
-                {
-                    /* No colon, all done */
-                    goto Exit;
-                }
-
-                Table += 2; /* Eat the colon + space */
-
-                for (i = 0; i < 16; i++)
-                {
-                    Scanned = AbHexByteToBinary (Table, &Value);
-                    if (!Scanned)
-                    {
-                        goto Exit;
-                    }
-
-                    Table += 3; /* Go past this hex byte and space */
-
-                    /* Write the converted (binary) byte */
-
-                    if (fwrite (&Value, 1, 1, FileOutHandle) != 1)
-                    {
-                        printf ("Error writing byte %u to output file: %s\n",
-                            Count, File2Path);
-                        goto Exit;
-                    }
-                    Count++;
-                }
-            }
-
-            /* No more lines, EOF, all done */
-
-            goto Exit;
-        }
-    }
-
-    /* Searched entire file, no match to table signature */
-
-    printf ("Could not match table signature\n");
-    fclose (FileHandle);
-    return (-1);
-
-Exit:
-    printf ("%u (0x%X) bytes written to %s\n", Count, Count, File2Path);
-    fclose (FileHandle);
+Exit2:
     fclose (FileOutHandle);
-    return (0);
+
+Exit1:
+    free (FileBuffer);
+    return (Status);
 }
 
 
@@ -848,26 +696,3 @@ Exit:
  * DESCRIPTION: For linkage
  *
  ******************************************************************************/
-
-ACPI_PHYSICAL_ADDRESS
-AeLocalGetRootPointer (
-    void)
-{
-    return (AE_OK);
-}
-
-ACPI_THREAD_ID
-AcpiOsGetThreadId (
-    void)
-{
-    return (0xFFFF);
-}
-
-ACPI_STATUS
-AcpiOsExecute (
-    ACPI_EXECUTE_TYPE       Type,
-    ACPI_OSD_EXEC_CALLBACK  Function,
-    void                    *Context)
-{
-    return (AE_SUPPORT);
-}

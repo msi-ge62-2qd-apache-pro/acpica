@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -476,7 +476,7 @@ Method(m687, 2)
 
 // Gathers simple statistics of Store/CopyObject operators
 // m688(<name>)
-Method(m688, 1)
+Method(m688, 1, Serialized)
 {
 	// Objects are used as Source
 
@@ -578,7 +578,7 @@ if (y361) {
 	}
 
 	// Output statistics
-	Method(m002, 1)
+	Method(m002, 1, Serialized)
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -752,7 +752,7 @@ if (y361) {
 	}
 
 	// Gathers statistics of CopyObject to Integer
-	Method(m012, 2)
+	Method(m012, 2, Serialized)
 	{
 		// Integer
 		Name(INT1, 0xfedcba9876543211)
@@ -848,7 +848,7 @@ if (y361) {
 // Verify storing of an immediate Source Object into different kinds
 // of Target Objects by means of the specified operator (Store/CopyObject)
 // m689(<name>, <store op>, <exc. conditions>)
-Method(m689, 3)
+Method(m689, 3, Serialized)
 {
 	// Object-initializers are used either with Source or Target
 	// (names ended by 0 and 1 respectively)
@@ -995,7 +995,7 @@ if (y361) {
 	}
 
 	// Output statistics
-	Method(m002, 1)
+	Method(m002, 1, Serialized)
 	{
 		Name(lpN0, 0)
 		Name(lpC0, 0)
@@ -1241,7 +1241,7 @@ if (y361) {
 			// Source object is a reference
 			// Check that it can be used as reference
 			Store(Derefof(arg2), Local0)
-			Derefof(Local0)
+			Store(Derefof(Local0) ,Local3)
 			if (CH03(arg0, z122, 10, arg1, Local0)) {
 				// Derefof caused unexpected exception
 				Return (1)
@@ -1492,7 +1492,7 @@ if (y361) {
 	// Check Target Object to have the expected type and value
 	// m006(<msg>, <ref to target>, <target type>, <result object type>,
 	//      <op>, <target save type>, <test data package>)
-	Method(m006, 7)
+	Method(m006, 7, Serialized)
 	{
 		Name(MMM2, 0) // An auxiliary Object to invoke Method
 
@@ -1508,7 +1508,8 @@ if (y361) {
 				// Types mismatch Target/Target on storing
 				if (LEqual(arg2, c016)) {
 					if (X170) {
-						err(arg0, z122, 39, 0, 0, Local2, arg2)
+						//this sentence is for m00d and invalid, removed.
+						//err(arg0, z122, 39, 0, 0, Local2, arg2)
 					}
 				} else {
 					err(arg0, z122, 39, 0, 0, Local2, arg2)
@@ -1527,7 +1528,7 @@ if (y361) {
 					// Result object is a reference
 					// Check that Target can be used as reference
 					Store(Derefof(arg1), Local0)
-					Derefof(Local0)
+					Store(Derefof(Local0), Local3)
 					if (CH03(arg0, z122, 40, Local2, arg3)) {
 						// Derefof caused unexpected exception
 						Return (1)
@@ -1676,7 +1677,7 @@ if (y361) {
 	// on immediate storing to a Target Named Object of the specified type
 	// m008(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m008, 7)
+	Method(m008, 7, Serialized)
 	{
 		// Source Named Object
 		Name(SRC0, 0)
@@ -2038,7 +2039,7 @@ if (y361) {
 	// on immediate storing to a Target LocalX Object of the specified type
 	// m009(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m009, 7)
+	Method(m009, 7, Serialized)
 	{
 		// Source Named Object
 		Name(SRC0, 0)
@@ -2231,7 +2232,7 @@ if (y361) {
 	// on immediate storing to a Target Named Object of the specified type
 	// m00a(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m00a, 7)
+	Method(m00a, 7, Serialized)
 	{
 		// Source Object: Local1
 		// Target Named Object (or the reference to it in case of Fields)
@@ -2537,9 +2538,9 @@ if (y361) {
 	// Named Object of another specified type
 	// m00c(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m00c, 7)
+	Method(m00c, 7, Serialized)
 	{
-		Method(m10c, 7)
+		Method(m10c, 7, Serialized)
 		{
 			// Source Named Object
 			Name(SRC0, 0)
@@ -2794,9 +2795,9 @@ if (y361) {
 	// to the Named Object of another specified type
 	// m00d(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m00d, 7)
+	Method(m00d, 7, Serialized)
 	{
-		Method(m10d, 7)
+		Method(m10d, 7, Serialized)
 		{
 			// Source Named Object
 			Name(SRC0, 0)
@@ -3037,7 +3038,7 @@ if (y361) {
 	// on immediate storing to an Element of Package of the specified type
 	// m00e(<msg>, <aux>, <target type>, <source type>,
 	//      <op>, <exc. condition>, <test data package>)
-	Method(m00e, 7)
+	Method(m00e, 7, Serialized)
 	{
 		// Source LocalX Object: Local1
 		// Target Package
@@ -3220,7 +3221,7 @@ if (y361) {
 			// Target object is a reference
 			// Check that it can be used as reference
 			Store(Derefof(arg2), Local0)
-			Derefof(Local0)
+			Store(Derefof(Local0), Local3)
 			if (CH03(arg0, z122, 101, arg1, Local0)) {
 				// Derefof caused unexpected exception
 				Return (1)
@@ -3281,7 +3282,7 @@ if (y361) {
 				Store(14, Local0)
 			}
 			Case(17) {
-				Derefof(REF1)
+				Store(Derefof(REF1), Local3)
 				if (CH03(arg0, z122, 103, arg1, Local0)) {
 					// Derefof caused unexpected exception
 					Return (1)
@@ -3463,7 +3464,7 @@ if (y361) {
 				Store(14, Local0)
 			}
 			Case(17) {
-				Derefof(REF1)
+				Store(Derefof(REF1), Local3)
 				if (CH03(arg0, z122, 121, arg1, 0)) {
 					// Derefof caused unexpected exception
 					Return (1)
@@ -4312,7 +4313,7 @@ if (y361) {
 
 	// m020(<msg>, <store op>, <exc. conditions>,
 	//      <Target scale>, <Result scale>, <kind of Source-Target pair>)
-	Method(m020, 6)
+	Method(m020, 6, Serialized)
 	{
 		// Initialize statistics
 		m001()

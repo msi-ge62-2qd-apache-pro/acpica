@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "acpi.h"
 #include "accommon.h"
@@ -332,6 +331,11 @@ AcpiDmResourceTemplate (
     ACPI_NAMESPACE_NODE     *Node;
 
 
+    if (Op->Asl.AmlOpcode != AML_FIELD_OP)
+    {
+        Info->MappingOp = Op;
+    }
+
     Level = Info->Level;
     ResourceName = ACPI_DEFAULT_RESNAME;
     Node = Op->Common.Node;
@@ -400,7 +404,7 @@ AcpiDmResourceTemplate (
 
                 /* Go ahead and insert EndDependentFn() */
 
-                AcpiDmEndDependentDescriptor (Aml, ResourceLength, Level);
+                AcpiDmEndDependentDescriptor (Info, Aml, ResourceLength, Level);
 
                 AcpiDmIndent (Level);
                 AcpiOsPrintf (
@@ -409,6 +413,7 @@ AcpiDmResourceTemplate (
             return;
 
         default:
+
             break;
         }
 
@@ -421,7 +426,7 @@ AcpiDmResourceTemplate (
         }
 
         AcpiGbl_DmResourceDispatch [ResourceIndex] (
-            Aml, ResourceLength, Level);
+            Info, Aml, ResourceLength, Level);
 
         /* Descriptor post-processing */
 
@@ -488,7 +493,7 @@ AcpiDmIsResourceTemplate (
     /* Walk the byte list, abort on any invalid descriptor type or length */
 
     Status = AcpiUtWalkAmlResources (WalkState, Aml, Length,
-        NULL, (void **) &EndAml);
+        NULL, ACPI_CAST_INDIRECT_PTR (void, &EndAml));
     if (ACPI_FAILURE (Status))
     {
         return (AE_TYPE);

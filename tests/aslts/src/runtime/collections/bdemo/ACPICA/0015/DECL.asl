@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: ToDecimalString produces the Strings which have the length greater than expected
  */
 
-Method(mdb0)
+Method(mdb0,, Serialized)
 {
 	Name(b000, Buffer() { 1, 1 })
 

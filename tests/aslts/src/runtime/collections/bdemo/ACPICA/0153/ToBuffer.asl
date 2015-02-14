@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,7 +33,7 @@
 
 // Integer
 
-Method(md08)
+Method(md08,, Serialized)
 {
 	Name(i000, 0xabcd)
 	Name(b000, Buffer() {1,2,3,4})
@@ -51,7 +51,7 @@ Method(md08)
 
 // String
 
-Method(md09)
+Method(md09,, Serialized)
 {
 	Name(s000, "zxcvbqwertynm")
 	Name(b000, Buffer() {1,2,3,4})
@@ -69,7 +69,7 @@ Method(md09)
 
 // Buffer
 
-Method(md0a)
+Method(md0a,, Serialized)
 {
 	Name(b000, Buffer() {1,2,3,4})
 	Name(b001, Buffer() {5,6,7,8})
@@ -89,7 +89,7 @@ Method(md0a)
 
 // Integer
 
-Method(md0b)
+Method(md0b,, Serialized)
 {
 	Name(b000, Buffer() {1,2,3,4})
 
@@ -103,7 +103,7 @@ Method(md0b)
 
 // String
 
-Method(md0c)
+Method(md0c,, Serialized)
 {
 	Name(b000, Buffer() {1,2,3,4})
 
@@ -117,7 +117,7 @@ Method(md0c)
 
 // Buffer
 
-Method(md0d)
+Method(md0d,, Serialized)
 {
 	Name(b001, Buffer() {5,6,7,8})
 

@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The specific sequence of operations dealing with IRef/ORef corrupts the source object
  */
 
-	Method(me5b)
+	Method(me5b,, Serialized)
 	{
 		Name(s000, "12345678")
 		Name(b000, Buffer(2) {0x11, 0x22})

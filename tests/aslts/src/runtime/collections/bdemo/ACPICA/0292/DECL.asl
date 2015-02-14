@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -52,7 +52,7 @@ Device (D292) {
 		RFU4, 0x220,
 	}
 
-	Method(TST0)
+	Method(TST0,, Serialized)
 	{
 		Name(DDB0, 0)
 

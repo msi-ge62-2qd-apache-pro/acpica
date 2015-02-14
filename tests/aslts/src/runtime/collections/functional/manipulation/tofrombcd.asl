@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -95,7 +95,7 @@ Name(p355, Package()
 	0x9999999999999999,
 })
 
-Method(BCD1)
+Method(BCD1,, Serialized)
 {
 	Name(ts, "BCD1")
 
@@ -109,7 +109,7 @@ Method(BCD1)
 	}
 }
 
-Method(BCD2)
+Method(BCD2,, Serialized)
 {
 	Name(ts, "BCD2")
 

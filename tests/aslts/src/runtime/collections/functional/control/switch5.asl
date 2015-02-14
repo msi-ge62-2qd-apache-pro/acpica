@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -1021,7 +1021,7 @@ Method(m0ec, 1)
 }
 
 // Run-method
-Method(SW09)
+Method(SW09,, Serialized)
 {
 	Store("TEST: SW09, Switch, Case, Default operators", Debug)
 

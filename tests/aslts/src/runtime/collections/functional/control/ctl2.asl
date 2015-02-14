@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -785,7 +785,7 @@ Method(m040, 1)
 	return (Local0)
 }
 
-Method(IF00)
+Method(IF00,, Serialized)
 {
 	Name(ts, "IF00")
 

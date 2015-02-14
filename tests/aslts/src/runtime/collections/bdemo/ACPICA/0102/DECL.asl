@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: The specific combination of operators produces one "Outstanding allocation"
  */
 
-	Method(me63)
+	Method(me63,, Serialized)
 	{
 		Method(m001) { return (0x12345678) }
 		Name(p000, Package() {m001})

@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __EXPREP_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -339,32 +337,37 @@ AcpiExDecodeFieldAccess (
 
     case AML_FIELD_ACCESS_BYTE:
     case AML_FIELD_ACCESS_BUFFER:   /* ACPI 2.0 (SMBus Buffer) */
+
         ByteAlignment = 1;
         BitLength     = 8;
         break;
 
     case AML_FIELD_ACCESS_WORD:
+
         ByteAlignment = 2;
         BitLength     = 16;
         break;
 
     case AML_FIELD_ACCESS_DWORD:
+
         ByteAlignment = 4;
         BitLength     = 32;
         break;
 
     case AML_FIELD_ACCESS_QWORD:    /* ACPI 2.0 */
+
         ByteAlignment = 8;
         BitLength     = 64;
         break;
 
     default:
+
         /* Invalid field access type */
 
         ACPI_ERROR ((AE_INFO,
             "Unknown field access type 0x%X",
             Access));
-        return_VALUE (0);
+        return_UINT32 (0);
     }
 
     if (ObjDesc->Common.Type == ACPI_TYPE_BUFFER_FIELD)
@@ -378,7 +381,7 @@ AcpiExDecodeFieldAccess (
     }
 
     *ReturnByteAlignment = ByteAlignment;
-    return_VALUE (BitLength);
+    return_UINT32 (BitLength);
 }
 
 
@@ -582,6 +585,8 @@ AcpiExPrepFieldValue (
             ObjDesc->Field.ResourceLength = Info->ResourceLength;
         }
 
+        ObjDesc->Field.PinNumberIndex = Info->PinNumberIndex;
+
         /* Allow full data read from EC address space */
 
         if ((ObjDesc->Field.RegionObj->Region.SpaceId == ACPI_ADR_SPACE_EC) &&
@@ -607,7 +612,6 @@ AcpiExPrepFieldValue (
             ObjDesc->Field.StartFieldBitOffset, ObjDesc->Field.BaseByteOffset,
             ObjDesc->Field.AccessByteWidth, ObjDesc->Field.RegionObj));
         break;
-
 
     case ACPI_TYPE_LOCAL_BANK_FIELD:
 
@@ -642,7 +646,6 @@ AcpiExPrepFieldValue (
             Info->DataRegisterNode)->Named.Length;
 
         break;
-
 
     case ACPI_TYPE_LOCAL_INDEX_FIELD:
 
@@ -697,7 +700,9 @@ AcpiExPrepFieldValue (
         break;
 
     default:
+
         /* No other types should get here */
+
         break;
     }
 

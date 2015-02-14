@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "acpi.h"
 #include "accommon.h"
@@ -309,20 +308,24 @@ AcpiDmNamestring (
     switch (ACPI_GET8 (Name))
     {
     case 0:
+
         SegCount = 0;
         break;
 
     case AML_DUAL_NAME_PREFIX:
+
         SegCount = 2;
         Name++;
         break;
 
     case AML_MULTI_NAME_PREFIX_OP:
+
         SegCount = (UINT32) ACPI_GET8 (Name + 1);
         Name += 2;
         break;
 
     default:
+
         SegCount = 1;
         break;
     }

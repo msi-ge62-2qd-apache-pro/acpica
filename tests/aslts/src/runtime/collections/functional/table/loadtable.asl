@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -147,7 +147,7 @@ Device(DTM2) {
 	Name(DDBH, 0)
 
 	// Check DataTable Region
-	Method(chdr, 1)
+	Method(chdr, 1, Serialized)
 	{
 		DataTableRegion (DR00, "OEM1", "", "")
 		Field(DR00, AnyAcc, NoLock, Preserve) {
@@ -164,7 +164,7 @@ Device(DTM2) {
 	}
 
 	// Simple Loadtable test
-	Method(tst0, 1)
+	Method(tst0, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -220,7 +220,7 @@ Device(DTM2) {
 
 	// All comparisons of Loadtable parameters are case sensitive,
 	// if no table matches the specified parameters, then 0 is returned
-	Method(tst1, 1)
+	Method(tst1, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -374,7 +374,7 @@ Device(DTM2) {
 
 	// Any of the RootPathString, ParameterPathString, and ParameterData
 	// parameters in LoadTable expression can be omitted
-	Method(tst2, 1)
+	Method(tst2, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -545,7 +545,7 @@ Device(DTM2) {
 
 	// Different sources of the String parameters: Named Objects, LocalX,
 	// ArgX, elements of Packages, results of functions, any TermArg
-	Method(tst3, 1)
+	Method(tst3, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -732,7 +732,7 @@ Device(DTM2) {
 	// Different sources of the optional parameters (RootPathString,
 	// ParameterPathString, and ParameterData): Named Objects, LocalX,
 	// ArgX, elements of Packages, results of functions, any TermArg
-	Method(tst4, 1)
+	Method(tst4, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -930,7 +930,7 @@ Device(DTM2) {
 	// Namespace location to load the Definition Block is determined
 	// by the RootPathString parameter of Loadtable
 	// Arg1: RootPathString
-	Method(tst5, 2)
+	Method(tst5, 2, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -995,7 +995,7 @@ Device(DTM2) {
 
 	// "\" is assumed to be Namespace location to load the Definition
 	// Block if RootPathString parameter is not specified
-	Method(tst6, 1)
+	Method(tst6, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1049,7 +1049,7 @@ Device(DTM2) {
 	// or caret character, then the path of the object set up on success
 	// is ParameterPathString. It is RootPathString.ParameterPathString
 	// in any case.
-	Method(tst7, 1)
+	Method(tst7, 1, Serialized)
 	{
 		Name(DDBH, 0)
 		Name(PLDT, 0)
@@ -1117,7 +1117,7 @@ Device(DTM2) {
 	// Exceptions when the SignatureString is greater than four characters,
 	// the OEMIDString is greater than six characters, or the OEMTableID is
 	// greater than eight characters
-	Method(tst8, 1)
+	Method(tst8, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1199,7 +1199,7 @@ Device(DTM2) {
 	}
 
 	// Exceptions when the matched table is already loaded
-	Method(tsta, 1)
+	Method(tsta, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1289,7 +1289,7 @@ Device(DTM2) {
 
 	// Exceptions when there already is an previously loaded Object
 	// referred by the path in the Namespace
-	Method(tstb, 1)
+	Method(tstb, 1, Serialized)
 	{
 		Name(DDBH, 0)
 
@@ -1386,7 +1386,7 @@ Device(DTM2) {
 	}
 
 	// Implicit operand conversion of the parameters specified to be strings
-	Method(tste, 1)
+	Method(tste, 1, Serialized)
 	{
 		Name(DDBH, 2)
 		Name(SOID, "")
@@ -1564,10 +1564,10 @@ Device(DTM2) {
 
 	// LoadTable returns 0 if some SSDT matching the LoadTable
 	// parameters is originally not listed in XSDT
-	/* 
+	/*
 	 * This test should never happen in real ASL code. So it is removed.
-	 * 
-	 * The Load operation will add a table to global table list, which is 
+	 *
+	 * The Load operation will add a table to global table list, which is
 	 * the master list that can be find in XSDT.
 	 *
 	 * The Unload operation will just delete the namespace owned by the table,
@@ -1659,7 +1659,7 @@ Device(DTM2) {
 
 	// Exceptions when the parameter of the Loadtable operator
 	// is of incorrect types
-	Method(tsth, 1)
+	Method(tsth, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -1778,31 +1778,37 @@ Device(DTM2) {
 		} else {
 			LoadTable(Local1, "", "", "\\", "\\DTM2.PLDT", 1)
 			if (SLCK) {
-				CH04(arg0, 0, 47, z176, 0x10e, 0, 0) // AE_AML_OPERAND_TYPE
+				CH04(arg0, 0, 61, z176, 0x10e, 0, 0) // AE_AML_STRING_LIMIT
 			} else {
 				CH04(arg0, 0, 49, z176, 0x10e, 0, 0) // AE_AML_UNINITIALIZED_LOCAL
 			}
 			LoadTable("OEM1", Local1, "", "\\", "\\DTM2.PLDT", 1)
 			if (SLCK) {
-				CH04(arg0, 0, 47, z176, 0x10f, 0, 0) // AE_AML_OPERAND_TYPE
+				CH04(arg0, 0, 61, z176, 0x10f, 0, 0) // AE_AML_STRING_LIMIT
 			} else {
 				CH04(arg0, 0, 49, z176, 0x10f, 0, 0) // AE_AML_UNINITIALIZED_LOCAL
 			}
 			LoadTable("OEM1", "", Local1, "\\", "\\DTM2.PLDT", 1)
 			if (SLCK) {
-				CH04(arg0, 0, 47, z176, 0x110, 0, 0) // AE_AML_OPERAND_TYPE
+				// ACPI_OEM_TABLE_ID_SIZE should be less than 8.
+				// The size of the "Integer" converted from "Any" is ISZ0*2.
+				if (LLessEqual(ISZ0, 4)) {
+					CH03(arg0, z176, 0x110, 0, 0) // No exception
+				} else {
+					CH04(arg0, 0, 61, z176, 0x110, 0, 0) // AE_AML_STRING_LIMIT
+				}
 			} else {
 				CH04(arg0, 0, 49, z176, 0x110, 0, 0) // AE_AML_UNINITIALIZED_LOCAL
 			}
 			LoadTable("OEM1", "", "", Local1, "\\DTM2.PLDT", 1)
 			if (SLCK) {
-				CH04(arg0, 0, 47, z176, 0x111, 0, 0) // AE_AML_OPERAND_TYPE
+				CH04(arg0, 0, 30, z176, 0x111, 0, 0) // AE_BAD_PATHNAME
 			} else {
 				CH04(arg0, 0, 49, z176, 0x111, 0, 0) // AE_AML_UNINITIALIZED_LOCAL
 			}
 			LoadTable("OEM1", "", "", "\\", Local1, 1)
 			if (SLCK) {
-				CH04(arg0, 0, 47, z176, 0x112, 0, 0) // AE_AML_OPERAND_TYPE
+				CH04(arg0, 0, 30, z176, 0x112, 0, 0) // AE_BAD_PATHNAME
 			} else {
 				CH04(arg0, 0, 49, z176, 0x112, 0, 0) // AE_AML_UNINITIALIZED_LOCAL
 			}
@@ -1934,7 +1940,7 @@ Device(DTM2) {
 
 	// Exceptions when the ParameterData parameter of the Loadtable operator
 	// can not be saved into the Object referred by ParameterPathString
-	Method(tsti, 1)
+	Method(tsti, 1, Serialized)
 	{
 		Name(DDB0, 0)
 		Name(DDB1, 0)
@@ -2198,7 +2204,7 @@ Device(DTM2) {
 	}
 }
 
-Method(TLT0)
+Method(TLT0,, Serialized)
 {
 	Name(ts, "TLT0")
 
@@ -2285,7 +2291,7 @@ Method(TLT0)
 }
 
 // Exceptional conditions
-Method(TLT1)
+Method(TLT1,, Serialized)
 {
 	Name(ts, "TLT1")
 

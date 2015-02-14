@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -113,9 +113,6 @@
  *
  *****************************************************************************/
 
-
-#define __EXREGION_C__
-
 #include "acpi.h"
 #include "accommon.h"
 #include "acinterp.h"
@@ -171,22 +168,27 @@ AcpiExSystemMemorySpaceHandler (
     switch (BitWidth)
     {
     case 8:
+
         Length = 1;
         break;
 
     case 16:
+
         Length = 2;
         break;
 
     case 32:
+
         Length = 4;
         break;
 
     case 64:
+
         Length = 8;
         break;
 
     default:
+
         ACPI_ERROR ((AE_INFO, "Invalid SystemMemory width %u",
             BitWidth));
         return_ACPI_STATUS (AE_AML_OPERAND_VALUE);
@@ -259,13 +261,12 @@ AcpiExSystemMemorySpaceHandler (
 
         /* Create a new mapping starting at the address given */
 
-        MemInfo->MappedLogicalAddress = AcpiOsMapMemory (
-            (ACPI_PHYSICAL_ADDRESS) Address, MapLength);
+        MemInfo->MappedLogicalAddress = AcpiOsMapMemory (Address, MapLength);
         if (!MemInfo->MappedLogicalAddress)
         {
             ACPI_ERROR ((AE_INFO,
                 "Could not map memory at 0x%8.8X%8.8X, size %u",
-                ACPI_FORMAT_NATIVE_UINT (Address), (UINT32) MapLength));
+                ACPI_FORMAT_UINT64 (Address), (UINT32) MapLength));
             MemInfo->MappedLength = 0;
             return_ACPI_STATUS (AE_NO_MEMORY);
         }
@@ -285,7 +286,7 @@ AcpiExSystemMemorySpaceHandler (
 
     ACPI_DEBUG_PRINT ((ACPI_DB_INFO,
         "System-Memory (width %u) R/W %u Address=%8.8X%8.8X\n",
-        BitWidth, Function, ACPI_FORMAT_NATIVE_UINT (Address)));
+        BitWidth, Function, ACPI_FORMAT_UINT64 (Address)));
 
     /*
      * Perform the memory read or write
@@ -303,23 +304,29 @@ AcpiExSystemMemorySpaceHandler (
         switch (BitWidth)
         {
         case 8:
+
             *Value = (UINT64) ACPI_GET8 (LogicalAddrPtr);
             break;
 
         case 16:
+
             *Value = (UINT64) ACPI_GET16 (LogicalAddrPtr);
             break;
 
         case 32:
+
             *Value = (UINT64) ACPI_GET32 (LogicalAddrPtr);
             break;
 
         case 64:
+
             *Value = (UINT64) ACPI_GET64 (LogicalAddrPtr);
             break;
 
         default:
+
             /* BitWidth was already validated */
+
             break;
         }
         break;
@@ -329,28 +336,35 @@ AcpiExSystemMemorySpaceHandler (
         switch (BitWidth)
         {
         case 8:
+
             ACPI_SET8 (LogicalAddrPtr, *Value);
             break;
 
         case 16:
+
             ACPI_SET16 (LogicalAddrPtr, *Value);
             break;
 
         case 32:
+
             ACPI_SET32 (LogicalAddrPtr, *Value);
             break;
 
         case 64:
+
             ACPI_SET64 (LogicalAddrPtr, *Value);
             break;
 
         default:
+
             /* BitWidth was already validated */
+
             break;
         }
         break;
 
     default:
+
         Status = AE_BAD_PARAMETER;
         break;
     }
@@ -395,7 +409,7 @@ AcpiExSystemIoSpaceHandler (
 
     ACPI_DEBUG_PRINT ((ACPI_DB_INFO,
         "System-IO (width %u) R/W %u Address=%8.8X%8.8X\n",
-        BitWidth, Function, ACPI_FORMAT_NATIVE_UINT (Address)));
+        BitWidth, Function, ACPI_FORMAT_UINT64 (Address)));
 
     /* Decode the function parameter */
 
@@ -415,6 +429,7 @@ AcpiExSystemIoSpaceHandler (
         break;
 
     default:
+
         Status = AE_BAD_PARAMETER;
         break;
     }

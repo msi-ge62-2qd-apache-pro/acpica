@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -63,7 +63,7 @@
 
 			Store("DeRefof(Local0)" , Debug)
 
-			DeRefof(Local0)
+			Store(DeRefof(Local0), Local1)
 
 			if (LNotEqual(id1c, 0xfedcba9876543211)) {
 				err("", zFFF, 0x003, 0, 0, id1c, 0xfedcba9876543211)

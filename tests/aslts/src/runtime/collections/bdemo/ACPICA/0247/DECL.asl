@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: ASL compiler incorrectly implements Break within Switch
  */
 
-Method(m17c)
+Method(m17c,, Serialized)
 {
 	Name(ERRN, 0x000)
 

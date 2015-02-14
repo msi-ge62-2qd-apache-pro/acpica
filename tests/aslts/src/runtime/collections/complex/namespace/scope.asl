@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,11 +32,11 @@ Name(z178, 178)
  !!!!!!!!!!!!!!!!    It is in progress, just started !!!!!!!!!!!!!!!!
  */
 
-Method(sc00)
+Method(sc00,, Serialized)
 {
 	Name(ts, "sc00")
 
-	Method(m000, 1)
+	Method(m000, 1, Serialized)
 	{
 		Scope(\) { Name(i2z4, 0xabcd0007) }
 	}

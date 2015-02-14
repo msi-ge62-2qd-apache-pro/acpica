@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,6 +36,6 @@
 	{
 		Store(0, Local0)
 
-		ToBuffer("1234567")
+		Store(ToBuffer("1234567"), Local1)
 		Store(ToBuffer("1234567"), Local0)
 	}

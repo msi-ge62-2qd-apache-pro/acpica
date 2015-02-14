@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -71,7 +71,7 @@ Name(z168, 168)
  *
  * The ASL Mod operation is not implemented on MS
  */
-Method(in50)
+Method(in50,, Serialized)
 {
 	Name(ts, "in50")
 
@@ -98,15 +98,15 @@ Method(in50)
 	NAnd                   (Local0, Local1, Local2)
 	NOr                    (Local0, Local1, Local2)
 	Not                    (Local0, Local2)
-	LNot                   (Local0)
-	LOr                    (Local0, Local1)
-	LAnd                   (Local0, Local1)
-	LEqual                 (Local0, Local1)
-	LGreater               (Local0, Local1)
-	LGreaterEqual          (Local0, Local1)
-	LLess                  (Local0, Local1)
-	LLessEqual             (Local0, Local1)
-	LNotEqual              (Local0, Local1)
+	Store(LNot             (Local0),         Local4)
+	Store(LOr              (Local0, Local1), Local4)
+	Store(LAnd             (Local0, Local1), Local4)
+	Store(LEqual           (Local0, Local1), Local4)
+	Store(LGreater         (Local0, Local1), Local4)
+	Store(LGreaterEqual    (Local0, Local1), Local4)
+	Store(LLess            (Local0, Local1), Local4)
+	Store(LLessEqual       (Local0, Local1), Local4)
+	Store(LNotEqual        (Local0, Local1), Local4)
 }
 
 /*
@@ -147,7 +147,7 @@ Name(ii47, 0xabcd0047)
  * it is not applied here. All other opcodes enumerated
  * in the table above are applied and verified in this test.
  */
-Method(in51, 7)
+Method(in51, 7, Serialized)
 {
 	Name(ts, "in51")
 

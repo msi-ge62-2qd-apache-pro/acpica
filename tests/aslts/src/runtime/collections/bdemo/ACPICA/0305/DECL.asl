@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
 
 Method(mff2)
 {
-	Method(m000, 1)
+	Method(m000, 1, Serialized, 3)
 	{
 		if (LNot(arg0)) {
 			Scope(\_SB) { Name(i2z6, 0xabcd0000) }

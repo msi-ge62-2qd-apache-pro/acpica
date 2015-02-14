@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -37,7 +37,7 @@ do here all the tests ns0-ns... with Add replaced by MAdd
 
 Name(z158, 158)
 
-Method(m401, 1)
+Method(m401, 1, Serialized)
 {
 	Name(ts, "m401")
 	Name(i000, 0x00000001)

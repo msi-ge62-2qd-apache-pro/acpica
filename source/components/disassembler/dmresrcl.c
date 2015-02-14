@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,7 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
 
 #include "acpi.h"
 #include "accommon.h"
@@ -225,16 +224,19 @@ AcpiDmMemoryFields (
         switch (Type)
         {
         case 16:
+
             AcpiDmDumpInteger16 (ACPI_CAST_PTR (UINT16, Source)[i],
                 AcpiDmMemoryNames[i]);
             break;
 
         case 32:
+
             AcpiDmDumpInteger32 (ACPI_CAST_PTR (UINT32, Source)[i],
                 AcpiDmMemoryNames[i]);
             break;
 
         default:
+
             return;
         }
     }
@@ -273,21 +275,25 @@ AcpiDmAddressFields (
         switch (Type)
         {
         case 16:
+
             AcpiDmDumpInteger16 (ACPI_CAST_PTR (UINT16, Source)[i],
                 AcpiDmAddressNames[i]);
             break;
 
         case 32:
+
             AcpiDmDumpInteger32 (ACPI_CAST_PTR (UINT32, Source)[i],
                 AcpiDmAddressNames[i]);
             break;
 
         case 64:
+
             AcpiDmDumpInteger64 (ACPI_CAST_PTR (UINT64, Source)[i],
                 AcpiDmAddressNames[i]);
             break;
 
         default:
+
             return;
         }
     }
@@ -314,22 +320,27 @@ AcpiDmAddressPrefix (
     switch (Type)
     {
     case ACPI_RESOURCE_TYPE_ADDRESS16:
+
         AcpiOsPrintf ("Word");
         break;
 
     case ACPI_RESOURCE_TYPE_ADDRESS32:
+
         AcpiOsPrintf ("DWord");
         break;
 
     case ACPI_RESOURCE_TYPE_ADDRESS64:
+
         AcpiOsPrintf ("QWord");
         break;
 
     case ACPI_RESOURCE_TYPE_EXTENDED_ADDRESS64:
+
         AcpiOsPrintf ("Extended");
         break;
 
     default:
+
         return;
     }
 }
@@ -625,7 +636,7 @@ AcpiDmResourceSource (
     if (TotalLength > (MinimumTotalLength + 1))
     {
         AcpiOsPrintf (" ");
-        AcpiUtPrintString ((char *) &AmlResourceSource[1], ACPI_UINT8_MAX);
+        AcpiUtPrintString ((char *) &AmlResourceSource[1], ACPI_UINT16_MAX);
     }
 
     AcpiOsPrintf (", ");
@@ -636,7 +647,8 @@ AcpiDmResourceSource (
  *
  * FUNCTION:    AcpiDmWordDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -648,6 +660,7 @@ AcpiDmResourceSource (
 
 void
 AcpiDmWordDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -681,7 +694,8 @@ AcpiDmWordDescriptor (
  *
  * FUNCTION:    AcpiDmDwordDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -693,6 +707,7 @@ AcpiDmWordDescriptor (
 
 void
 AcpiDmDwordDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -726,7 +741,8 @@ AcpiDmDwordDescriptor (
  *
  * FUNCTION:    AcpiDmQwordDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -738,6 +754,7 @@ AcpiDmDwordDescriptor (
 
 void
 AcpiDmQwordDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -771,7 +788,8 @@ AcpiDmQwordDescriptor (
  *
  * FUNCTION:    AcpiDmExtendedDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -783,6 +801,7 @@ AcpiDmQwordDescriptor (
 
 void
 AcpiDmExtendedDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -818,7 +837,8 @@ AcpiDmExtendedDescriptor (
  *
  * FUNCTION:    AcpiDmMemory24Descriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -830,6 +850,7 @@ AcpiDmExtendedDescriptor (
 
 void
 AcpiDmMemory24Descriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -857,7 +878,8 @@ AcpiDmMemory24Descriptor (
  *
  * FUNCTION:    AcpiDmMemory32Descriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -869,6 +891,7 @@ AcpiDmMemory24Descriptor (
 
 void
 AcpiDmMemory32Descriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -896,7 +919,8 @@ AcpiDmMemory32Descriptor (
  *
  * FUNCTION:    AcpiDmFixedMemory32Descriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -908,6 +932,7 @@ AcpiDmMemory32Descriptor (
 
 void
 AcpiDmFixedMemory32Descriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -937,7 +962,8 @@ AcpiDmFixedMemory32Descriptor (
  *
  * FUNCTION:    AcpiDmGenericRegisterDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -949,6 +975,7 @@ AcpiDmFixedMemory32Descriptor (
 
 void
 AcpiDmGenericRegisterDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -993,7 +1020,8 @@ AcpiDmGenericRegisterDescriptor (
  *
  * FUNCTION:    AcpiDmInterruptDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -1005,6 +1033,7 @@ AcpiDmGenericRegisterDescriptor (
 
 void
 AcpiDmInterruptDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)
@@ -1099,7 +1128,8 @@ AcpiDmVendorCommon (
  *
  * FUNCTION:    AcpiDmVendorLargeDescriptor
  *
- * PARAMETERS:  Resource            - Pointer to the resource descriptor
+ * PARAMETERS:  Info                - Extra resource info
+ *              Resource            - Pointer to the resource descriptor
  *              Length              - Length of the descriptor in bytes
  *              Level               - Current source code indentation level
  *
@@ -1111,6 +1141,7 @@ AcpiDmVendorCommon (
 
 void
 AcpiDmVendorLargeDescriptor (
+    ACPI_OP_WALK_INFO       *Info,
     AML_RESOURCE            *Resource,
     UINT32                  Length,
     UINT32                  Level)

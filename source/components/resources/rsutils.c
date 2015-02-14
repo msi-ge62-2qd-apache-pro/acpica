@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,9 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-
-#define __RSUTILS_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -248,6 +245,7 @@ AcpiRsMoveData (
         case ACPI_RSC_MOVE_GPIO_RES:
         case ACPI_RSC_MOVE_SERIAL_VEN:
         case ACPI_RSC_MOVE_SERIAL_RES:
+
             ACPI_MEMCPY (Destination, Source, ItemCount);
             return;
 
@@ -258,21 +256,25 @@ AcpiRsMoveData (
          */
         case ACPI_RSC_MOVE16:
         case ACPI_RSC_MOVE_GPIO_PIN:
+
             ACPI_MOVE_16_TO_16 (&ACPI_CAST_PTR (UINT16, Destination)[i],
                                 &ACPI_CAST_PTR (UINT16, Source)[i]);
             break;
 
         case ACPI_RSC_MOVE32:
+
             ACPI_MOVE_32_TO_32 (&ACPI_CAST_PTR (UINT32, Destination)[i],
                                 &ACPI_CAST_PTR (UINT32, Source)[i]);
             break;
 
         case ACPI_RSC_MOVE64:
+
             ACPI_MOVE_64_TO_64 (&ACPI_CAST_PTR (UINT64, Destination)[i],
                                 &ACPI_CAST_PTR (UINT64, Source)[i]);
             break;
 
         default:
+
             return;
         }
     }
@@ -882,7 +884,7 @@ AcpiRsSetSrsMethodData (
     }
 
     Info->PrefixNode = Node;
-    Info->Pathname = METHOD_NAME__SRS;
+    Info->RelativePathname = METHOD_NAME__SRS;
     Info->Parameters = Args;
     Info->Flags = ACPI_IGNORE_RETURN_VALUE;
 
@@ -894,7 +896,7 @@ AcpiRsSetSrsMethodData (
      * Convert the linked list into a byte stream
      */
     Buffer.Length = ACPI_ALLOCATE_LOCAL_BUFFER;
-    Status = AcpiRsCreateAmlResources (InBuffer->Pointer, &Buffer);
+    Status = AcpiRsCreateAmlResources (InBuffer, &Buffer);
     if (ACPI_FAILURE (Status))
     {
         goto Cleanup;

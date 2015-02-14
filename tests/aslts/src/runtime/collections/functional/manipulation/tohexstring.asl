@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -176,7 +176,7 @@ Name(p351, Package()
 })
 
 // Run-method
-Method(TOH0)
+Method(TOH0,, Serialized)
 {
 	Name(ts, "TOH0")
 

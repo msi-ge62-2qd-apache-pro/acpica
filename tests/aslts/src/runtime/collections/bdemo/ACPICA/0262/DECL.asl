@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +32,7 @@
  * SUMMARY: Unexpected AE_STACK_OVERFLOW for a method call expression with nested calls
  */
 
-Method(m027)
+Method(m027,, Serialized)
 {
 	Name(iad1, 0x1)
 	Name(iad2, 0x10)

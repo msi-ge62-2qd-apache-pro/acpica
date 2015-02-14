@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -121,11 +121,11 @@
 
 extern ACPI_TABLE_DESC  Tables[];
 
-FILE                    *AcpiGbl_DebugFile;
 static AE_TABLE_DESC    *AeTableListHead = NULL;
 
 
-#define AE_SUPPORTED_OPTIONS    "?h"
+#define AN_UTILITY_NAME             "ACPI Namespace Dump Utility"
+#define AN_SUPPORTED_OPTIONS        "?hv"
 
 
 /******************************************************************************
@@ -147,6 +147,7 @@ usage (
 
     ACPI_USAGE_HEADER ("AcpiNames [options] AMLfile");
     ACPI_OPTION ("-?",                  "Display this message");
+    ACPI_OPTION ("-v",                  "Display version information");
 }
 
 
@@ -176,7 +177,7 @@ NsDumpEntireNamespace (
 
     /* Open the binary AML file and read the entire table */
 
-    Status = AcpiDbReadTableFromFile (AmlFilename, &Table);
+    Status = AcpiUtReadTableFromFile (AmlFilename, &Table);
     if (ACPI_FAILURE (Status))
     {
         printf ("**** Could not get input table %s, %s\n", AmlFilename,
@@ -311,29 +312,39 @@ main (
     int                     j;
 
 
-    printf (ACPI_COMMON_SIGNON ("ACPI Namespace Dump Utility"));
+    ACPI_DEBUG_INITIALIZE (); /* For debug version only */
 
+    /* Init debug globals and ACPICA */
+
+    AcpiDbgLevel = ACPI_LV_TABLES;
+    AcpiDbgLayer = 0xFFFFFFFF;
+
+    Status = AcpiInitializeSubsystem ();
+    AE_CHECK_OK (AcpiInitializeSubsystem, Status);
+    if (ACPI_FAILURE (Status))
+    {
+        return (-1);
+    }
+
+    printf (ACPI_COMMON_SIGNON (AN_UTILITY_NAME));
     if (argc < 2)
     {
         usage ();
         return (0);
     }
 
-    /* Init globals and ACPICA */
-
-    AcpiDbgLevel = ACPI_NORMAL_DEFAULT | ACPI_LV_TABLES;
-    AcpiDbgLayer = 0xFFFFFFFF;
-
-    Status = AcpiInitializeSubsystem ();
-    AE_CHECK_OK (AcpiInitializeSubsystem, Status);
-
     /* Get the command line options */
 
-    while ((j = AcpiGetopt (argc, argv, AE_SUPPORTED_OPTIONS)) != EOF) switch(j)
+    while ((j = AcpiGetopt (argc, argv, AN_SUPPORTED_OPTIONS)) != ACPI_OPT_END) switch(j)
     {
+    case 'v': /* -v: (Version): signon already emitted, just exit */
+
+        return (0);
+
     case '?':
     case 'h':
     default:
+
         usage();
         return (0);
     }

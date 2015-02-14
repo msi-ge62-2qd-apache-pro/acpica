@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,7 +36,7 @@ Method(mdd3)
 {
 	Store("0", Local0)
 	Store(Local0, Debug)
-	ToDecimalString(Local0)
+	Store(ToDecimalString(Local0), Local2)
 	Store(Local0, Debug)
 	Add(Local0, 1, Local7)
 	if (LNotEqual(Local7, 1)){

@@ -18,22 +18,32 @@ PROG = $(OBJDIR)/acpixtract
 # Search paths for source files
 #
 vpath %.c \
-    $(ACPIXTRACT) \
-    $(ACPICA_COMMON)
+    $(ACPIXTRACT)\
+    $(ACPICA_UTILITIES)\
+    $(ACPICA_COMMON)\
+    $(ACPICA_OSL)
 
 HEADERS = \
     $(wildcard $(ACPIXTRACT)/*.h)
 
 OBJECTS = \
-    $(OBJDIR)/acpixtract.o \
-    $(OBJDIR)/axmain.o \
-    $(OBJDIR)/getopt.o
+    $(OBJDIR)/acpixtract.o\
+    $(OBJDIR)/axmain.o\
+    $(OBJDIR)/getopt.o\
+    $(OBJDIR)/oslibcfs.o\
+    $(OBJDIR)/osunixxf.o\
+    $(OBJDIR)/utdebug.o\
+    $(OBJDIR)/utexcep.o\
+    $(OBJDIR)/utglobal.o\
+    $(OBJDIR)/utmath.o\
+    $(OBJDIR)/utprint.o\
+    $(OBJDIR)/utxferror.o
 
 #
 # Flags specific to acpixtract
 #
-CFLAGS+= \
-    -DACPI_XTRACT_APP \
+CFLAGS += \
+    -DACPI_XTRACT_APP
 
 #
 # Common Rules

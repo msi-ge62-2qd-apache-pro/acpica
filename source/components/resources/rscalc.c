@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -112,8 +112,6 @@
  * such license, approval or letter.
  *
  *****************************************************************************/
-
-#define __RSCALC_C__
 
 #include "acpi.h"
 #include "accommon.h"
@@ -269,6 +267,7 @@ AcpiRsStreamOptionLength (
  * FUNCTION:    AcpiRsGetAmlLength
  *
  * PARAMETERS:  Resource            - Pointer to the resource linked list
+ *              ResourceListSize    - Size of the resource linked list
  *              SizeNeeded          - Where the required size is returned
  *
  * RETURN:      Status
@@ -282,9 +281,11 @@ AcpiRsStreamOptionLength (
 ACPI_STATUS
 AcpiRsGetAmlLength (
     ACPI_RESOURCE           *Resource,
+    ACPI_SIZE               ResourceListSize,
     ACPI_SIZE               *SizeNeeded)
 {
     ACPI_SIZE               AmlSizeNeeded = 0;
+    ACPI_RESOURCE           *ResourceEnd;
     ACPI_RS_LENGTH          TotalSize;
 
 
@@ -293,13 +294,21 @@ AcpiRsGetAmlLength (
 
     /* Traverse entire list of internal resource descriptors */
 
-    while (Resource)
+    ResourceEnd = ACPI_ADD_PTR (ACPI_RESOURCE, Resource, ResourceListSize);
+    while (Resource < ResourceEnd)
     {
         /* Validate the descriptor type */
 
         if (Resource->Type > ACPI_RESOURCE_TYPE_MAX)
         {
             return_ACPI_STATUS (AE_AML_INVALID_RESOURCE_TYPE);
+        }
+
+        /* Sanity check the length. It must not be zero, or we loop forever */
+
+        if (!Resource->Length)
+        {
+            return_ACPI_STATUS (AE_AML_BAD_RESOURCE_LENGTH);
         }
 
         /* Get the base size of the (external stream) resource descriptor */
@@ -436,8 +445,8 @@ AcpiRsGetAmlLength (
 
             break;
 
-
         default:
+
             break;
         }
 
@@ -627,6 +636,7 @@ AcpiRsGetListLength (
             break;
 
         default:
+
             break;
         }
 
@@ -719,7 +729,7 @@ AcpiRsGetPciRoutingTableLength (
 
     for (Index = 0; Index < NumberOfElements; Index++)
     {
-        /* Dereference the sub-package */
+        /* Dereference the subpackage */
 
         PackageElement = *TopObjectList;
 
@@ -741,7 +751,9 @@ AcpiRsGetPciRoutingTableLength (
 
         NameFound = FALSE;
 
-        for (TableIndex = 0; TableIndex < 4 && !NameFound; TableIndex++)
+        for (TableIndex = 0;
+             TableIndex < PackageElement->Package.Count && !NameFound;
+             TableIndex++)
         {
             if (*SubObjectList && /* Null object allowed */
 

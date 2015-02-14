@@ -1,5 +1,5 @@
 /*
- * Some or all of this work - Copyright (c) 2006 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 2006 - 2015, Intel Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -84,7 +84,7 @@ return
 /*
  * All the possible attempts to confuse calculation
  */
-Method(md74) {
+Method(md74,, Serialized) {
 
 	Name(ts, "md74")
 
@@ -328,7 +328,7 @@ Method(md74) {
 	CH03(ts, zFFF, 0x109, 0, 0)
 
 	// Only decimal, much more than 16
-	Add("123456789012345601112223334446667788990087654", 0)
+	Store(Add("123456789012345601112223334446667788990087654", 0), Local1)
 	if (F64) {
 		if (LNotEqual(Local0, 0x1234567890123456)) {
 			err("", zFFF, 0x025, 0, 0, Local0, 0x1234567890123456)
@@ -342,7 +342,7 @@ Method(md74) {
 	CH03(ts, zFFF, 0x10a, 0, 0)
 
 	// Only hex, much more than 16
-	Add("abcdefabcdefabcdefabcdefabcdefabcdefabcdefabc", 0)
+	Store(Add("abcdefabcdefabcdefabcdefabcdefabcdefabcdefabc", 0), Local1)
 	if (F64) {
 		if (LNotEqual(Local0, 0xabcdefabcdefabcd)) {
 			err("", zFFF, 0x027, 0, 0, Local0, 0xabcdefabcdefabcd)
@@ -356,7 +356,7 @@ Method(md74) {
 	CH03(ts, zFFF, 0x10b, 0, 0)
 
 	// Only decimal, much more than 16, non-hex at the end
-	Add("123456789012345601112223334446667788990087654ZZZZ", 0)
+	Store(Add("123456789012345601112223334446667788990087654ZZZZ", 0), Local1)
 	if (F64) {
 		if (LNotEqual(Local0, 0x1234567890123456)) {
 			err("", zFFF, 0x029, 0, 0, Local0, 0x1234567890123456)
@@ -370,7 +370,7 @@ Method(md74) {
 	CH03(ts, zFFF, 0x10c, 0, 0)
 
 	// Only hex, much more than 16, non-hex at the end
-	Add("abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcZZZZ", 0)
+	Store(Add("abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcZZZZ", 0), Local1)
 	if (F64) {
 		if (LNotEqual(Local0, 0xabcdefabcdefabcd)) {
 			err("", zFFF, 0x02b, 0, 0, Local0, 0xabcdefabcdefabcd)
@@ -388,7 +388,7 @@ Method(md75) {
 	// Do here the same as md74 but store Result by Store
 }
 
-Method(md76) {
+Method(md76,, Serialized) {
 
 	Name(ts, "md76")
 

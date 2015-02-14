@@ -8,7 +8,7 @@
  *
  * 1. Copyright Notice
  *
- * Some or all of this work - Copyright (c) 1999 - 2012, Intel Corp.
+ * Some or all of this work - Copyright (c) 1999 - 2015, Intel Corp.
  * All rights reserved.
  *
  * 2. License
@@ -231,6 +231,43 @@ AcpiDbGenerateGpe (
     char                    *GpeArg,
     char                    *BlockArg))
 
+ACPI_HW_DEPENDENT_RETURN_VOID (
+void
+AcpiDbGenerateSci (
+    void))
+
+void
+AcpiDbExecuteTest (
+    char                    *TypeArg);
+
+
+/*
+ * dbconvert - miscellaneous conversion routines
+ */
+ACPI_STATUS
+AcpiDbHexCharToValue (
+    int                     HexChar,
+    UINT8                   *ReturnValue);
+
+ACPI_STATUS
+AcpiDbConvertToPackage (
+    char                    *String,
+    ACPI_OBJECT             *Object);
+
+ACPI_STATUS
+AcpiDbConvertToObject (
+    ACPI_OBJECT_TYPE        Type,
+    char                    *String,
+    ACPI_OBJECT             *Object);
+
+UINT8 *
+AcpiDbEncodePldBuffer (
+    ACPI_PLD_INFO           *PldInfo);
+
+void
+AcpiDbDumpPldBuffer (
+    ACPI_OBJECT             *ObjDesc);
+
 
 /*
  * dbmethod - control method commands
@@ -276,6 +313,10 @@ void
 AcpiDbDumpNamespace (
     char                    *StartArg,
     char                    *DepthArg);
+
+void
+AcpiDbDumpNamespacePaths (
+    void);
 
 void
 AcpiDbDumpNamespaceByOwner (
@@ -371,6 +412,11 @@ AcpiDbCreateExecutionThreads (
     char                    *NumLoopsArg,
     char                    *MethodNameArg);
 
+void
+AcpiDbDeleteObjects (
+    UINT32                  Count,
+    ACPI_OBJECT             *Objects);
+
 #ifdef ACPI_DBG_TRACK_ALLOCATIONS
 UINT32
 AcpiDbGetCacheInfo (
@@ -403,11 +449,6 @@ AcpiDbGetTableFromFile (
     char                    *Filename,
     ACPI_TABLE_HEADER       **Table);
 
-ACPI_STATUS
-AcpiDbReadTableFromFile (
-    char                    *Filename,
-    ACPI_TABLE_HEADER       **Table);
-
 
 /*
  * dbhistry - debugger HISTORY command
@@ -423,6 +464,10 @@ AcpiDbDisplayHistory (
 char *
 AcpiDbGetFromHistory (
     char                    *CommandNumArg);
+
+char *
+AcpiDbGetHistoryByIndex (
+    UINT32                  CommanddNum);
 
 
 /*
