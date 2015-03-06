@@ -636,10 +636,6 @@ AcpiDmDisassembleOneOp (
     ACPI_OP_WALK_INFO       *Info,
     ACPI_PARSE_OBJECT       *Op);
 
-void
-AcpiDmDecodeInternalObject (
-    ACPI_OPERAND_OBJECT     *ObjDesc);
-
 UINT32
 AcpiDmListType (
     ACPI_PARSE_OBJECT       *Op);
@@ -696,29 +692,6 @@ AcpiPsDisplayObjectPathname (
 void
 AcpiDmNamestring (
     char                    *Name);
-
-
-/*
- * dmobject
- */
-void
-AcpiDmDisplayInternalObject (
-    ACPI_OPERAND_OBJECT     *ObjDesc,
-    ACPI_WALK_STATE         *WalkState);
-
-void
-AcpiDmDisplayArguments (
-    ACPI_WALK_STATE         *WalkState);
-
-void
-AcpiDmDisplayLocals (
-    ACPI_WALK_STATE         *WalkState);
-
-void
-AcpiDmDumpMethodInfo (
-    ACPI_STATUS             Status,
-    ACPI_WALK_STATE         *WalkState,
-    ACPI_PARSE_OBJECT       *Op);
 
 
 /*

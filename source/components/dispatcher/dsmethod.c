@@ -118,9 +118,9 @@
 #include "acdispat.h"
 #include "acinterp.h"
 #include "acnamesp.h"
-#include "acdisasm.h"
 #include "acparser.h"
 #include "amlcode.h"
+#include "acdebug.h"
 
 
 #define _COMPONENT          ACPI_DISPATCHER
@@ -287,7 +287,7 @@ AcpiDsDetectNamedOpcodes (
  * RETURN:      Status
  *
  * DESCRIPTION: Called on method error. Invoke the global exception handler if
- *              present, dump the method data if the disassembler is configured
+ *              present, dump the method data if the debugger is configured
  *
  *              Note: Allows the exception handler to change the status code
  *
@@ -330,12 +330,12 @@ AcpiDsMethodError (
 
     AcpiDsClearImplicitReturn (WalkState);
 
-#ifdef ACPI_DISASSEMBLER
+#ifdef ACPI_DEBUGGER
     if (ACPI_FAILURE (Status))
     {
-        /* Display method locals/args if disassembler is present */
+        /* Display method locals/args if debugger is present */
 
-        AcpiDmDumpMethodInfo (Status, WalkState, WalkState->Op);
+        AcpiDbDumpMethodInfo (Status, WalkState, WalkState->Op);
     }
 #endif
 

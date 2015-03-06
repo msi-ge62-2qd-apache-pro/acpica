@@ -118,7 +118,9 @@
 #include "acdispat.h"
 #include "acnamesp.h"
 #include "acdebug.h"
+#ifdef ACPI_DISASSEMBLER
 #include "acdisasm.h"
+#endif
 #include "acparser.h"
 #include "acpredef.h"
 
@@ -310,7 +312,7 @@ AcpiDbSetMethodData (
         ObjDesc = WalkState->Arguments[Index].Object;
 
         AcpiOsPrintf ("Arg%u: ", Index);
-        AcpiDmDisplayInternalObject (ObjDesc, WalkState);
+        AcpiDbDisplayInternalObject (ObjDesc, WalkState);
         break;
 
     case 'L':
@@ -333,7 +335,7 @@ AcpiDbSetMethodData (
         ObjDesc = WalkState->LocalVariables[Index].Object;
 
         AcpiOsPrintf ("Local%u: ", Index);
-        AcpiDmDisplayInternalObject (ObjDesc, WalkState);
+        AcpiDbDisplayInternalObject (ObjDesc, WalkState);
         break;
 
     default:
@@ -379,7 +381,9 @@ AcpiDbDisassembleAml (
         NumStatements = ACPI_STRTOUL (Statements, NULL, 0);
     }
 
+#ifdef ACPI_DISASSEMBLER
     AcpiDmDisassemble (NULL, Op, NumStatements);
+#endif
 }
 
 
@@ -462,6 +466,8 @@ AcpiDbDisassembleMethod (
     WalkState->ParseFlags |= ACPI_PARSE_DISASSEMBLE;
 
     Status = AcpiPsParseAml (WalkState);
+
+#ifdef ACPI_DISASSEMBER
     (void) AcpiDmParseDeferredOps (Op);
 
     /* Now we can disassemble the method */
@@ -469,6 +475,7 @@ AcpiDbDisassembleMethod (
     AcpiGbl_DbOpt_Verbose = FALSE;
     AcpiDmDisassemble (NULL, Op, 0);
     AcpiGbl_DbOpt_Verbose = TRUE;
+#endif
 
     AcpiPsDeleteParseTree (Op);
 
