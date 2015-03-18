@@ -461,7 +461,7 @@ AcpiDsLoad1BeginOp (
     {
         /* Create a new op */
 
-        Op = AcpiPsAllocOp (WalkState->Opcode);
+        Op = AcpiPsAllocOp (WalkState->Opcode, WalkState->Aml);
         if (!Op)
         {
             return_ACPI_STATUS (AE_NO_MEMORY);
