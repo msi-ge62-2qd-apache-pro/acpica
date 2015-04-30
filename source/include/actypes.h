@@ -422,6 +422,7 @@ typedef UINT64                          ACPI_PHYSICAL_ADDRESS;
 
 
 /* This is just an example */
+/* This is just another example */
 
 /*******************************************************************************
  *
