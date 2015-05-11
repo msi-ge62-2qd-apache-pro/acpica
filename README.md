@@ -5,13 +5,15 @@ Minor modifies for OS X compiling and MaciASL.
 ## Modifies
 ### /generate/unix/Makefile.config (for compiling in OS X)
 #### around line 37
-`HOST ?= _CYGWIN`
-Change to
-`HOST ?= _APPLE`
+> HOST ?= _CYGWIN
+修改
+> HOST ?= _APPLE
 #### between line 68 and 69
-`INSTALLFLAGS ?= -f
-else`
-Add
-`INSTALLFLAGS ?= -f
-LDFLAGS = -mmacosx-version-min=10.6
-else`
+> INSTALLFLAGS ?= -f
+> else
+添加
+> INSTALLFLAGS ?= -f
+> LDFLAGS = -mmacosx-version-min=10.6
+> else
+
+待更新......
