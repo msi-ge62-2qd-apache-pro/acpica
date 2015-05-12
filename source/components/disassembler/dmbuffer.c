@@ -220,7 +220,7 @@ AcpiDmDisasmByteList (
     UINT32                  i;
     UINT32                  j;
     UINT32                  CurrentIndex;
-    UINT8                   BufChar;
+/*    UINT8                   BufChar; */
 
 
     if (!ByteCount)
@@ -266,7 +266,7 @@ AcpiDmDisasmByteList (
         }
 
         /* Dump the ASCII equivalents within a comment */
-
+#if 0
         AcpiOsPrintf ("  /* ");
         for (j = 0; j < ACPI_BUFFER_BYTES_PER_LINE; j++)
         {
@@ -290,6 +290,9 @@ AcpiDmDisasmByteList (
         /* Finished with this line */
 
         AcpiOsPrintf (" */\n");
+#else
+        AcpiOsPrintf ("\n");
+#endif
     }
 }
 
@@ -656,6 +659,7 @@ AcpiDmIsPldBuffer (
     ACPI_PARSE_OBJECT       *SizeOp;
     ACPI_PARSE_OBJECT       *ParentOp;
 
+    return 0;
 
     /* Buffer size is the buffer argument */
 
@@ -1086,7 +1090,9 @@ AcpiDmDecompressEisaId (
     UINT32                  EncodedId)
 {
     char                    IdBuffer[ACPI_EISAID_STRING_SIZE];
+#if 0
     const AH_DEVICE_ID      *Info;
+#endif
 
 
     /* Convert EISAID to a string an emit the statement */
@@ -1095,12 +1101,13 @@ AcpiDmDecompressEisaId (
     AcpiOsPrintf ("EisaId (\"%s\")", IdBuffer);
 
     /* If we know about the ID, emit the description */
-
+#if 0
     Info = AcpiAhMatchHardwareId (IdBuffer);
     if (Info)
     {
         AcpiOsPrintf (" /* %s */", Info->Description);
     }
+#endif
 }
 
 #endif
