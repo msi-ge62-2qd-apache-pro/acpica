@@ -5,7 +5,7 @@ Minor modifies for OS X compiling and MaciASL's OutlineView issue.
 为在OS X下编译 acpi tools 和 MaciASL 的OutlineView显示问题，进行轻微的修改。
 
 ## 修改
-#### Credit to RehabMan: [https://github.com/RehabMan/Intel-iasl](http://example.com)
+#### Credit to RehabMan: [https://github.com/RehabMan/Intel-iasl](https://github.com/RehabMan/Intel-iasl)
 ###一、/generate/unix/Makefile.config (修改编译配置)
 
 ##### 1.1 在 37 行左右
@@ -261,4 +261,4 @@ make
 
 ### 四、编译版下载
 
-[https://github.com/Yuki-Judai/acpica/releases](http://example.com)
+[https://github.com/Yuki-Judai/acpica/releases](https://github.com/Yuki-Judai/acpica/releases)
