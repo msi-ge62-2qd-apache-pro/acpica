@@ -48,7 +48,7 @@ else
 ---
 
 ###二、disassembler
-####2.1 source/components/disassembler/dmbuffer.c
+####2.1 /source/components/disassembler/dmbuffer.c
 #### 2.1.1 223行左右
 
 ```
@@ -146,7 +146,7 @@ if (Info)
 
 ---
 
-### 2.2 source/components/disassembler/dmopcode.c
+### 2.2 /source/components/disassembler/dmopcode.c
 #### 2.2.1 206行左右
 ```
 if (!PrevOp->Asl.Node)
@@ -234,3 +234,31 @@ if (IdInfo)
 }
     break;
 ```
+
+### 三、怎样编译
+1. 在OS X下，先安装好 Xcode Command Line Tools.
+2. 打开 终端，依次输入
+
+ 2.1
+```
+cd Desktop
+```
+ 2.2
+```
+git clone https://github.com/Yuki-Judai/acpica.git
+```
+ 2.3
+```
+cd acpica
+```
+2.4
+```
+make
+```
+2.5
+
+ 编译好的文件在 /generate/unix/bin/ 目录。
+
+### 四、编译版下载
+
+[https://github.com/Yuki-Judai/acpica/releases](http://example.com)
