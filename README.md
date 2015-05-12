@@ -239,15 +239,15 @@ if (IdInfo)
 1. 在OS X下，先安装好 Xcode Command Line Tools.
 2. 打开 终端，依次输入
 
- 2.1
+2.1
 ```
 cd Desktop
 ```
- 2.2
+2.2
 ```
 git clone https://github.com/Yuki-Judai/acpica.git
 ```
- 2.3
+2.3
 ```
 cd acpica
 ```
