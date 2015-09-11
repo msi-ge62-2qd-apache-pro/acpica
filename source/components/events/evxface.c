@@ -397,7 +397,7 @@ AcpiRemoveNotifyHandler (
 
                 /* Make sure all deferred notify tasks are completed */
 
-                AcpiOsWaitEventsComplete ();
+                AcpiUtFlushObjectReferences ();
             }
         }
 
@@ -466,7 +466,7 @@ AcpiRemoveNotifyHandler (
 
             /* Make sure all deferred notify tasks are completed */
 
-            AcpiOsWaitEventsComplete ();
+            AcpiUtFlushObjectReferences ();
             AcpiUtRemoveReference (HandlerObj);
         }
     }
@@ -1228,7 +1228,7 @@ AcpiRemoveGpeHandler (
 
     /* Make sure all deferred GPE tasks are completed */
 
-    AcpiOsWaitEventsComplete ();
+    AcpiUtFlushObjectReferences ();
 
     /* Now we can free the handler object */
 

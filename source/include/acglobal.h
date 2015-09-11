@@ -236,6 +236,13 @@ ACPI_GLOBAL (UINT32,                    AcpiGbl_OwnerIdMask[ACPI_NUM_OWNERID_MAS
 ACPI_GLOBAL (UINT8,                     AcpiGbl_LastOwnerIdIndex);
 ACPI_GLOBAL (UINT8,                     AcpiGbl_NextOwnerIdOffset);
 
+/* Garbage collection support */
+
+ACPI_INIT_GLOBAL (ACPI_OPERAND_OBJECT *,AcpiGbl_GarbageOperands, NULL);
+ACPI_INIT_GLOBAL (BOOLEAN,              AcpiGbl_GcThreadCreated, FALSE);
+ACPI_GLOBAL (ACPI_MUTEX,                AcpiGbl_GcHandshakeMutex);
+ACPI_GLOBAL (BOOLEAN,                   AcpiGbl_GcMutexAcquired);
+
 /* Initialization sequencing */
 
 ACPI_GLOBAL (BOOLEAN,                   AcpiGbl_RegMethodsExecuted);

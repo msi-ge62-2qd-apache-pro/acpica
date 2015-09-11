@@ -127,7 +127,16 @@
 
 static void
 AcpiUtDeleteInternalObj (
-    ACPI_OPERAND_OBJECT     *Object);
+    ACPI_OPERAND_OBJECT     *Object,
+    BOOLEAN                 Asynchronous);
+
+static void ACPI_SYSTEM_XFACE
+AcpiUtDeleteObjectDeferred (
+    void                    *Context);
+
+static void ACPI_SYSTEM_XFACE
+AcpiUtDeleteObjectThread (
+    void                    *Unused);
 
 static void
 AcpiUtUpdateRefCount (
@@ -144,14 +153,16 @@ AcpiUtUpdateRefCount (
  * RETURN:      None
  *
  * DESCRIPTION: Low level object deletion, after reference counts have been
- *              updated (All reference counts, including sub-objects!)
+ *              updated to zero.
  *
  ******************************************************************************/
 
 static void
 AcpiUtDeleteInternalObj (
-    ACPI_OPERAND_OBJECT     *Object)
+    ACPI_OPERAND_OBJECT     *Object,
+    BOOLEAN                 Asynchronous)
 {
+    ACPI_STATUS             Status;
     void                    *ObjPointer = NULL;
     ACPI_OPERAND_OBJECT     *HandlerDesc;
     ACPI_OPERAND_OBJECT     *SecondDesc;
@@ -166,6 +177,19 @@ AcpiUtDeleteInternalObj (
     if (!Object)
     {
         return_VOID;
+    }
+
+    /*
+     * Keep old logic where the namespace mutex is always locked for an
+     * operand object deletion in order to be regression safe.
+     */
+    if (Asynchronous)
+    {
+        Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
+        if (ACPI_FAILURE (Status))
+        {
+            return_VOID;
+        }
     }
 
     /*
@@ -421,7 +445,144 @@ AcpiUtDeleteInternalObj (
         Object, AcpiUtGetObjectTypeName (Object)));
 
     AcpiUtDeleteObjectDesc (Object);
+    if (Asynchronous)
+    {
+        (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
+    }
     return_VOID;
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiUtDeleteObjectDeferred
+ *
+ * PARAMETERS:  Context        - Execution info
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Deferred object deletion.
+ *              There are two design requirements for the deletion function:
+ *              1. Since multiple wait/lock code may be invoked for the
+ *                 destruction of the object, the deletion function should be
+ *                 implemented in a lock free style so that individual deletion
+ *                 code piece can wait/lock using different wait/lock semantics.
+ *                 Since this context here is the only context that is still
+ *                 referencing the object, we needn't worry about the race
+ *                 conditions occurred without locking the whole function
+ *                 around.
+ *              2. Since operand object may contain many sub-objects typed as
+ *                 operand objects, in order not to increase stack consumption
+ *                 beyond software control, we need to defer executing each
+ *                 deletion of each operand object.
+ * Using AcpiOsExecute() is the simplest choice for now to meet the above
+ * requirements.
+ *
+ ******************************************************************************/
+
+static void ACPI_SYSTEM_XFACE
+AcpiUtDeleteObjectDeferred (
+    void                    *Context)
+{
+
+    AcpiUtDeleteInternalObj (
+        ACPI_CAST_PTR (ACPI_OPERAND_OBJECT, Context), TRUE);
+    return;
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiUtDeleteObjectThread
+ *
+ * PARAMETERS:  Unused         - Execution info (unused)
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: This thread iterates garbage operand list and destroy operands
+ *              linked in the list.
+ *
+ ******************************************************************************/
+
+static void ACPI_SYSTEM_XFACE
+AcpiUtDeleteObjectThread (
+    void                    *Context)
+{
+    ACPI_CPU_FLAGS          LockFlags;
+    ACPI_OPERAND_OBJECT     *GcObj;
+    ACPI_STATUS             Status;
+
+
+    ACPI_FUNCTION_ENTRY ();
+
+
+    LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+    while (AcpiGbl_GcThreadCreated)
+    {
+        while (AcpiGbl_GarbageOperands)
+        {
+            GcObj = ACPI_CAST_PTR (ACPI_OPERAND_OBJECT, AcpiGbl_GarbageOperands);
+            AcpiGbl_GarbageOperands = GcObj->Common.NextObject;
+            GcObj->Common.NextObject = NULL;
+
+            /* Delete the object in a lock free environment */
+
+            AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+            AcpiUtDeleteInternalObj (GcObj, TRUE);
+            LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+        }
+
+        /* Sleep until more garbage operands are detected */
+
+        AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+        Status = AcpiOsAcquireMutex (AcpiGbl_GcHandshakeMutex,
+            ACPI_WAIT_FOREVER);
+        LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+        if (ACPI_SUCCESS (Status))
+        {
+            AcpiGbl_GcMutexAcquired = TRUE;
+        }
+    }
+    AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+    return;
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiUtFlushObjectReferences
+ *
+ * PARAMETERS:  None
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Wait for all asynchronous events to complete. Since our operand
+ *              object GC mechanism is also done in such a deferred way, this
+ *              wrapper can be used to make sure operand object related
+ *              callbacks are destructed (GPE handlers for GPE devices, notify
+ *              handlers, operation region handlers, etc.).
+ *
+ ******************************************************************************/
+
+void
+AcpiUtFlushObjectReferences (
+    void)
+{
+    ACPI_CPU_FLAGS          LockFlags;
+
+
+    AcpiOsWaitEventsComplete ();
+    LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+    while (AcpiGbl_GarbageOperands)
+    {
+        /* Sleep until all garbage operands are destructed */
+
+        AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+        AcpiOsSleep (50);
+        LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+    }
+    AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+    return;
 }
 
 
@@ -483,6 +644,7 @@ AcpiUtUpdateRefCount (
     UINT16                  OriginalCount;
     UINT16                  NewCount = 0;
     ACPI_CPU_FLAGS          LockFlags;
+    ACPI_STATUS             Status;
 
 
     ACPI_FUNCTION_NAME (UtUpdateRefCount);
@@ -547,11 +709,84 @@ AcpiUtUpdateRefCount (
             "Obj %p Type %.2X Refs %.2X [Decremented]\n",
             Object, Object->Common.Type, NewCount));
 
-        /* Actually delete the object on a reference count of zero */
-
+        /*
+         * Actually delete the object on a reference count of zero. As some
+         * synchronizations may be required for destructing sub-objects,
+         * defer executing the deletion to a lock free environment.
+         */
         if (NewCount == 0)
         {
-            AcpiUtDeleteInternalObj (Object);
+            if (Object->Common.NextObject)
+            {
+                /* Slow path: create a work queue to free the object */
+
+                Status = AcpiOsExecute (OSL_GC_HANDLER,
+                    AcpiUtDeleteObjectDeferred, Object);
+            }
+            else
+            {
+                /* Acquire reference count lock for GC variables */
+
+                LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+
+                /*
+                 * Synchronize here to create the garbage collection thread
+                 * when memory is not low.
+                 */
+                Status = AE_OK;
+                if (!AcpiGbl_GcThreadCreated)
+                {
+                    AcpiGbl_GcThreadCreated = TRUE;
+                    AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+
+                    /*
+                     * Some hosts require this to be done in a non atomic
+                     * environment.
+                     */
+                    Status = AcpiOsExecute (OSL_GC_THREAD,
+                        AcpiUtDeleteObjectThread, NULL);
+
+                    LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+                    if (ACPI_FAILURE (Status))
+                    {
+                        AcpiGbl_GcThreadCreated = FALSE;
+                    }
+                }
+
+                if (ACPI_SUCCESS (Status))
+                {
+                    /* Fast path: link the object into a garbage list */
+
+                    Object->Common.NextObject = AcpiGbl_GarbageOperands;
+                    AcpiGbl_GarbageOperands = Object;
+
+                    /* Wake up the GC thread */
+
+                    if (AcpiGbl_GcMutexAcquired)
+                    {
+                        AcpiGbl_GcMutexAcquired = FALSE;
+                        AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+                        (void) AcpiOsReleaseMutex (AcpiGbl_GcHandshakeMutex);
+                        LockFlags = AcpiOsAcquireLock (AcpiGbl_ReferenceCountLock);
+                    }
+                }
+
+                /* Release reference count lock for GC variables */
+
+                AcpiOsReleaseLock (AcpiGbl_ReferenceCountLock, LockFlags);
+            }
+
+            /*
+             * Failed to defer executing object deletion. This normally
+             * happens in host OSes' early boot stages where mutexes can
+             * be no-ops.
+             */
+            if (ACPI_FAILURE (Status))
+            {
+                ACPI_WARNING ((AE_INFO,
+                    "Obj %p, Synchronous deletion occurred.\n", Object));
+                AcpiUtDeleteInternalObj (Object, FALSE);
+            }
         }
         break;
 

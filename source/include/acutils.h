@@ -514,6 +514,10 @@ AcpiUtRemoveReference (
     ACPI_OPERAND_OBJECT     *Object);
 
 void
+AcpiUtFlushObjectReferences (
+    void);
+
+void
 AcpiUtDeleteInternalPackageObject (
     ACPI_OPERAND_OBJECT     *Object);
 

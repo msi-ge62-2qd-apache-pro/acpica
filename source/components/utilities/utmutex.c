@@ -185,6 +185,13 @@ AcpiUtMutexInitialize (
         return_ACPI_STATUS (Status);
     }
 
+    Status = AcpiOsCreateMutex (&AcpiGbl_GcHandshakeMutex);
+    if (ACPI_FAILURE (Status))
+    {
+        return_ACPI_STATUS (Status);
+    }
+    AcpiGbl_GcMutexAcquired = FALSE;
+
     /* Mutex for _OSI support */
 
     Status = AcpiOsCreateMutex (&AcpiGbl_OsiMutex);
