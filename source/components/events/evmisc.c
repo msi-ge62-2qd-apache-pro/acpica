@@ -248,6 +248,7 @@ AcpiEvQueueNotifyRequest (
     Info->Notify.Value = (UINT16) NotifyValue;
     Info->Notify.HandlerListId = HandlerListId;
     Info->Notify.HandlerListHead = HandlerListHead;
+    AcpiUtAddReference (HandlerListHead);
     Info->Notify.Global = &AcpiGbl_GlobalNotify[HandlerListId];
 
     ACPI_DEBUG_PRINT ((ACPI_DB_INFO,
@@ -285,6 +286,8 @@ AcpiEvNotifyDispatch (
 {
     ACPI_GENERIC_STATE      *Info = (ACPI_GENERIC_STATE *) Context;
     ACPI_OPERAND_OBJECT     *HandlerObj;
+    ACPI_OPERAND_OBJECT     *NextObj;
+    ACPI_STATUS             Status;
 
 
     ACPI_FUNCTION_ENTRY ();
@@ -301,19 +304,152 @@ AcpiEvNotifyDispatch (
 
     /* Now invoke the local notify handler(s) if any are installed */
 
+    Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
+    if (ACPI_FAILURE (Status))
+    {
+        goto ErrorExit;
+    }
+
     HandlerObj = Info->Notify.HandlerListHead;
+    AcpiUtAddReference (HandlerObj);
     while (HandlerObj)
     {
+        NextObj = HandlerObj->Notify.Next[Info->Notify.HandlerListId];
+        AcpiUtAddReference (NextObj);
+        (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
+
         HandlerObj->Notify.Handler (Info->Notify.Node,
             Info->Notify.Value,
             HandlerObj->Notify.Context);
+        AcpiUtRemoveReference (HandlerObj);
 
-        HandlerObj = HandlerObj->Notify.Next[Info->Notify.HandlerListId];
+        Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
+        if (ACPI_FAILURE (Status))
+        {
+            return;
+        }
+        HandlerObj = NextObj;
     }
 
     /* All done with the info object */
 
+    (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
+ErrorExit:
     AcpiUtDeleteGenericState (Info);
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiEvDeleteNotifyHandlers
+ *
+ * PARAMETERS:  Object          - The object for which notifies will be handled
+ *              HandlerType     - The type of handler:
+ *                                  ACPI_SYSTEM_NOTIFY: System Handler (00-7F)
+ *                                  ACPI_DEVICE_NOTIFY: Device Handler (80-FF)
+ *                                  ACPI_ALL_NOTIFY:    Both System and Device
+ *              Handler         - Address of the handler
+ *
+ * RETURN:      None
+ *
+ * DESCRIPTION: Remove matched handlers for notifications on the operand object
+ *              which should have just been detached from an ACPI Device,
+ *              ThermalZone, or Processor namespace node.
+ *              Note that this function must be invoked with ACPI_MTX_NAMESPACE
+ *              held.
+ *
+ ******************************************************************************/
+
+void
+AcpiEvDeleteNotifyHandlers (
+    ACPI_OPERAND_OBJECT     *Object,
+    UINT32                  HandlerType,
+    ACPI_NOTIFY_HANDLER     Handler)
+
+{
+    ACPI_OPERAND_OBJECT     *HandlerObj;
+    ACPI_OPERAND_OBJECT     *PreviousHandlerObj;
+    UINT32                  i;
+    ACPI_OPERAND_OBJECT     *DeadHandlerList = NULL;
+    ACPI_OPERAND_OBJECT     *DeadHandlerObj = NULL;
+    BOOLEAN                 DeadHandlerDuplicated;
+
+
+    ACPI_FUNCTION_TRACE (EvDeleteNotifyHandlers);
+
+
+    /* Internal object exists. Find the handler and remove it */
+
+    for (i = 0; i < ACPI_NUM_NOTIFY_TYPES; i++)
+    {
+        if (HandlerType & (i+1))
+        {
+            HandlerObj = Object->CommonNotify.NotifyList[i];
+            PreviousHandlerObj = NULL;
+
+            /* Attempt to find the handler in the handler list */
+
+            if (Handler)
+            {
+                while (HandlerObj &&
+                      (HandlerObj->Notify.Handler != Handler))
+                {
+                    PreviousHandlerObj = HandlerObj;
+                    HandlerObj = HandlerObj->Notify.Next[i];
+                }
+            }
+
+            if (!HandlerObj)
+            {
+                continue;
+            }
+
+            /* Remove the handler object from the list */
+
+            if (PreviousHandlerObj) /* Handler is not at the list head */
+            {
+                PreviousHandlerObj->Notify.Next[i] =
+                    HandlerObj->Notify.Next[i];
+            }
+            else /* Handler is at the list head */
+            {
+                Object->CommonNotify.NotifyList[i] =
+                    HandlerObj->Notify.Next[i];
+            }
+            AcpiUtRemoveReference (HandlerObj);
+
+            /* Store removed handler object if it is not duplicated */
+
+            DeadHandlerDuplicated = FALSE;
+            DeadHandlerObj = DeadHandlerList;
+            while (DeadHandlerObj)
+            {
+                if (DeadHandlerObj == HandlerObj)
+                {
+                    DeadHandlerDuplicated = TRUE;
+                    break;
+                }
+                DeadHandlerObj = DeadHandlerObj->Notify.Next[0];
+            }
+            if (!DeadHandlerDuplicated)
+            {
+                HandlerObj->Notify.Next[0] = DeadHandlerList;
+                DeadHandlerList = HandlerObj;
+            }
+        }
+    }
+
+    /* Destroy removed handler objects */
+
+    HandlerObj = DeadHandlerList;
+    while (HandlerObj)
+    {
+        DeadHandlerList = HandlerObj->Notify.Next[0];
+        AcpiUtRemoveReference (HandlerObj);
+        HandlerObj = DeadHandlerList;
+    }
+
+    return_VOID;
 }
 
 

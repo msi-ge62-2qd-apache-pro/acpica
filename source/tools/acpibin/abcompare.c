@@ -115,6 +115,7 @@
 
 #include "acpibin.h"
 #include "acapps.h"
+#include "acevents.h"
 
 
 ACPI_TABLE_HEADER           Header1;
@@ -696,3 +697,19 @@ Exit1:
  * DESCRIPTION: For linkage
  *
  ******************************************************************************/
+
+void
+AcpiEvDeleteNotifyHandlers (
+    ACPI_OPERAND_OBJECT     *Object,
+    UINT32                  HandlerType,
+    ACPI_NOTIFY_HANDLER     Handler)
+{
+    return;
+}
+
+void
+AcpiUtRemoveReference (
+    ACPI_OPERAND_OBJECT     *Object)
+{
+    return;
+}

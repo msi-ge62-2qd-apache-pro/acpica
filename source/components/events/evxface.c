@@ -304,15 +304,9 @@ AcpiInstallNotifyHandler (
             HandlerObj->Notify.Next[i] =
                 ObjDesc->CommonNotify.NotifyList[i];
 
+            AcpiUtAddReference (HandlerObj);
             ObjDesc->CommonNotify.NotifyList[i] = HandlerObj;
         }
-    }
-
-    /* Add an extra reference if handler was installed in both lists */
-
-    if (HandlerType == ACPI_ALL_NOTIFY)
-    {
-        AcpiUtAddReference (HandlerObj);
     }
 
 
@@ -349,8 +343,6 @@ AcpiRemoveNotifyHandler (
 {
     ACPI_NAMESPACE_NODE     *Node = ACPI_CAST_PTR (ACPI_NAMESPACE_NODE, Device);
     ACPI_OPERAND_OBJECT     *ObjDesc;
-    ACPI_OPERAND_OBJECT     *HandlerObj;
-    ACPI_OPERAND_OBJECT     *PreviousHandlerObj;
     ACPI_STATUS             Status = AE_OK;
     UINT32                  i;
 
@@ -383,8 +375,8 @@ AcpiRemoveNotifyHandler (
                 if (!AcpiGbl_GlobalNotify[i].Handler ||
                     (AcpiGbl_GlobalNotify[i].Handler != Handler))
                 {
-                    Status = AE_NOT_EXIST;
-                    goto UnlockAndExit;
+                    (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
+                    return_ACPI_STATUS (Status);
                 }
 
                 ACPI_DEBUG_PRINT ((ACPI_DB_INFO,
@@ -419,64 +411,20 @@ AcpiRemoveNotifyHandler (
         return_ACPI_STATUS (AE_NOT_EXIST);
     }
 
-    /* Internal object exists. Find the handler and remove it */
+    /* Delete notify handlers */
 
-    for (i = 0; i < ACPI_NUM_NOTIFY_TYPES; i++)
+    Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
+    if (ACPI_FAILURE (Status))
     {
-        if (HandlerType & (i+1))
-        {
-            Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
-            if (ACPI_FAILURE (Status))
-            {
-                return_ACPI_STATUS (Status);
-            }
-
-            HandlerObj = ObjDesc->CommonNotify.NotifyList[i];
-            PreviousHandlerObj = NULL;
-
-            /* Attempt to find the handler in the handler list */
-
-            while (HandlerObj &&
-                  (HandlerObj->Notify.Handler != Handler))
-            {
-                PreviousHandlerObj = HandlerObj;
-                HandlerObj = HandlerObj->Notify.Next[i];
-            }
-
-            if (!HandlerObj)
-            {
-                Status = AE_NOT_EXIST;
-                goto UnlockAndExit;
-            }
-
-            /* Remove the handler object from the list */
-
-            if (PreviousHandlerObj) /* Handler is not at the list head */
-            {
-                PreviousHandlerObj->Notify.Next[i] =
-                    HandlerObj->Notify.Next[i];
-            }
-            else /* Handler is at the list head */
-            {
-                ObjDesc->CommonNotify.NotifyList[i] =
-                    HandlerObj->Notify.Next[i];
-            }
-
-            (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
-
-            /* Make sure all deferred notify tasks are completed */
-
-            AcpiUtFlushObjectReferences ();
-            AcpiUtRemoveReference (HandlerObj);
-        }
+        return_ACPI_STATUS (Status);
     }
+    AcpiEvDeleteNotifyHandlers (ObjDesc, HandlerType, Handler);
+    (void) AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
 
-    return_ACPI_STATUS (Status);
+    /* Make sure all deferred notify tasks are completed */
 
-
-UnlockAndExit:
-    (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
-    return_ACPI_STATUS (Status);
+    AcpiUtFlushObjectReferences ();
+    return_ACPI_STATUS (AE_OK);
 }
 
 ACPI_EXPORT_SYMBOL (AcpiRemoveNotifyHandler)

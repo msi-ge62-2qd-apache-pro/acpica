@@ -268,6 +268,14 @@ AcpiUtDeleteInternalObj (
             AcpiUtRemoveReference (HandlerDesc);
             HandlerDesc = NextDesc;
         }
+
+        /*lint -fallthrough */
+
+    case ACPI_TYPE_POWER:
+
+        /* Update the notify objects for these types (if present) */
+
+        AcpiEvDeleteNotifyHandlers (Object, ACPI_ALL_NOTIFY, NULL);
         break;
 
     case ACPI_TYPE_MUTEX:
@@ -840,7 +848,6 @@ AcpiUtUpdateObjectReference (
     ACPI_STATUS             Status = AE_OK;
     ACPI_GENERIC_STATE      *StateList = NULL;
     ACPI_OPERAND_OBJECT     *NextObject = NULL;
-    ACPI_OPERAND_OBJECT     *PrevObject;
     ACPI_GENERIC_STATE      *State;
     UINT32                  i;
 
@@ -865,26 +872,6 @@ AcpiUtUpdateObjectReference (
          */
         switch (Object->Common.Type)
         {
-        case ACPI_TYPE_DEVICE:
-        case ACPI_TYPE_PROCESSOR:
-        case ACPI_TYPE_POWER:
-        case ACPI_TYPE_THERMAL:
-            /*
-             * Update the notify objects for these types (if present)
-             * Two lists, system and device notify handlers.
-             */
-            for (i = 0; i < ACPI_NUM_NOTIFY_TYPES; i++)
-            {
-                PrevObject = Object->CommonNotify.NotifyList[i];
-                while (PrevObject)
-                {
-                    NextObject = PrevObject->Notify.Next[i];
-                    AcpiUtUpdateRefCount (PrevObject, Action);
-                    PrevObject = NextObject;
-                }
-            }
-            break;
-
         case ACPI_TYPE_PACKAGE:
             /*
              * We must update all the sub-objects of the package,

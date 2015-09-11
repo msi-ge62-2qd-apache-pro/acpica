@@ -204,6 +204,15 @@ AcpiEvInitializeEvents (
     return (AE_OK);
 }
 
+void
+AcpiEvDeleteNotifyHandlers (
+    ACPI_OPERAND_OBJECT     *Object,
+    UINT32                  HandlerType,
+    ACPI_NOTIFY_HANDLER     Handler)
+{
+    return;
+}
+
 
 /* AML Interpreter */
 

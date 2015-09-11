@@ -149,6 +149,12 @@ AcpiEvQueueNotifyRequest (
     ACPI_NAMESPACE_NODE     *Node,
     UINT32                  NotifyValue);
 
+void
+AcpiEvDeleteNotifyHandlers (
+    ACPI_OPERAND_OBJECT     *Object,
+    UINT32                  HandlerType,
+    ACPI_NOTIFY_HANDLER     Handler);
+
 
 /*
  * evglock - Global Lock support

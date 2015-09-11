@@ -206,6 +206,15 @@ AcpiEvIsNotifyObject (
     return (FALSE);
 }
 
+void
+AcpiEvDeleteNotifyHandlers (
+    ACPI_OPERAND_OBJECT     *Object,
+    UINT32                  HandlerType,
+    ACPI_NOTIFY_HANDLER     Handler)
+{
+    return;
+}
+
 #if (!ACPI_REDUCED_HARDWARE)
 ACPI_STATUS
 AcpiEvDeleteGpeBlock (

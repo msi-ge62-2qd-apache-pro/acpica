@@ -410,14 +410,35 @@ void
 AcpiUtDeleteGenericState (
     ACPI_GENERIC_STATE      *State)
 {
+    ACPI_OPERAND_OBJECT     *HandlerListHead;
+
+
     ACPI_FUNCTION_ENTRY ();
 
 
     /* Ignore null state */
 
-    if (State)
+    if (!State)
     {
-        (void) AcpiOsReleaseObject (AcpiGbl_StateCache, State);
+        return;
     }
+
+    switch (State->Common.DescriptorType)
+    {
+    case ACPI_DESC_TYPE_STATE_NOTIFY:
+
+        if (State->Notify.HandlerListHead)
+        {
+            HandlerListHead = State->Notify.HandlerListHead;
+            State->Notify.HandlerListHead = NULL;
+            AcpiUtRemoveReference (HandlerListHead);
+        }
+        break;
+
+    default:
+
+        break;
+    }
+    (void) AcpiOsReleaseObject (AcpiGbl_StateCache, State);
     return;
 }
