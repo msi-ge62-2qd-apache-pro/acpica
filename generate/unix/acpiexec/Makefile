@@ -244,9 +244,10 @@ CFLAGS += \
     -DACPI_CHECKSUM_ABORT=TRUE
 endif
 
+ifneq ($(HOST),_QNX)
 LDFLAGS += -lpthread
 
-ifneq ($(HOST),_APPLE)
+if ($(HOST) != _APPLE) || ($(HOST) != _QNX)
 LDFLAGS += -lrt
 endif
 
