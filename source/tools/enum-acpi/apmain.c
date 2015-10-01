@@ -143,8 +143,8 @@ static void fprint_counted_id(const char* prefix, int* counter) {
 
 /* Print a pascal-style string */
 static void PrintFixedString(UINT32 Length, char* String) {
-    if (Length > 1) {
-        fwrite(String, Length-1, 1, stdout);
+    for ( ; (Length != 0) && (*String != 0); --Length, ++String ) {
+        fputc(*String,stdout);
     };
 };
 
@@ -415,6 +415,10 @@ acpi_main (
 {
     int                     Status = 0;
     void* ReturnValue = NULL;
+
+    /* Ensure output is line buffered - prevent partial writes */
+    /* enum-devices expects each read() to return a whole line */
+    setvbuf(stdout,NULL,_IOLBF,0);
 
     // print args
     fprintf(stdout,"#%d %s\n",getpid(),argv[0]);
