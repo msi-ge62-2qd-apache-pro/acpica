@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Module Name: utuuid -- UUID support functions
+ * Module Name: acpidump.h - Include file for AcpiDump utility
  *
  *****************************************************************************/
 
@@ -113,63 +113,115 @@
  *
  *****************************************************************************/
 
+/*
+ * Global variables. Defined in main.c only, externed in all other files
+ */
+#ifdef _DECLARE_GLOBALS
+#define EXTERN
+#define INIT_GLOBAL(a,b)        a=b
+#else
+#define EXTERN                  extern
+#define INIT_GLOBAL(a,b)        a
+#endif
+
 #include "acpi.h"
 #include "accommon.h"
+#include "actables.h"
 
-#define _COMPONENT          ACPI_COMPILER
-        ACPI_MODULE_NAME    ("utuuid")
-
-
-#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_HELP_APP || defined ENUM_ACPI)
-/*
- * UUID support functions.
- *
- * This table is used to convert an input UUID ascii string to a 16 byte
- * buffer and the reverse. The table maps a UUID buffer index 0-15 to
- * the index within the 36-byte UUID string where the associated 2-byte
- * hex value can be found.
- *
- * 36-byte UUID strings are of the form:
- *     aabbccdd-eeff-gghh-iijj-kkllmmnnoopp
- * Where aa-pp are one byte hex numbers, made up of two hex digits
- *
- * Note: This table is basically the inverse of the string-to-offset table
- * found in the ACPI spec in the description of the ToUUID macro.
- */
-const UINT8    AcpiGbl_MapToUuidOffset[UUID_BUFFER_LENGTH] =
-{
-    6,4,2,0,11,9,16,14,19,21,24,26,28,30,32,34
-};
+#include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 
-/*******************************************************************************
- *
- * FUNCTION:    AcpiUtConvertStringToUuid
- *
- * PARAMETERS:  InString            - 36-byte formatted UUID string
- *              UuidBuffer          - Where the 16-byte UUID buffer is returned
- *
- * RETURN:      None. Output data is returned in the UuidBuffer
- *
- * DESCRIPTION: Convert a 36-byte formatted UUID string to 16-byte UUID buffer
- *
- ******************************************************************************/
+/* Globals */
 
-void
-AcpiUtConvertStringToUuid (
-    char                    *InString,
-    UINT8                   *UuidBuffer)
-{
-    UINT32                  i;
+EXTERN BOOLEAN              INIT_GLOBAL (Gbl_SummaryMode, FALSE);
+EXTERN BOOLEAN              INIT_GLOBAL (Gbl_VerboseMode, FALSE);
+EXTERN BOOLEAN              INIT_GLOBAL (Gbl_BinaryMode, FALSE);
+EXTERN BOOLEAN              INIT_GLOBAL (Gbl_DumpCustomizedTables, TRUE);
+EXTERN BOOLEAN              INIT_GLOBAL (Gbl_DoNotDumpXsdt, FALSE);
+EXTERN ACPI_FILE            INIT_GLOBAL (Gbl_OutputFile, NULL);
+EXTERN char                 INIT_GLOBAL (*Gbl_OutputFilename, NULL);
+EXTERN UINT64               INIT_GLOBAL (Gbl_RsdpBase, 0);
 
+/* Globals required for use with ACPICA modules */
 
-    for (i = 0; i < UUID_BUFFER_LENGTH; i++)
-    {
-        UuidBuffer[i] =
-            (AcpiUtAsciiCharToHex (InString[AcpiGbl_MapToUuidOffset[i]]) << 4);
-
-        UuidBuffer[i] |=
-            AcpiUtAsciiCharToHex (InString[AcpiGbl_MapToUuidOffset[i] + 1]);
-    }
-}
+#ifdef _DECLARE_GLOBALS
+UINT8                       AcpiGbl_IntegerByteWidth = 8;
 #endif
+
+/* Action table used to defer requested options */
+
+typedef struct ap_dump_action
+{
+    char                    *Argument;
+    UINT32                  ToBeDone;
+
+} AP_DUMP_ACTION;
+
+#define AP_MAX_ACTIONS              32
+
+#define AP_DUMP_ALL_TABLES          0
+#define AP_DUMP_TABLE_BY_ADDRESS    1
+#define AP_DUMP_TABLE_BY_NAME       2
+#define AP_DUMP_TABLE_BY_FILE       3
+
+#define AP_MAX_ACPI_FILES           256 /* Prevent infinite loops */
+
+/* Minimum FADT sizes for various table addresses */
+
+#define MIN_FADT_FOR_DSDT           (ACPI_FADT_OFFSET (Dsdt) + sizeof (UINT32))
+#define MIN_FADT_FOR_FACS           (ACPI_FADT_OFFSET (Facs) + sizeof (UINT32))
+#define MIN_FADT_FOR_XDSDT          (ACPI_FADT_OFFSET (XDsdt) + sizeof (UINT64))
+#define MIN_FADT_FOR_XFACS          (ACPI_FADT_OFFSET (XFacs) + sizeof (UINT64))
+
+
+/*
+ * apdump - Table get/dump routines
+ */
+int
+ApDumpTableFromFile (
+    char                    *Pathname);
+
+int
+ApDumpTableByName (
+    char                    *Signature);
+
+int
+ApDumpTableByAddress (
+    char                    *AsciiAddress);
+
+int
+ApDumpAllTables (
+    void);
+
+BOOLEAN
+ApIsValidHeader (
+    ACPI_TABLE_HEADER       *Table);
+
+BOOLEAN
+ApIsValidChecksum (
+    ACPI_TABLE_HEADER       *Table);
+
+UINT32
+ApGetTableLength (
+    ACPI_TABLE_HEADER       *Table);
+
+
+/*
+ * apfiles - File I/O utilities
+ */
+int
+ApOpenOutputFile (
+    char                    *Pathname);
+
+int
+ApWriteToBinaryFile (
+    ACPI_TABLE_HEADER       *Table,
+    UINT32                  Instance);
+
+ACPI_TABLE_HEADER *
+ApGetTableFromFile (
+    char                    *Pathname,
+    UINT32                  *FileSize);

@@ -75,6 +75,7 @@ generate/unix/acpinames/obj
 generate/unix/acpisrc/obj
 generate/unix/acpixtract/obj
 generate/unix/iasl/obj
+generate/unix/enum-acpi/obj
 
 generate/release/current
 generate/release/archive

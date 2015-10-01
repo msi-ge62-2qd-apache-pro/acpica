@@ -198,6 +198,17 @@ extern const char                       *AcpiGbl_PtDecode[];
 /*
  * Common message suffix
  */
+#ifdef ENUM_ACPI
+#include <process.h>
+#define ACPI_MSG_PREFIX \
+    AcpiOsPrintf ("#%d ", getpid())
+#else
+#define ACPI_MSG_PREFIX
+#endif
+
+/*
+ * Common message suffix
+ */
 #define ACPI_MSG_SUFFIX \
     AcpiOsPrintf (" (%8.8X/%s-%u)\n", ACPI_CA_VERSION, ModuleName, LineNumber)
 
@@ -1164,7 +1175,7 @@ AcpiUtFilePrintf (
 /*
  * utuuid -- UUID support functions
  */
-#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_HELP_APP)
+#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_HELP_APP || defined(ENUM_ACPI))
 void
 AcpiUtConvertStringToUuid (
     char                    *InString,

@@ -154,6 +154,7 @@ AcpiError (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_ERROR);
 
     va_start (ArgList, Format);
@@ -195,6 +196,7 @@ AcpiException (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
 
     /* For AE_OK, just print the message */
 
@@ -243,6 +245,7 @@ AcpiWarning (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_WARNING);
 
     va_start (ArgList, Format);
@@ -284,6 +287,7 @@ AcpiInfo (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_INFO);
 
     va_start (ArgList, Format);
@@ -323,6 +327,7 @@ AcpiBiosError (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_BIOS_ERROR);
 
     va_start (ArgList, Format);
@@ -362,6 +367,7 @@ AcpiBiosWarning (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_BIOS_WARNING);
 
     va_start (ArgList, Format);

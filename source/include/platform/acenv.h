@@ -172,7 +172,8 @@
     (defined ACPI_NAMES_APP)    || \
     (defined ACPI_SRC_APP)      || \
     (defined ACPI_XTRACT_APP)   || \
-    (defined ACPI_EXAMPLE_APP)
+    (defined ACPI_EXAMPLE_APP)  || \
+    (defined ENUM_ACPI)
 #define ACPI_APPLICATION
 #define ACPI_SINGLE_THREADED
 #endif
@@ -193,13 +194,15 @@
 
 #if (defined ACPI_EXEC_APP)     || \
     (defined ACPI_EXAMPLE_APP)  || \
-    (defined ACPI_NAMES_APP)
+    (defined ACPI_NAMES_APP)    || \
+    (defined ENUM_ACPI)
 #define ACPI_USE_NATIVE_RSDP_POINTER
 #endif
 
 /* AcpiDump configuration. Native mapping used if provided by the host */
 
-#ifdef ACPI_DUMP_APP
+#if (defined ACPI_DUMP_APP)     || \
+    (defined ENUM_ACPI)
 #define ACPI_USE_NATIVE_MEMORY_MAPPING
 #define USE_NATIVE_ALLOCATE_ZEROED
 #endif
@@ -209,6 +212,10 @@
 #if (defined ACPI_EXAMPLE_APP)  || \
     (defined ACPI_NAMES_APP)
 #define ACPI_REDUCED_HARDWARE 1
+#endif
+
+#ifdef ENUM_ACPI
+#define ACPI_USER_MODE_IO
 #endif
 
 /* Linkable ACPICA library */

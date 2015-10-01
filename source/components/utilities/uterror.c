@@ -168,6 +168,7 @@ AcpiUtPredefinedWarning (
         return;
     }
 
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_WARNING "%s: ", Pathname);
 
     va_start (ArgList, Format);
@@ -217,6 +218,7 @@ AcpiUtPredefinedInfo (
         return;
     }
 
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_INFO "%s: ", Pathname);
 
     va_start (ArgList, Format);
@@ -266,6 +268,7 @@ AcpiUtPredefinedBiosError (
         return;
     }
 
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_BIOS_ERROR "%s: ", Pathname);
 
     va_start (ArgList, Format);
@@ -303,6 +306,7 @@ AcpiUtNamespaceError (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_ERROR);
 
     if (LookupStatus == AE_BAD_CHARACTER)
@@ -375,6 +379,7 @@ AcpiUtMethodError (
 
 
     ACPI_MSG_REDIRECT_BEGIN;
+    ACPI_MSG_PREFIX;
     AcpiOsPrintf (ACPI_MSG_ERROR);
 
     if (Path)

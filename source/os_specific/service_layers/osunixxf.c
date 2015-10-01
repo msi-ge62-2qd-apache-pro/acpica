@@ -1059,6 +1059,7 @@ AcpiOsSignalSemaphore (
 
 #endif /* ACPI_SINGLE_THREADED */
 
+#ifndef ACPI_USER_MODE_IO
 
 /******************************************************************************
  *
@@ -1175,6 +1176,8 @@ AcpiOsStall (
 }
 
 
+#endif /* ACPI_USER_MODE_IO */
+
 /******************************************************************************
  *
  * FUNCTION:    AcpiOsSleep
@@ -1233,6 +1236,9 @@ AcpiOsGetTimer (
             ((UINT64) time.tv_usec * ACPI_100NSEC_PER_USEC));
 }
 
+
+
+#ifndef ACPI_USER_MODE_IO
 
 /******************************************************************************
  *
@@ -1471,6 +1477,8 @@ AcpiOsWritable (
     return (TRUE);
 }
 
+
+#endif /* !ACPI_USER_MODE_IO */
 
 /******************************************************************************
  *
