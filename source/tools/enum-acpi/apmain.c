@@ -434,6 +434,8 @@ acpi_main (
     AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT, 1, ACPI_DEFAULT_HANDLER, ACPI_DEFAULT_HANDLER, 0);
     AcpiInstallAddressSpaceHandler(ACPI_ROOT_OBJECT, 2, ACPI_DEFAULT_HANDLER, ACPI_DEFAULT_HANDLER, 0);
 
+    AcpiDbgLevel = 0;
+
     AcpiInitializeTables(NULL,32,TRUE);
     AcpiLoadTables();
 
