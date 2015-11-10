@@ -338,8 +338,25 @@ AcpiOsWritePciConfiguration (
     UINT64                  Value,
     UINT32                  Width)
 {
-    fprintf(stderr,"PCIWrite: %d:%d:%d:%d %d -> %08llX\n", PciId->Segment, PciId->Bus, PciId->Device, PciId->Function, Width, Value);
-    return (AE_OK);
+    //fprintf(stderr,"PCIWrite: %d:%d:%d:%d %d -> %08llX\n", PciId->Segment, PciId->Bus, PciId->Device, PciId->Function, Width, Value);
+    int rv;
+
+    if (pci_handle == -1) {
+        pci_handle = pci_attach(0);
+        if (pci_handle == -1) {
+            fprintf(stderr,"Unable to connect to PCI server: %d\n",errno);
+            return AE_ACCESS;
+        };
+    };
+
+    switch(Width) {
+        case 8: rv = pci_write_config8(PciId->Bus, PCI_DEVFUNC(PciId->Device, PciId->Function), PciRegister, 1, (char*)&Value); break;
+        case 16: rv = pci_write_config16(PciId->Bus, PCI_DEVFUNC(PciId->Device, PciId->Function), PciRegister, 1, (char*)&Value); break;
+        case 32: rv = pci_write_config32(PciId->Bus, PCI_DEVFUNC(PciId->Device, PciId->Function), PciRegister, 1, (char*)&Value); break;
+        default:
+            return AE_BAD_PARAMETER;
+    }
+    return (rv == PCI_SUCCESS) ? (AE_OK) : AE_ERROR;
 }
 
 
