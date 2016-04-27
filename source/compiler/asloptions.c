@@ -376,6 +376,10 @@ AslDoOptions (
             AcpiGbl_CstyleDisassembly = FALSE;
             break;
 
+        case 'j':
+            Gbl_DisasmJson = TRUE;
+            break;
+
         default:
 
             printf ("Unknown option: -d%s\n", AcpiGbl_Optarg);

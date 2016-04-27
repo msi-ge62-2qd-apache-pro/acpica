@@ -117,6 +117,7 @@
 #include "accommon.h"
 #include "acdisasm.h"
 #include "actables.h"
+#include "aslcompiler.h"
 
 /* This module used for application-level code only */
 
@@ -3418,6 +3419,8 @@ AcpiDmDumpSrat (
 
 
     /* Main table */
+    if (Gbl_DisasmJson)
+        AcpiOsPrintf("Yes, we're here\n");
 
     Status = AcpiDmDumpTable (Table->Length, 0, Table, 0, AcpiDmTableInfoSrat);
     if (ACPI_FAILURE (Status))

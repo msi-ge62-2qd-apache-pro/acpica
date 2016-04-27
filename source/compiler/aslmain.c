@@ -239,6 +239,7 @@ Usage (
     ACPI_OPTION ("-in",             "Ignore NoOp opcodes");
     ACPI_OPTION ("-l",              "Disassemble to mixed ASL and AML code");
     ACPI_OPTION ("-vt",             "Dump binary table data in hex format within output file");
+    ACPI_OPTION ("-dj",             "Disassemble or decode binary ACPI tables to JSON file");
 
     printf ("\nDebug Options:\n");
     ACPI_OPTION ("-bf",             "Create debug file (full output) (*.txt)");
