@@ -331,8 +331,8 @@ AcpiDsInitBufferField (
      * For FieldFlags, use LOCK_RULE = 0 (NO_LOCK),
      * UPDATE_RULE = 0 (UPDATE_PRESERVE)
      */
-    Status = AcpiExPrepCommonFieldObject (
-        ObjDesc, FieldFlags, 0, BitOffset, BitCount);
+    Status = AcpiExPrepCommonFieldObject (ObjDesc, BufferDesc->Buffer.Length,
+        FieldFlags, 0, BitOffset, BitCount);
     if (ACPI_FAILURE (Status))
     {
         goto Cleanup;

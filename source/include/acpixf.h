@@ -234,6 +234,11 @@ ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_CreateOsiMethod, TRUE);
 ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_UseDefaultRegisterWidths, TRUE);
 
 /*
+ * Optionally use optimal values for the ACPI region AnyAcc accesses.
+ */
+ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_UseOptimalRegionAccess, TRUE);
+
+/*
  * Whether or not to verify the table checksum before installation. Set
  * this to TRUE to verify the table checksum before install it to the table
  * manager. Note that enabling this option causes errors to happen in some

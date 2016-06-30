@@ -448,6 +448,7 @@ AcpiExUnlinkMutex (
 ACPI_STATUS
 AcpiExPrepCommonFieldObject (
     ACPI_OPERAND_OBJECT     *ObjDesc,
+    UINT32                  FieldBoundary,
     UINT8                   FieldFlags,
     UINT8                   FieldAttribute,
     UINT32                  FieldBitPosition,
