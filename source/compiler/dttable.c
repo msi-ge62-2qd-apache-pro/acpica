@@ -184,10 +184,7 @@ DtCompileRsdp (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoRsdp1,
         &Gbl_RootTable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Rsdp = ACPI_CAST_PTR (ACPI_TABLE_RSDP, Gbl_RootTable->Buffer);
     DtSetTableChecksum (&Rsdp->Checksum);
@@ -242,10 +239,7 @@ DtCompileFadt (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoFadt1,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);
@@ -328,10 +322,7 @@ DtCompileFacs (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoFacs,
         &Gbl_RootTable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Large FACS reserved area at the end of the table */
 

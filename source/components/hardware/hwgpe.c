@@ -235,10 +235,7 @@ AcpiHwLowSetGpe (
     /* Get current value of the enable register that contains this GPE */
 
     Status = AcpiHwRead (&EnableMask, &GpeRegisterInfo->EnableAddress);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Set or clear just the bit that corresponds to this GPE */
 
@@ -397,10 +394,7 @@ AcpiHwGetGpeStatus (
     /* GPE currently enabled (enable bit == 1)? */
 
     Status = AcpiHwRead (&InByte, &GpeRegisterInfo->EnableAddress);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (RegisterBit & InByte)
     {
@@ -410,10 +404,7 @@ AcpiHwGetGpeStatus (
     /* GPE currently active (status bit == 1)? */
 
     Status = AcpiHwRead (&InByte, &GpeRegisterInfo->StatusAddress);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (RegisterBit & InByte)
     {

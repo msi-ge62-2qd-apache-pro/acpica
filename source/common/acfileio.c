@@ -374,10 +374,7 @@ AcGetOneTableFromFile (
     /* Validate the table signature/header (limited ASCII chars) */
 
     Status = AcValidateTableHeader (File, TableOffset);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (GetOnlyAmlTables)
     {

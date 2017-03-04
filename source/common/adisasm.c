@@ -635,10 +635,7 @@ AdReparseOneTable (
     AcpiGbl_RootNodeStruct.Flags        = 0;
 
     Status = AcpiNsRootInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* New namespace, add the external definitions first */
 

@@ -266,10 +266,7 @@ AcpiAcquireMutex (
     /* Get the low-level mutex associated with Handle:Pathname */
 
     Status = AcpiUtGetMutexObject (Handle, Pathname, &MutexObj);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Acquire the OS mutex */
 
@@ -307,10 +304,7 @@ AcpiReleaseMutex (
     /* Get the low-level mutex associated with Handle:Pathname */
 
     Status = AcpiUtGetMutexObject (Handle, Pathname, &MutexObj);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Release the OS mutex */
 

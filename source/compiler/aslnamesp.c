@@ -526,10 +526,7 @@ NsDoOnePathname (
 
     TargetPath.Length = ACPI_ALLOCATE_LOCAL_BUFFER;
     Status = AcpiNsHandleToPathname (Node, &TargetPath, FALSE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     FlPrintFile (ASL_FILE_NAMESPACE_OUTPUT, "%s\n", TargetPath.Pointer);
     ACPI_FREE (TargetPath.Pointer);

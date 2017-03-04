@@ -249,10 +249,7 @@ OptSearchToRoot (
     Status = AcpiNsLookup (&ScopeInfo, Path, ACPI_TYPE_ANY, ACPI_IMODE_EXECUTE,
         ACPI_NS_SEARCH_PARENT | ACPI_NS_DONT_OPEN_SCOPE,
         WalkState, &(Node));
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * We found the name, but we must check to make sure that the node

@@ -255,10 +255,7 @@ AcpiUtInitializeInterfaces (
 
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     AcpiGbl_SupportedInterfaces = AcpiDefaultSupportedInterfaces;
 
@@ -299,10 +296,7 @@ AcpiUtInterfaceTerminate (
 
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     NextInterface = AcpiGbl_SupportedInterfaces;
     while (NextInterface)

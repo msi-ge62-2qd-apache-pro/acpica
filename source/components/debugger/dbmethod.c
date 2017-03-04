@@ -488,10 +488,7 @@ AcpiDbDisassembleMethod (
     Status = AcpiDsInitAmlWalk (WalkState, Op, NULL,
         ObjDesc->Method.AmlStart,
         ObjDesc->Method.AmlLength, NULL, ACPI_IMODE_LOAD_PASS1);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiUtAllocateOwnerId (&ObjDesc->Method.OwnerId);
     WalkState->OwnerId = ObjDesc->Method.OwnerId;
@@ -500,10 +497,7 @@ AcpiDbDisassembleMethod (
 
     Status = AcpiDsScopeStackPush (Method,
         Method->Type, WalkState);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Parse the entire method AML including deferred operators */
 

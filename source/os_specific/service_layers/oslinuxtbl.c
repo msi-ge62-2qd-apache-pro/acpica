@@ -347,18 +347,12 @@ AcpiOsGetTableByAddress (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Map the table and validate it */
 
     Status = OslMapTable (Address, NULL, &MappedTable);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Copy table to local buffer and return it */
 
@@ -417,10 +411,7 @@ AcpiOsGetTableByName (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Not a main ACPI table, attempt to extract it from the RSDT/XSDT */
 
@@ -568,10 +559,7 @@ AcpiOsGetTableByIndex (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Validate Index */
 

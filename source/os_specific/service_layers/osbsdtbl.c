@@ -265,10 +265,7 @@ AcpiOsGetTableByAddress (
     /* Map the table and validate it */
 
     Status = OslMapTable (Address, NULL, &MappedTable);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Copy table to local buffer and return it */
 
@@ -328,10 +325,7 @@ AcpiOsGetTableByName (
     /* Initialize main tables */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * If one of the main ACPI tables was requested (RSDT/XSDT/FADT),
@@ -371,10 +365,7 @@ AcpiOsGetTableByName (
     /* Not a main ACPI table, attempt to extract it from the RSDT/XSDT */
 
     Status = OslGetTableViaRoot (Signature, Instance, Table, Address);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (AE_OK);
 }
@@ -414,18 +405,12 @@ AcpiOsGetTableByIndex (
     /* Initialize main tables */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Add all tables to list */
 
     Status = OslAddTablesToList ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Validate Index */
 
@@ -627,10 +612,7 @@ OslTableInitialize (
     }
 
     Status = OslMapTable (Gbl_FadtAddress, ACPI_SIG_FADT, &MappedTable);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Gbl_Fadt = calloc (1, MappedTable->Length);
     if (!Gbl_Fadt)
@@ -790,10 +772,7 @@ OslGetTableViaRoot (
     /* Now we can get the requested table */
 
     Status = OslMapTable (TableAddress, Signature, &MappedTable);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Copy table to local buffer and return it */
 

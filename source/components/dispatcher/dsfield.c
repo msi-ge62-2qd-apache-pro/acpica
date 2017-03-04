@@ -226,10 +226,7 @@ AcpiDsCreateExternalRegion (
 
     Status = AcpiNsLookup (WalkState->ScopeInfo, Path, ACPI_TYPE_REGION,
        ACPI_IMODE_LOAD_PASS1, ACPI_NS_SEARCH_PARENT, WalkState, Node);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Must create and install a region object for the new node */
 

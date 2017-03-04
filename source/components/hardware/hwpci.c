@@ -487,10 +487,7 @@ AcpiHwGetPciDeviceInfo (
     /* We only care about objects of type Device */
 
     Status = AcpiGetType (PciDevice, &ObjectType);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (ObjectType != ACPI_TYPE_DEVICE)
     {
@@ -530,10 +527,7 @@ AcpiHwGetPciDeviceInfo (
     *IsBridge = FALSE;
     Status = AcpiOsReadPciConfiguration (PciId,
         PCI_CFG_HEADER_TYPE_REG, &PciValue, 8);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* We only care about bridges (1=PciBridge, 2=CardBusBridge) */
 
@@ -549,10 +543,7 @@ AcpiHwGetPciDeviceInfo (
 
     Status = AcpiOsReadPciConfiguration (PciId,
         PCI_CFG_PRIMARY_BUS_NUMBER_REG, &PciValue, 8);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     *IsBridge = TRUE;
     PciId->Bus = (UINT16) PciValue;
@@ -561,10 +552,7 @@ AcpiHwGetPciDeviceInfo (
 
     Status = AcpiOsReadPciConfiguration (PciId,
         PCI_CFG_SECONDARY_BUS_NUMBER_REG, &PciValue, 8);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     *BusNumber = (UINT16) PciValue;
     return (AE_OK);

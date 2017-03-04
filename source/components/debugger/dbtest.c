@@ -610,10 +610,7 @@ AcpiDbTestIntegerType (
     /* Read the original value */
 
     Status = AcpiDbReadFromObject (Node, ACPI_TYPE_INTEGER, &Temp1);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     AcpiOsPrintf (" (%4.4X/%3.3X) %8.8X%8.8X",
         BitLength, ACPI_ROUND_BITS_UP_TO_BYTES (BitLength),
@@ -848,10 +845,7 @@ AcpiDbTestStringType (
     /* Read the original value */
 
     Status = AcpiDbReadFromObject (Node, ACPI_TYPE_STRING, &Temp1);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     AcpiOsPrintf (" (%4.4X/%3.3X) \"%s\"", (Temp1->String.Length * 8),
         Temp1->String.Length, Temp1->String.Pointer);

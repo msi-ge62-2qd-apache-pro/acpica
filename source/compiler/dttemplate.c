@@ -243,10 +243,7 @@ DtCreateTemplates (
     AslInitializeGlobals ();
 
     Status = AdInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Special cases for DSDT, ALL, and '*'
@@ -436,34 +433,19 @@ DtCreateAllTemplates (
      * 2) FACS and RSDP have non-standard headers
      */
     Status = DtCreateOneTemplate (ACPI_SIG_DSDT, 0, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = DtCreateOneTemplate (ACPI_SIG_SSDT, 0, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = DtCreateOneTemplate (ACPI_SIG_OSDT, 0, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = DtCreateOneTemplate (ACPI_SIG_FACS, 0, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = DtCreateOneTemplate (ACPI_RSDP_NAME, 0, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (AE_OK);
 }

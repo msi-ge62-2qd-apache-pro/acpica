@@ -352,10 +352,7 @@ AslDoDisassembly (
     /* ACPICA subsystem initialization */
 
     Status = AdInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiAllocateRootTable (4);
     if (ACPI_FAILURE (Status))
@@ -376,10 +373,7 @@ AslDoDisassembly (
     Status = AdAmlDisassemble (AslToFile,
         Gbl_Files[ASL_FILE_INPUT].Filename, Gbl_OutputFilenamePrefix,
         &Gbl_Files[ASL_FILE_INPUT].Filename);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Check if any control methods were unresolved */
 
@@ -440,10 +434,7 @@ AslDoOneFile (
      * DefinitionBlock declaration.
      */
     Status = FlSplitInputPathname (Filename, &Gbl_DirectoryPath, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Take a copy of the input filename, convert any backslashes */
 

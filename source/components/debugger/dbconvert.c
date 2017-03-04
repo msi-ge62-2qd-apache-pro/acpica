@@ -230,18 +230,12 @@ AcpiDbHexByteToBinary (
     /* High byte */
 
     Status = AcpiDbHexCharToValue (HexByte[0], &Local0);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Low byte */
 
     Status = AcpiDbHexCharToValue (HexByte[1], &Local1);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     *ReturnValue = (UINT8) ((Local0 << 4) | Local1);
     return (AE_OK);

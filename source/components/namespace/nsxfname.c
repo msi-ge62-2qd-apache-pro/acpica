@@ -294,20 +294,14 @@ AcpiGetName (
     }
 
     Status = AcpiUtValidateBuffer (Buffer);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Wants the single segment ACPI name.
      * Validate handle and convert to a namespace Node
      */
     Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (NameType == ACPI_FULL_PATHNAME ||
         NameType == ACPI_FULL_PATHNAME_NO_TRAILING)
@@ -419,10 +413,7 @@ AcpiGetObjectInfo (
     }
 
     Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Node = AcpiNsValidateHandle (Handle);
     if (!Node)
@@ -443,10 +434,7 @@ AcpiGetObjectInfo (
     }
 
     Status = AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if ((Type == ACPI_TYPE_DEVICE) ||
         (Type == ACPI_TYPE_PROCESSOR))

@@ -506,10 +506,7 @@ DtCompileDbg2 (
     /* Main table */
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDbg2, &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);
@@ -655,10 +652,7 @@ DtCompileDmar (
 
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDmar, &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);
@@ -819,10 +813,7 @@ DtCompileDrtm (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDrtm,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
     DtInsertSubtable (ParentTable, Subtable);
 
     /*
@@ -837,10 +828,7 @@ DtCompileDrtm (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDrtm0,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     DtInsertSubtable (ParentTable, Subtable);
     DrtmVtl = ACPI_CAST_PTR (ACPI_DRTM_VTABLE_LIST, Subtable->Buffer);
@@ -873,10 +861,7 @@ DtCompileDrtm (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDrtm1,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     DtInsertSubtable (ParentTable, Subtable);
     DrtmRl = ACPI_CAST_PTR (ACPI_DRTM_RESOURCE_LIST, Subtable->Buffer);
@@ -911,10 +896,7 @@ DtCompileDrtm (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoDrtm2,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
     DtInsertSubtable (ParentTable, Subtable);
     /* DrtmDps = ACPI_CAST_PTR (ACPI_DRTM_DPS_ID, Subtable->Buffer);*/
 
@@ -1001,10 +983,7 @@ DtCompileGtdt (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoGtdt,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);
@@ -1197,10 +1176,7 @@ DtCompileHest (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoHest,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);
@@ -1344,10 +1320,7 @@ DtCompileIort (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoIort,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
     DtInsertSubtable (ParentTable, Subtable);
 
     /*
@@ -1366,10 +1339,7 @@ DtCompileIort (
     Iort->NodeOffset = sizeof (ACPI_TABLE_IORT);
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoIortPad,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
     if (Subtable)
     {
         DtInsertSubtable (ParentTable, Subtable);
@@ -1673,10 +1643,7 @@ DtCompileIvrs (
 
     Status = DtCompileTable (PFieldList, AcpiDmTableInfoIvrs,
         &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);

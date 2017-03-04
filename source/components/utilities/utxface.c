@@ -452,10 +452,7 @@ AcpiInstallInterface (
     }
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Check if the interface name is already in the global list */
 
@@ -517,10 +514,7 @@ AcpiRemoveInterface (
     }
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiUtRemoveInterface (InterfaceName);
 
@@ -554,10 +548,7 @@ AcpiInstallInterfaceHandler (
 
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (Handler && AcpiGbl_InterfaceHandler)
     {
@@ -597,10 +588,7 @@ AcpiUpdateInterfaces (
 
 
     Status = AcpiOsAcquireMutex (AcpiGbl_OsiMutex, ACPI_WAIT_FOREVER);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiUtUpdateInterfaces (Action);
 

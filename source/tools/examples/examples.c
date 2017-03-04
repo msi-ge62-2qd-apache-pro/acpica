@@ -392,18 +392,12 @@ InitializeAcpi (
     /* Initialize the ACPICA subsystem */
 
     Status = AcpiInitializeSubsystem ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Copy the root table list to dynamic memory */
 
     Status = AcpiReallocateRootTable ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Install local handlers */
 
@@ -417,26 +411,17 @@ InitializeAcpi (
     /* Initialize the ACPI hardware */
 
     Status = AcpiEnableSubsystem (ACPI_FULL_INITIALIZATION);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Create the ACPI namespace from ACPI tables */
 
     Status = AcpiLoadTables ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Complete the ACPI namespace object initialization */
 
     Status = AcpiInitializeObjects (ACPI_FULL_INITIALIZATION);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (AE_OK);
 }

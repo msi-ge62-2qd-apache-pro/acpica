@@ -643,10 +643,7 @@ AcpiUtRemoveAllocation (
     }
 
     Status = AcpiUtAcquireMutex (ACPI_MTX_MEMORY);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Unlink */
 

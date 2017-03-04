@@ -657,10 +657,7 @@ RemoveElement:
      */
     Status = AcpiNsCheckSortedList (Info, ReturnObject, 1, 4, 1,
         ACPI_SORT_ASCENDING, "C-State Type");
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (AE_OK);
 }
@@ -869,10 +866,7 @@ AcpiNsRepair_PSS (
      */
     Status = AcpiNsCheckSortedList (Info, ReturnObject, 0, 6, 0,
         ACPI_SORT_DESCENDING, "CpuFrequency");
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * We now know the list is correctly sorted by CPU frequency. Check if

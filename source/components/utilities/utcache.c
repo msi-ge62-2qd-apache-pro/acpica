@@ -239,10 +239,7 @@ AcpiOsPurgeCache (
     }
 
     Status = AcpiUtAcquireMutex (ACPI_MTX_CACHES);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Walk the list of objects in this cache */
 
@@ -288,10 +285,7 @@ AcpiOsDeleteCache (
    /* Purge all objects in the cache */
 
     Status = AcpiOsPurgeCache (Cache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Now we can delete the cache object */
 

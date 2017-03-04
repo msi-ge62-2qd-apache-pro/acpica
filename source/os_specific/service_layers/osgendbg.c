@@ -381,10 +381,7 @@ AcpiOsInitializeDebugger (
     /* Create command signals */
 
     Status = AcpiOsCreateMutex (&AcpiGbl_DbCommandReady);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
     Status = AcpiOsCreateMutex (&AcpiGbl_DbCommandComplete);
     if (ACPI_FAILURE (Status))
     {

@@ -196,10 +196,7 @@ AcpiDebugTrace (
 
 
     Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     AcpiGbl_TraceMethodName = Name;
     AcpiGbl_TraceFlags = Flags;

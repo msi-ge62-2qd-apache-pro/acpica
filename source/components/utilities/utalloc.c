@@ -219,38 +219,23 @@ AcpiUtCreateCaches (
 
     Status = AcpiOsCreateCache ("Acpi-Namespace", sizeof (ACPI_NAMESPACE_NODE),
         ACPI_MAX_NAMESPACE_CACHE_DEPTH, &AcpiGbl_NamespaceCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiOsCreateCache ("Acpi-State", sizeof (ACPI_GENERIC_STATE),
         ACPI_MAX_STATE_CACHE_DEPTH, &AcpiGbl_StateCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiOsCreateCache ("Acpi-Parse", sizeof (ACPI_PARSE_OBJ_COMMON),
         ACPI_MAX_PARSE_CACHE_DEPTH, &AcpiGbl_PsNodeCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiOsCreateCache ("Acpi-ParseExt", sizeof (ACPI_PARSE_OBJ_NAMED),
         ACPI_MAX_EXTPARSE_CACHE_DEPTH, &AcpiGbl_PsNodeExtCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiOsCreateCache ("Acpi-Operand", sizeof (ACPI_OPERAND_OBJECT),
         ACPI_MAX_OBJECT_CACHE_DEPTH, &AcpiGbl_OperandCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
 #ifdef ACPI_ASL_COMPILER
     /*
@@ -259,10 +244,7 @@ AcpiUtCreateCaches (
      */
     Status = AcpiOsCreateCache ("Acpi-Comment", sizeof (ACPI_COMMENT_NODE),
         ACPI_MAX_COMMENT_CACHE_DEPTH, &AcpiGbl_RegCommentCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * This cache keeps track of the starting addresses of where the comments
@@ -270,20 +252,14 @@ AcpiUtCreateCaches (
      */
     Status = AcpiOsCreateCache ("Acpi-Comment-Addr", sizeof (ACPI_COMMENT_ADDR_NODE),
         ACPI_MAX_COMMENT_CACHE_DEPTH, &AcpiGbl_CommentAddrCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * This cache will be used for nodes that represent files.
      */
     Status = AcpiOsCreateCache ("Acpi-File", sizeof (ACPI_FILE_NODE),
         ACPI_MAX_COMMENT_CACHE_DEPTH, &AcpiGbl_FileCache);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 #endif
 
 
@@ -293,17 +269,11 @@ AcpiUtCreateCaches (
 
     Status = AcpiUtCreateList ("Acpi-Global", 0,
         &AcpiGbl_GlobalList);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiUtCreateList ("Acpi-Namespace", sizeof (ACPI_NAMESPACE_NODE),
         &AcpiGbl_NsNodeList);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 #endif
 
     return (AE_OK);

@@ -841,10 +841,7 @@ UtInternalizeName (
     /* Build the name */
 
     Status = AcpiNsBuildInternalName (&Info);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     *ConvertedName = Info.InternalName;
     return (AE_OK);

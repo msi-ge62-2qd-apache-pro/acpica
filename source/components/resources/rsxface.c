@@ -616,10 +616,7 @@ AcpiGetVendorResource (
 
     Status = AcpiWalkResources (
         DeviceHandle, Name, AcpiRsMatchVendorResource, &Info);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (Info.Status);
 }
@@ -677,10 +674,7 @@ AcpiRsMatchVendorResource (
 
     Buffer = Info->Buffer;
     Status = AcpiUtInitializeBuffer (Buffer, Resource->Length);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Found the correct resource, copy and return it */
 

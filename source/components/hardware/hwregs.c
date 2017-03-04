@@ -385,10 +385,7 @@ AcpiHwRead (
     /* Validate contents of the GAS register */
 
     Status = AcpiHwValidateRegister (Reg, 32, &Address);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Initialize entire 32-bit return value to zero, convert AccessWidth
@@ -484,10 +481,7 @@ AcpiHwWrite (
     /* Validate contents of the GAS register */
 
     Status = AcpiHwValidateRegister (Reg, 32, &Address);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Convert AccessWidth into number of bits based */
 
@@ -916,10 +910,7 @@ AcpiHwReadMultiple (
     /* The first register is always required */
 
     Status = AcpiHwRead (&ValueA, RegisterA);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Second register is optional */
 
@@ -973,10 +964,7 @@ AcpiHwWriteMultiple (
     /* The first register is always required */
 
     Status = AcpiHwWrite (Value, RegisterA);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Second register is optional

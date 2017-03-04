@@ -330,10 +330,7 @@ AcpiOsInitialize (
     OsEnterLineEditMode ();
 
     Status = AcpiOsCreateLock (&AcpiGbl_PrintLock);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     return (AE_OK);
 }

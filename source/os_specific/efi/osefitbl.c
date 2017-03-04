@@ -264,18 +264,12 @@ AcpiOsGetTableByAddress (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Map the table and validate it */
 
     Status = OslMapTable (Address, NULL, &MappedTable);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Copy table to local buffer and return it */
 
@@ -334,10 +328,7 @@ AcpiOsGetTableByName (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Not a main ACPI table, attempt to extract it from the RSDT/XSDT */
 
@@ -462,10 +453,7 @@ AcpiOsGetTableByIndex (
     /* Get main ACPI tables from memory on first invocation of this function */
 
     Status = OslTableInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Validate Index */
 
@@ -618,10 +606,7 @@ OslTableInitialize (
     /* Get RSDP from memory */
 
     Status = OslLoadRsdp ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Get XSDT from memory */
 
@@ -670,24 +655,15 @@ OslTableInitialize (
 
     Status = OslGetTable (ACPI_SIG_FADT, 0,
         ACPI_CAST_PTR (ACPI_TABLE_HEADER *, &Gbl_Fadt), &Gbl_FadtAddress);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Add mandatory tables to global table list first */
 
     Status = OslAddTableToList (ACPI_RSDP_NAME, 0);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = OslAddTableToList (ACPI_SIG_RSDT, 0);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     if (Gbl_Revision == 2)
     {
@@ -699,24 +675,15 @@ OslTableInitialize (
     }
 
     Status = OslAddTableToList (ACPI_SIG_DSDT, 0);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = OslAddTableToList (ACPI_SIG_FACS, 0);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Add all tables found in the memory */
 
     Status = OslListTables ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Gbl_TableListInitialized = TRUE;
     return (AE_OK);

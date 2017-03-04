@@ -404,10 +404,7 @@ AdStoreTable (
 
 
     Status = AcpiTbGetNextTableDescriptor (TableIndex, &TableDesc);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* Initialize added table */
 
@@ -537,19 +534,13 @@ AdParseTable (
 
     Status = AcpiDsInitAmlWalk (WalkState, AcpiGbl_ParseOpRoot,
         NULL, AmlStart, AmlLength, NULL, ACPI_IMODE_LOAD_PASS1);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     WalkState->ParseFlags &= ~ACPI_PARSE_DELETE_TREE;
     WalkState->ParseFlags |= ACPI_PARSE_DISASSEMBLE;
 
     Status = AcpiPsParseAml (WalkState);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* If LoadTable is FALSE, we are parsing the last loaded table */
 
@@ -582,10 +573,7 @@ AdParseTable (
     fprintf (stderr, "Pass 2 parse of [%4.4s]\n", (char *) Table->Signature);
 
     Status = AcpiNsOneCompleteParse (ACPI_IMODE_LOAD_PASS2, TableIndex, NULL);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /* No need to parse control methods of external table */
 

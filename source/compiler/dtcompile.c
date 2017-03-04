@@ -308,16 +308,10 @@ DtInitialize (
 
 
     Status = AcpiOsInitialize ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Status = AcpiUtInitGlobals ();
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     Gbl_FieldList = NULL;
     Gbl_RootTable = NULL;
@@ -454,10 +448,7 @@ DtCompileDataTable (
 
     Status = DtCompileTable (FieldList, AcpiDmTableInfoHeader,
         &Gbl_RootTable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     DtPushSubtable (Gbl_RootTable);
 
@@ -773,10 +764,7 @@ DtCompileTwoSubtables (
 
 
     Status = DtCompileTable (PFieldList, TableInfo1, &Subtable, TRUE);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     ParentTable = DtPeekSubtable ();
     DtInsertSubtable (ParentTable, Subtable);

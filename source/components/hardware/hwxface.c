@@ -265,10 +265,7 @@ AcpiRead (
     /* Validate contents of the GAS register. Allow 64-bit transfers */
 
     Status = AcpiHwValidateRegister (Reg, 64, &Address);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Two address spaces supported: Memory or I/O. PCI_Config is
@@ -359,10 +356,7 @@ AcpiWrite (
     /* Validate contents of the GAS register. Allow 64-bit transfers */
 
     Status = AcpiHwValidateRegister (Reg, 64, &Address);
-    if (ACPI_FAILURE (Status))
-    {
-        return (Status);
-    }
+    IF_ACPI_FAILURE_RETURN_STATUS (Status);
 
     /*
      * Two address spaces supported: Memory or IO. PCI_Config is
