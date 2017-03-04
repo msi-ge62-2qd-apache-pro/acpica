@@ -201,6 +201,7 @@ typedef struct acpi_exception_info
  */
 #define ACPI_SUCCESS(a)                 (!(a))
 #define ACPI_FAILURE(a)                 (a)
+#define IF_FAILURE_RETURN_STATUS(a)     if (ACPI_FAILURE(a)) return (a);
 
 #define AE_OK                           (ACPI_STATUS) 0x0000
 
