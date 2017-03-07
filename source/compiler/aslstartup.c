@@ -456,7 +456,7 @@ AslDoOneFile (
     /*
      * AML Disassembly (Optional)
      */
-    if (Gbl_DisasmFlag)
+    if (AcpiGbl_DisasmFlag)
     {
         Status = AslDoDisassembly ();
         if (Status != AE_CTRL_CONTINUE)
@@ -601,7 +601,7 @@ AslDoOneFile (
 
         FlCloseFile (ASL_FILE_INPUT);
         Gbl_DoCompile = FALSE;
-        Gbl_DisasmFlag = TRUE;
+        AcpiGbl_DisasmFlag = TRUE;
         Status = AslDoDisassembly ();
         return (Status);
 
