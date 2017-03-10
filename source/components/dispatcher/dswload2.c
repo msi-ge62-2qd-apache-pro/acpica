@@ -428,6 +428,16 @@ AcpiDsLoad2BeginOp (
             }
         }
 
+#ifdef ACPI_ASL_COMPILER
+
+        /* This is an external method object. Do not open a scope. */
+
+        if (WalkState->Opcode == AML_EXTERNAL_OP)
+        {
+            Flags |= ACPI_NS_DONT_OPEN_SCOPE;
+        }
+#endif
+
         /* Add new entry or lookup existing entry */
 
         Status = AcpiNsLookup (WalkState->ScopeInfo, BufferPtr, ObjectType,
