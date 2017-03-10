@@ -665,10 +665,17 @@ AcpiDsLoad1EndOp (
          */
         ParamCount = Op->Common.Value.Arg->Common.Next->Common.Value.Integer;
 
-        ObjDesc = AcpiUtCreateInternalObject (ACPI_TYPE_METHOD);
-        ObjDesc->Method.ParamCount = ParamCount;
 
         ObjectType = Op->Common.Value.Arg->Common.Value.Integer;
+        if (ObjectType == ACPI_TYPE_METHOD)
+        {
+            ObjDesc = AcpiUtCreateInternalObject (ACPI_TYPE_METHOD);
+            ObjDesc->Method.ParamCount = ParamCount;
+        }
+        else
+        {
+            ObjDesc = AcpiUtCreateInternalObject (ACPI_TYPE_ANY);
+        }
 
         Op->Common.Node->Object = ObjDesc;
         Op->Common.Node->Flags &= ANOBJ_IS_EXTERNAL;
