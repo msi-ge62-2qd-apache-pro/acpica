@@ -207,7 +207,16 @@ AdDisassemblerHeader (
     /* Header and input table info */
 
     AcpiOsPrintf ("/*\n");
-    AcpiOsPrintf (ACPI_COMMON_HEADER (AML_DISASSEMBLER_NAME, " * "));
+
+    if (Gbl_CaptureComments)
+    {
+        AcpiOsPrintf (ACPI_COMMON_HEADER (ASL_CONVERTER_NAME, " * "));
+        return;
+    }
+    else
+    {
+        AcpiOsPrintf (ACPI_COMMON_HEADER (AML_DISASSEMBLER_NAME, " * "));
+    }
 
     if (TableType == ACPI_IS_AML_TABLE)
     {
