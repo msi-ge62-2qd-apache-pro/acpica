@@ -360,6 +360,7 @@ AcpiTbInstallStandardTable (
          */
         if ((NewTableDesc.Signature.Ascii[0] != 0x00) &&
            (!ACPI_COMPARE_NAME (&NewTableDesc.Signature, ACPI_SIG_SSDT)) &&
+           (!ACPI_COMPARE_NAME (&NewTableDesc.Signature, ACPI_SIG_OSDT)) &&
            (strncmp (NewTableDesc.Signature.Ascii, "OEM", 3)))
         {
             ACPI_BIOS_ERROR ((AE_INFO,

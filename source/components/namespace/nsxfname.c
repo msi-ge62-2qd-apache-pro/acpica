@@ -156,6 +156,7 @@
 #include "accommon.h"
 #include "acnamesp.h"
 #include "acparser.h"
+#include "actables.h"
 #include "amlcode.h"
 
 
@@ -682,15 +683,6 @@ AcpiInstallMethod (
     UINT8                   *Buffer)
 {
     ACPI_TABLE_HEADER       *Table = ACPI_CAST_PTR (ACPI_TABLE_HEADER, Buffer);
-    UINT8                   *AmlBuffer;
-    UINT8                   *AmlStart;
-    char                    *Path;
-    ACPI_NAMESPACE_NODE     *Node;
-    ACPI_OPERAND_OBJECT     *MethodObj;
-    ACPI_PARSE_STATE        ParserState;
-    UINT32                  AmlLength;
-    UINT16                  Opcode;
-    UINT8                   MethodFlags;
     ACPI_STATUS             Status;
 
 
@@ -701,123 +693,18 @@ AcpiInstallMethod (
         return (AE_BAD_PARAMETER);
     }
 
-    /* Table must be a DSDT or SSDT */
+    /* Table must be a OSDT */
 
-    if (!ACPI_COMPARE_NAME (Table->Signature, ACPI_SIG_DSDT) &&
-        !ACPI_COMPARE_NAME (Table->Signature, ACPI_SIG_SSDT))
-    {
-        return (AE_BAD_HEADER);
-    }
+    ACPI_MOVE_NAME (Table->Signature, ACPI_SIG_OSDT);
+	Table->Checksum = 0x00;
+	Table->Checksum -= AcpiTbChecksum (Buffer, Table->Length);
 
-    /* First AML opcode in the table must be a control method */
-
-    ParserState.Aml = Buffer + sizeof (ACPI_TABLE_HEADER);
-    Opcode = AcpiPsPeekOpcode (&ParserState);
-    if (Opcode != AML_METHOD_OP)
-    {
-        return (AE_BAD_PARAMETER);
-    }
-
-    /* Extract method information from the raw AML */
-
-    ParserState.Aml += AcpiPsGetOpcodeSize (Opcode);
-    ParserState.PkgEnd = AcpiPsGetNextPackageEnd (&ParserState);
-    Path = AcpiPsGetNextNamestring (&ParserState);
-
-    MethodFlags = *ParserState.Aml++;
-    AmlStart = ParserState.Aml;
-    AmlLength = ACPI_PTR_DIFF (ParserState.PkgEnd, AmlStart);
-
-    /*
-     * Allocate resources up-front. We don't want to have to delete a new
-     * node from the namespace if we cannot allocate memory.
+	/*
+     * Currently we need to install a definition block into the table list
+     * and load it. In the future, we can remove the requirement of
+     * installing the definition block.
      */
-    AmlBuffer = ACPI_ALLOCATE (AmlLength);
-    if (!AmlBuffer)
-    {
-        return (AE_NO_MEMORY);
-    }
-
-    MethodObj = AcpiUtCreateInternalObject (ACPI_TYPE_METHOD);
-    if (!MethodObj)
-    {
-        ACPI_FREE (AmlBuffer);
-        return (AE_NO_MEMORY);
-    }
-
-    /* Lock namespace for AcpiNsLookup, we may be creating a new node */
-
-    Status = AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE);
-    if (ACPI_FAILURE (Status))
-    {
-        goto ErrorExit;
-    }
-
-    /* The lookup either returns an existing node or creates a new one */
-
-    Status = AcpiNsLookup (NULL, Path, ACPI_TYPE_METHOD, ACPI_IMODE_LOAD_PASS1,
-        ACPI_NS_DONT_OPEN_SCOPE | ACPI_NS_ERROR_IF_FOUND, NULL, &Node);
-
-    (void) AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE);
-
-    if (ACPI_FAILURE (Status)) /* NsLookup */
-    {
-        if (Status != AE_ALREADY_EXISTS)
-        {
-            goto ErrorExit;
-        }
-
-        /* Node existed previously, make sure it is a method node */
-
-        if (Node->Type != ACPI_TYPE_METHOD)
-        {
-            Status = AE_TYPE;
-            goto ErrorExit;
-        }
-    }
-
-    /* Copy the method AML to the local buffer */
-
-    memcpy (AmlBuffer, AmlStart, AmlLength);
-
-    /* Initialize the method object with the new method's information */
-
-    MethodObj->Method.AmlStart = AmlBuffer;
-    MethodObj->Method.AmlLength = AmlLength;
-
-    MethodObj->Method.ParamCount = (UINT8)
-        (MethodFlags & AML_METHOD_ARG_COUNT);
-
-    if (MethodFlags & AML_METHOD_SERIALIZED)
-    {
-        MethodObj->Method.InfoFlags = ACPI_METHOD_SERIALIZED;
-
-        MethodObj->Method.SyncLevel = (UINT8)
-            ((MethodFlags & AML_METHOD_SYNC_LEVEL) >> 4);
-    }
-
-    /*
-     * Now that it is complete, we can attach the new method object to
-     * the method Node (detaches/deletes any existing object)
-     */
-    Status = AcpiNsAttachObject (Node, MethodObj, ACPI_TYPE_METHOD);
-
-    /*
-     * Flag indicates AML buffer is dynamic, must be deleted later.
-     * Must be set only after attach above.
-     */
-    Node->Flags |= ANOBJ_ALLOCATED_BUFFER;
-
-    /* Remove local reference to the method object */
-
-    AcpiUtRemoveReference (MethodObj);
-    return (Status);
-
-
-ErrorExit:
-
-    ACPI_FREE (AmlBuffer);
-    ACPI_FREE (MethodObj);
+    Status = AcpiLoadTable (Table);
     return (Status);
 }
 
