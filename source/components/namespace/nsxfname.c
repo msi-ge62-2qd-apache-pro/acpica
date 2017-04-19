@@ -157,6 +157,7 @@
 #include "acnamesp.h"
 #include "acparser.h"
 #include "actables.h"
+#include "acdispat.h"
 #include "amlcode.h"
 
 
@@ -170,6 +171,15 @@ AcpiNsCopyDeviceId (
     ACPI_PNP_DEVICE_ID      *Dest,
     ACPI_PNP_DEVICE_ID      *Source,
     char                    *StringArea);
+
+static ACPI_STATUS
+AcpiDsOsdtBeginOp (
+    ACPI_WALK_STATE         *WalkState,
+    ACPI_PARSE_OBJECT       **OutOp);
+
+static ACPI_STATUS
+AcpiDsOsdtEndOp (
+    ACPI_WALK_STATE         *WalkState);
 
 
 /******************************************************************************
@@ -663,6 +673,120 @@ Cleanup:
 ACPI_EXPORT_SYMBOL (AcpiGetObjectInfo)
 
 
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiDsOsdtBeginOp
+ *
+ * PARAMETERS:  WalkState       - The walk stack
+ *              OutOp           - Where to return op if a new one is created
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Handles all ops encountered during OSDT walk.
+ *
+ ******************************************************************************/
+
+static ACPI_STATUS
+AcpiDsOsdtBeginOp (
+    ACPI_WALK_STATE         *WalkState,
+    ACPI_PARSE_OBJECT       **OutOp)
+{
+    ACPI_STATUS             Status = AE_OK;
+    ACPI_GENERIC_STATE      *ControlState;
+
+
+    ACPI_FUNCTION_TRACE (DsOsdtBeginOp);
+
+
+    if ((WalkState->ControlState) &&
+        (WalkState->ControlState->Common.State ==
+            ACPI_CONTROL_CONDITIONAL_EXECUTING))
+    {
+        /* Only External opcode is allowed for method customization */
+
+        if (WalkState->Opcode != AML_ZERO_OP &&
+            WalkState->Opcode != AML_EXTERNAL_OP)
+        {
+            Status = AE_AML_BAD_OPCODE;
+        }
+        goto Exit;
+    }
+
+    /* Only limitted opcodes are allowed for method customization */
+
+    switch (WalkState->Opcode)
+    {
+    case AML_METHOD_OP:
+    case AML_SCOPE_OP:
+
+        break;
+
+    case AML_IF_OP:
+
+        ControlState = AcpiUtCreateControlState ();
+        if (!ControlState)
+        {
+            Status = AE_NO_MEMORY;
+            break;
+        }
+        ControlState->Control.AmlPredicateStart =
+            WalkState->ParserState.Aml - 1;
+        ControlState->Control.PackageEnd =
+            WalkState->ParserState.PkgEnd;
+        ControlState->Control.Opcode = AML_IF_OP;
+        AcpiUtPushGenericState (&WalkState->ControlState, ControlState);
+        break;
+
+    default:
+
+        Status = AE_AML_BAD_OPCODE;
+        break;
+    }
+
+Exit:
+    return_ACPI_STATUS (Status);
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiDsOsdtEndOp
+ *
+ * PARAMETERS:  WalkState       - The walk stack
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Handles all ops encountered during OSDT walk.
+ *
+ ******************************************************************************/
+
+static ACPI_STATUS
+AcpiDsOsdtEndOp (
+    ACPI_WALK_STATE         *WalkState)
+{
+    ACPI_GENERIC_STATE      *ControlState;
+
+
+    ACPI_FUNCTION_TRACE (DsOsdtEndOp);
+
+
+    switch (WalkState->Opcode)
+    {
+    case AML_IF_OP:
+
+        ControlState = AcpiUtPopGenericState (&WalkState->ControlState);
+        AcpiUtDeleteGenericState (ControlState);
+        break;
+
+    default:
+
+        break;
+    }
+
+    return_ACPI_STATUS (AE_OK);
+}
+
+
 /******************************************************************************
  *
  * FUNCTION:    AcpiInstallMethod
@@ -684,6 +808,8 @@ AcpiInstallMethod (
 {
     ACPI_TABLE_HEADER       *Table = ACPI_CAST_PTR (ACPI_TABLE_HEADER, Buffer);
     ACPI_STATUS             Status;
+    UINT8                   *AmlStart;
+    UINT32                  AmlLength;
 
 
     /* Parameter validation */
@@ -691,6 +817,17 @@ AcpiInstallMethod (
     if (!Buffer)
     {
         return (AE_BAD_PARAMETER);
+    }
+
+    /* Validate to ensure the table only contains methods */
+
+    AmlStart = (UINT8 *) Table + sizeof (ACPI_TABLE_HEADER);
+    AmlLength = Table->Length - sizeof (ACPI_TABLE_HEADER);
+    Status = AcpiDsWalkAml (AmlStart, AmlLength,
+        AcpiDsOsdtBeginOp, AcpiDsOsdtEndOp);
+    if (ACPI_FAILURE (Status))
+    {
+        return (Status);
     }
 
     /* Table must be a OSDT */

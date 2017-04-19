@@ -1020,3 +1020,74 @@ AcpiDsTerminateControlMethod (
 
     return_VOID;
 }
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiDsWalkAml
+ *
+ * PARAMETERS:  Aml                         - Buffer to the AML
+ *              DescendingCallback          - Callback for parsing the AML
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Parse a defiition block AML to invoke caller specified walk
+ *              callback.
+ *
+ ******************************************************************************/
+
+ACPI_STATUS
+AcpiDsWalkAml (
+    UINT8                   *AmlStart,
+    UINT32                  AmlLength,
+    ACPI_PARSE_DOWNWARDS    DescendingCallback,
+    ACPI_PARSE_UPWARDS      AscendingCallback)
+{
+    ACPI_STATUS             Status;
+    ACPI_NAMESPACE_NODE     *Node = AcpiGbl_RootNode;
+    ACPI_PARSE_OBJECT       *Op = NULL;
+    ACPI_WALK_STATE         *WalkState;
+
+
+    ACPI_FUNCTION_TRACE_PTR (DsWalkAml, Node);
+
+
+    /* Create/Init a root op for the method parse tree */
+
+    Op = AcpiPsAllocOp (AML_METHOD_OP, AmlStart);
+    if (!Op)
+    {
+        return_ACPI_STATUS (AE_NO_MEMORY);
+    }
+
+    AcpiPsSetName (Op, Node->Name.Integer);
+    Op->Common.Node = Node;
+
+    /* Create and initialize a new walk state */
+
+    WalkState = AcpiDsCreateWalkState (Node->OwnerId, NULL, NULL, NULL);
+    if (!WalkState)
+    {
+        AcpiPsFreeOp (Op);
+        return_ACPI_STATUS (AE_NO_MEMORY);
+    }
+
+    Status = AcpiDsInitAmlWalk (WalkState, Op, Node,  AmlStart, AmlLength,
+       NULL, 0);
+    if (ACPI_FAILURE (Status))
+    {
+        AcpiDsDeleteWalkState (WalkState);
+        AcpiPsFreeOp (Op);
+        return_ACPI_STATUS (Status);
+    }
+
+    WalkState->DescendingCallback = DescendingCallback;
+	WalkState->AscendingCallback = AscendingCallback;
+
+    /* Parse the method, scan for creation of named objects */
+
+    Status = AcpiPsParseAml (WalkState);
+
+    AcpiPsDeleteParseTree (Op);
+    return_ACPI_STATUS (Status);
+}

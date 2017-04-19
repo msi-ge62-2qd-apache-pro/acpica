@@ -396,6 +396,13 @@ AcpiDsMethodError (
     ACPI_STATUS             Status,
     ACPI_WALK_STATE         *WalkState);
 
+ACPI_STATUS
+AcpiDsWalkAml (
+    UINT8                   *AmlStart,
+    UINT32                  AmlLength,
+    ACPI_PARSE_DOWNWARDS    DescendingCallback,
+    ACPI_PARSE_UPWARDS      AscendingCallback);
+
 /*
  * dsinit
  */
