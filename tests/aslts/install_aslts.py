@@ -26,6 +26,39 @@ def parse_args ():
     return args
 
 
+class filename_generator:
+    space = ' ' # used for join within methods
+    def __init__(self, name):
+        self.name = name
+
+    def emit_oe_filename(self):
+        return 'oe_' + self.name
+
+    def emit_disasm_name(self, style):
+        if style == 'legacy':
+            return self.name + '-aslminus'
+        elif style == 'convert':
+            return 'MAIN'
+        else:
+            return self.name + '-aslplus'
+
+    def emit_disasm_style(self, style):
+        if style == 'legacy':
+            return self.space.join(['-dl -p', self.emit_disasm_name(style)])
+        else:
+            return self.space.join(['-d -p', self.emit_disasm_name(style)])
+
+    def emit_aml_name(self, aml_kind):
+        if aml_kind == 'normal_compile':
+            return self.name + '.aml'
+        elif aml_kind == 'convert':
+            return 'MAIN.aml'
+        elif aml_kind == 'disassemble_legacy':
+            return self.emit_disasm_name('legacy') + '.aml'
+        else:
+            return self.emit_disasm_name('') + '.aml'
+
+
 class command_builder:
     space = ' ' # used for join within methods
     common_flags = '-cr -vs'
@@ -41,6 +74,7 @@ class command_builder:
         if index > -1:
             module_path = module_path[index + len("aslts."):]
         self.testcase_config = importlib.import_module(module_path + 'testConfig')
+        self.fname_gen = filename_generator(self.testcase_config.name)
 
     def mode_to_flags(self,mode):
         if mode == 'opt/32':
@@ -57,50 +91,23 @@ class command_builder:
     def compile_common(self, mode):
         return self.space.join(['iasl', self.common_compile_flags, self.testcase_config.compile_flags, self.mode_to_flags(mode)])
 
-    def emit_oe_filename(self):
-        return 'oe_' + self.testcase_config.name
-
-    def emit_disasm_name(self, style):
-        if style == 'legacy':
-            return self.testcase_config.name + '-aslminus'
-        elif style == 'convert':
-            return 'MAIN'
-        else:
-            return self.testcase_config.name + '-aslplus'
-
-    def emit_disasm_style(self, style):
-        if style == 'legacy':
-            return self.space.join(['-dl -p', self.emit_disasm_name(style)])
-        else:
-            return self.space.join(['-d -p', self.emit_disasm_name(style)])
-
     def compile_norm(self, mode):
         return self.space.join([self.compile_common(mode), self.main_filename])
 
     def compile_oe(self, mode):
-        return self.space.join([self.compile_common(mode), '-p', self.emit_oe_filename(), self.main_filename])
+        return self.space.join([self.compile_common(mode), '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
 
     def disassemble(self, style):
-        return self.space.join(['iasl', self.common_disassemble_flags, self.emit_disasm_style(style), self.emit_oe_filename()+'.aml'])
+        return self.space.join(['iasl', self.common_disasemble_flags, self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()+'.aml'])
 
     def recompile(self, mode, style):
-        return self.space.join([self.compile_common(mode), self.emit_disasm_name(style)+'.dsl'])
+        return self.space.join([self.compile_common(mode), self.fname_gen.emit_disasm_name(style)+'.dsl'])
 
     def convert(self):
         return self.space.join(['iasl', self.common_flags, '-ca', self.main_filename])
 
     def binary_compare(self, test1, test2):
-        return self.space.join(['acpibin -c', self.emit_aml_name(test1), self.emit_aml_name(test2)])
-
-    def emit_aml_name(self, aml_kind):
-        if aml_kind == 'normal_compile':
-            return self.testcase_config.name + '.aml'
-        elif aml_kind == 'convert':
-            return 'MAIN.aml'
-        elif aml_kind == 'disassemble_legacy':
-            return self.emit_disasm_name('legacy') + '.aml'
-        else:
-            return self.emit_disasm_name('') + '.aml'
+        return self.space.join(['acpibin -a', self.fname_gen.emit_aml_name(test1), self.fname_gen.emit_aml_name(test2)])
 
 
 class aslts_builder:
