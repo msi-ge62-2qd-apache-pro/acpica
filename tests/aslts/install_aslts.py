@@ -106,8 +106,8 @@ class command_builder:
     def convert(self):
         return self.space.join(['iasl', self.common_flags, '-ca', self.main_filename])
 
-    def binary_compare(self, test1, test2):
-        return self.space.join(['acpibin -a', self.fname_gen.emit_aml_name(test1), self.fname_gen.emit_aml_name(test2)])
+    def binary_compare(self, aml1, aml2):
+        return self.space.join(['acpibin -a', self.fname_gen.emit_aml_name(aml1), self.fname_gen.emit_aml_name(aml2)])
 
 
 class aslts_builder:
