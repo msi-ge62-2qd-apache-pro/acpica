@@ -71,13 +71,13 @@ class artifact_path_builder:
         if not os.path.exists(self.test_directory_path):
             os.makedirs(self.test_directory_path)
         try:
-            self.compiler_log = open(self.test_directory_path+'/compile.txt', 'r')
+            self.compiler_log = open(self.test_directory_path+'compile.txt', 'r')
         except FileNotFoundError:
-            self.compiler_log = open(self.test_directory_path+'/compile.txt', 'w')
+            self.compiler_log = open(self.test_directory_path+'compile.txt', 'w')
         try:
-            self.error_log = open(self.test_directory_path+'/error.txt', 'r')
+            self.error_log = open(self.test_directory_path+'error.txt', 'r')
         except FileNotFoundError:
-            self.error_log = open(self.test_directory_path+'/error.txt', 'w')
+            self.error_log = open(self.test_directory_path+'error.txt', 'w')
         self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
 
     def alter_output(self):
@@ -90,11 +90,11 @@ class artifact_path_builder:
 
 
 class command_builder:
-    space = ' ' # used for join within methods
-    common_flags = '-cr -vs'
-    common_compile_flags = common_flags + ' -of -l -sc -sa -ic -ta -ts -so -lm -ln -ls -li'
-    common_disassemble_flags = '-od'
-    main_filename = 'MAIN.asl'
+    common_flags = ['-cr','-vs']
+    common_compile_flags = common_flags + ['-of','-l','-sc','-sa','-ic','-ta','-ts','-so','-lm','-ln','-ls','-li']
+    common_disassemble_flags = ['-od']
+    main_filename = ['MAIN.asl']
+    asl_compiler = ['iasl']
 
     def __init__(self, path):
         self.artifact = artifact_path_builder()
@@ -109,21 +109,22 @@ class command_builder:
 
     def mode_to_flags(self,mode):
         if mode == 'opt/32':
-            return '-r 1'
+            return ['-r','1']
         elif mode == 'opt/64':
-            return '-r 2'
+            return ['-r','2']
         elif mode == 'nopt/32':
-            return '-oa -r 1'
+            return ['-oa','-r','1']
         elif mode == 'nopt/64':
-            return '-oa -r 2'
+            return ['-oa','-r','2']
         else:
-            return ''
+            return []
 
     def compile_common(self, mode):
-        return self.space.join(['iasl', self.common_compile_flags, self.testcase_config.compile_flags, self.mode_to_flags(mode)])
+        return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags(mode)
+        subprocess.call(self.commands.compile_norm(''))
 
     def compile_norm(self, mode):
-        return self.space.join([self.compile_common(mode), self.main_filename])
+        return self.compile_common(mode) + self.main_filename
 
     def compile_oe(self, mode):
         return self.space.join([self.compile_common(mode), '-oE', '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
@@ -147,7 +148,7 @@ class aslts_builder:
         self.commands = command_builder(test_module_path)
 
     def compile_test(self):
-        os.system(self.commands.compile_norm(''))
+        subprocess.call(self.commands.compile_norm(''))
 
     def disassembler_test_sequence(self, style):
         os.system(self.commands.compile_oe(''))
@@ -167,8 +168,8 @@ def main ():
     builder = aslts_builder (args.path)
     os.chdir (args.path)
     builder.compile_test()
-    builder.disassembler_test_sequence('')
-    builder.converter_test_sequence()
+    #builder.disassembler_test_sequence('')
+    #builder.converter_test_sequence()
 
 
 if __name__ == '__main__':
