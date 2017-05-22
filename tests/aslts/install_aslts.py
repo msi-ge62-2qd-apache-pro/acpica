@@ -95,10 +95,10 @@ class command_builder:
         return self.space.join([self.compile_common(mode), self.main_filename])
 
     def compile_oe(self, mode):
-        return self.space.join([self.compile_common(mode), '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
+        return self.space.join([self.compile_common(mode), '-oE', '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
 
     def disassemble(self, style):
-        return self.space.join(['iasl', self.common_disassemble_flags, self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()])
+        return self.space.join(['iasl', self.common_disassemble_flags, '-oe', self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()])
 
     def recompile(self, mode, style):
         return self.space.join([self.compile_common(mode), self.fname_gen.emit_disasm_name(style)+'.dsl'])
