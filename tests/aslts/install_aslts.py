@@ -32,7 +32,7 @@ class filename_generator:
         self.name = name
 
     def emit_oe_filename(self):
-        return 'oe_' + self.name
+        return 'oe_' + self.name + '.aml'
 
     def emit_disasm_name(self, style):
         if style == 'legacy':
@@ -98,7 +98,7 @@ class command_builder:
         return self.space.join([self.compile_common(mode), '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
 
     def disassemble(self, style):
-        return self.space.join(['iasl', self.common_disasemble_flags, self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()+'.aml'])
+        return self.space.join(['iasl', self.common_disassemble_flags, self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()])
 
     def recompile(self, mode, style):
         return self.space.join([self.compile_common(mode), self.fname_gen.emit_disasm_name(style)+'.dsl'])
