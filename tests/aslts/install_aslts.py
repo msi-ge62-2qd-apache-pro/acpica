@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 import os
+import sys
+import subprocess
+import re
 import argparse
 import importlib
 
@@ -59,6 +62,33 @@ class filename_generator:
             return self.emit_disasm_name('') + '.aml'
 
 
+class artifact_path_builder:
+    def __init__(self):
+        print ("current dir: " + os.getcwd())
+        output = subprocess.check_output(['iasl','-v'])
+        version = re.search('(?<=version )\w+', output.decode("utf-8")).group(0)
+        self.test_directory_path = 'tmp/aml/' + version
+        if not os.path.exists(self.test_directory_path):
+            os.makedirs(self.test_directory_path)
+        try:
+            self.compiler_log = open(self.test_directory_path+'/compile.txt', 'r')
+        except FileNotFoundError:
+            self.compiler_log = open(self.test_directory_path+'/compile.txt', 'w')
+        try:
+            self.error_log = open(self.test_directory_path+'/error.txt', 'r')
+        except FileNotFoundError:
+            self.error_log = open(self.test_directory_path+'/error.txt', 'w')
+        self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
+
+    def alter_output(self):
+        sys.stdout = self.compiler_log
+        sys.stderr = self.error_log
+
+    def alter_output(self):
+        sys.stdout = self.old_stdout
+        sys.stderr = self.old_stderr
+
+
 class command_builder:
     space = ' ' # used for join within methods
     common_flags = '-cr -vs'
@@ -67,6 +97,7 @@ class command_builder:
     main_filename = 'MAIN.asl'
 
     def __init__(self, path):
+        self.artifact = artifact_path_builder()
         module_path = path.replace('/','.')
         if not(module_path.endswith('.')):
             module_path += '.'
