@@ -151,10 +151,10 @@ class aslts_builder:
 
     def __init__(self, test_module_path): # consume the config file
         self.commands = command_builder(test_module_path)
-        self.logs = artifact_path_builder()
+        self.artifacts = artifact_path_builder()
 
     def logged_call(self, command):
-        subprocess.call(command, stdout = self.logs.compiler_log, stderr = self.logs.error_log)
+        subprocess.call(command, stdout = self.artifacts.compiler_log, stderr = self.artifacts.error_log)
 
     def compile_test(self):
         self.logged_call(self.commands.compile_norm(''))
