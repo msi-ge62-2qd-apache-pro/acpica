@@ -152,6 +152,7 @@
 #include "acpi.h"
 #include "accommon.h"
 #include "acuuid.h"
+#include "acutils.h"
 
 #define _COMPONENT          ACPI_UTILITIES
         ACPI_MODULE_NAME    ("ahuuids")

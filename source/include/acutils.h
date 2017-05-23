@@ -1190,7 +1190,7 @@ AcpiAhMatchUuid (
 /*
  * utuuid -- UUID support functions
  */
-#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_HELP_APP)
+#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_HELP_APP || defined ACPI_DISASSEMBLER)
 void
 AcpiUtConvertStringToUuid (
     char                    *InString,
