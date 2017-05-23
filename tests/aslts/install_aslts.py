@@ -91,6 +91,15 @@ class artifact_path_builder:
         except FileNotFoundError:
             self.error_log = open(self.test_directory_path+'error.txt', 'w')
 
+    def get_aml_mode_path(self, mode):
+        if mode == 'opt/32' or mode == 'opt/64' or mode == 'nopt/32' or mode == 'nopt/64':
+            return self.test_directory_path + '/' + mode + '/'
+
+    def move_aml (self, aml_file, mode):
+        index = aml_file.rfind("/")
+        if index > -1:
+            aml_fname = module_path[index:]
+        os.rename(aml_file, self.get_aml_mode_path(mode) + aml_fname)
 
 
 class command_builder:
