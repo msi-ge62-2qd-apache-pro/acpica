@@ -100,7 +100,6 @@ class command_builder:
     asl_compiler = ['iasl']
 
     def __init__(self, path):
-        self.artifact = artifact_path_builder()
         module_path = path.replace('/','.')
         if not(module_path.endswith('.')):
             module_path += '.'
@@ -148,6 +147,10 @@ class aslts_builder:
 
     def __init__(self, test_module_path): # consume the config file
         self.commands = command_builder(test_module_path)
+        self.logs = artifact_path_builder()
+
+    def logged_call(self, command):
+        subprocess.call(command, stdout = self.logs.compiler_log, stderr = self.logs.error_log)
 
     def compile_test(self):
         subprocess.call(self.commands.compile_norm(''))
