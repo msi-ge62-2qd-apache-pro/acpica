@@ -70,7 +70,7 @@ class artifact_path_builder:
         print ("current dir: " + os.getcwd())
         output = subprocess.check_output(['iasl','-v'])
         version = re.search('(?<=version )\w+', output.decode("utf-8")).group(0)
-        self.test_directory_path = 'tmp/aml/' + version
+        self.test_directory_path = 'tmp/aml/' + version + '/'
         if not os.path.exists(self.test_directory_path):
             os.makedirs(self.test_directory_path)
         try:
