@@ -81,15 +81,7 @@ class artifact_path_builder:
             self.error_log = open(self.test_directory_path+'error.txt', 'r')
         except FileNotFoundError:
             self.error_log = open(self.test_directory_path+'error.txt', 'w')
-        self.old_stdout, self.old_stderr = sys.stdout, sys.stderr
 
-    def alter_output(self):
-        sys.stdout = self.compiler_log
-        sys.stderr = self.error_log
-
-    def alter_output(self):
-        sys.stdout = self.old_stdout
-        sys.stderr = self.old_stderr
 
 
 class command_builder:
