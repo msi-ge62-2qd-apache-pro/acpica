@@ -153,18 +153,18 @@ class aslts_builder:
         subprocess.call(command, stdout = self.logs.compiler_log, stderr = self.logs.error_log)
 
     def compile_test(self):
-        subprocess.call(self.commands.compile_norm(''))
+        self.logged_call(self.commands.compile_norm(''))
 
     def disassembler_test_sequence(self, style):
-        subprocess.call(self.commands.compile_oe(''))
-        subprocess.call(self.commands.disassemble(style))
-        subprocess.call(self.commands.recompile('', style))
-        subprocess.call(self.commands.binary_compare('normal_compile', ''))
+        self.logged_call(self.commands.compile_oe(''))
+        self.logged_call(self.commands.disassemble(style))
+        self.logged_call(self.commands.recompile('', style))
+        self.logged_call(self.commands.binary_compare('normal_compile', ''))
 
     def converter_test_sequence(self):
-        subprocess.call(self.commands.convert())
-        subprocess.call(self.commands.recompile('', 'convert'))
-        subprocess.call(self.commands.binary_compare('normal_compile', 'convert'))
+        self.logged_call(self.commands.convert())
+        self.logged_call(self.commands.recompile('', 'convert'))
+        self.logged_call(self.commands.binary_compare('normal_compile', 'convert'))
 
 
 def main ():
