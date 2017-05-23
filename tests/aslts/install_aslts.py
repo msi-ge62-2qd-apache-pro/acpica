@@ -124,7 +124,6 @@ class command_builder:
 
     def compile_common(self, mode):
         return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags(mode)
-        subprocess.call(self.commands.compile_norm(''))
 
     def compile_norm(self, mode):
         return self.compile_common(mode) + self.main_filename
