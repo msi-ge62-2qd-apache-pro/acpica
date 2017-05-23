@@ -73,6 +73,15 @@ class artifact_path_builder:
         self.test_directory_path = 'tmp/aml/' + version + '/'
         if not os.path.exists(self.test_directory_path):
             os.makedirs(self.test_directory_path)
+
+        # set up aml directories for each mode if it does not exist
+
+        for mode_name in ['nopt/32', 'nopt/64', 'opt/32', 'opt/64']:
+            if not os.path.exists(self.test_directory_path + mode_name + '/'):
+                os.makedirs(self.test_directory_path + mode_name + '/')
+
+        # set up log files for compilation
+
         try:
             self.compiler_log = open(self.test_directory_path+'compile.txt', 'r')
         except FileNotFoundError:
@@ -85,6 +94,9 @@ class artifact_path_builder:
 
 
 class command_builder:
+
+    # constant flags
+
     common_flags = ['-cr','-vs']
     common_compile_flags = common_flags + ['-of','-l','-sc','-sa','-ic','-ta','-ts','-so','-lm','-ln','-ls','-li']
     common_disassemble_flags = ['-od']
