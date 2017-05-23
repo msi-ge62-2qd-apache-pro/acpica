@@ -272,8 +272,8 @@ strtoul (
 
 int
 memcmp (
-    void                    *Buffer1,
-    void                    *Buffer2,
+    const void              *Buffer1,
+    const void              *Buffer2,
     ACPI_SIZE               Count);
 
 void *

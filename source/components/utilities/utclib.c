@@ -218,8 +218,8 @@
 
 int
 memcmp (
-    void                    *VBuffer1,
-    void                    *VBuffer2,
+    const void              *VBuffer1,
+    const void              *VBuffer2,
     ACPI_SIZE               Count)
 {
     char                    *Buffer1 = (char *) VBuffer1;
