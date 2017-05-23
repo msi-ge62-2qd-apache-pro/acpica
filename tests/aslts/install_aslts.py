@@ -35,7 +35,7 @@ class filename_generator:
         self.name = name
 
     def emit_oe_filename(self):
-        return 'oe_' + self.name + '.aml'
+        return ['oe_' + self.name + '.aml']
 
     def emit_disasm_name(self, style):
         if style == 'legacy':
@@ -45,21 +45,24 @@ class filename_generator:
         else:
             return self.name + '-aslplus'
 
+    def emit_disasm_dsl_name(self, style):
+        return [self.emit_disasm_name(style) + '.dsl']
+
     def emit_disasm_style(self, style):
         if style == 'legacy':
-            return self.space.join(['-dl -p', self.emit_disasm_name(style)])
+            return ['-dl', '-p', self.emit_disasm_name(style)]
         else:
-            return self.space.join(['-d -p', self.emit_disasm_name(style)])
+            return ['-d', '-p', self.emit_disasm_name(style)]
 
     def emit_aml_name(self, aml_kind):
         if aml_kind == 'normal_compile':
-            return self.name + '.aml'
+            return [self.name + '.aml']
         elif aml_kind == 'convert':
-            return 'MAIN.aml'
+            return ['MAIN.aml']
         elif aml_kind == 'disassemble_legacy':
-            return self.emit_disasm_name('legacy') + '.aml'
+            return [self.emit_disasm_name('legacy') + '.aml']
         else:
-            return self.emit_disasm_name('') + '.aml'
+            return [self.emit_disasm_name('') + '.aml']
 
 
 class artifact_path_builder:
@@ -127,19 +130,19 @@ class command_builder:
         return self.compile_common(mode) + self.main_filename
 
     def compile_oe(self, mode):
-        return self.space.join([self.compile_common(mode), '-oE', '-p', self.fname_gen.emit_oe_filename(), self.main_filename])
+        return self.compile_common(mode) + ['-oE'] + ['-p'] + self.fname_gen.emit_oe_filename() + self.main_filename
 
     def disassemble(self, style):
-        return self.space.join(['iasl', self.common_disassemble_flags, '-oe', self.fname_gen.emit_disasm_style(style), self.fname_gen.emit_oe_filename()])
+        return self.asl_compiler + self.common_disassemble_flags + ['-oe'] + self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_oe_filename()
 
     def recompile(self, mode, style):
-        return self.space.join([self.compile_common(mode), self.fname_gen.emit_disasm_name(style)+'.dsl'])
+        return self.compile_common(mode) + self.fname_gen.emit_disasm_dsl_name(style)
 
     def convert(self):
-        return self.space.join(['iasl', self.common_flags, '-ca', self.main_filename])
+        return self.asl_compiler + self.common_flags + ['-ca'] + self.main_filename
 
     def binary_compare(self, aml1, aml2):
-        return self.space.join(['acpibin -a', self.fname_gen.emit_aml_name(aml1), self.fname_gen.emit_aml_name(aml2)])
+        return ['acpibin'] + ['-a'] + self.fname_gen.emit_aml_name(aml1) + self.fname_gen.emit_aml_name(aml2)
 
 
 class aslts_builder:
@@ -151,15 +154,15 @@ class aslts_builder:
         subprocess.call(self.commands.compile_norm(''))
 
     def disassembler_test_sequence(self, style):
-        os.system(self.commands.compile_oe(''))
-        os.system(self.commands.disassemble(style))
-        os.system(self.commands.recompile('', style))
-        os.system(self.commands.binary_compare('normal_compile', ''))
+        subprocess.call(self.commands.compile_oe(''))
+        subprocess.call(self.commands.disassemble(style))
+        subprocess.call(self.commands.recompile('', style))
+        subprocess.call(self.commands.binary_compare('normal_compile', ''))
 
     def converter_test_sequence(self):
-        os.system(self.commands.convert())
-        os.system(self.commands.recompile('', 'convert'))
-        os.system(self.commands.binary_compare('normal_compile', 'convert'))
+        subprocess.call(self.commands.convert())
+        subprocess.call(self.commands.recompile('', 'convert'))
+        subprocess.call(self.commands.binary_compare('normal_compile', 'convert'))
 
 
 def main ():
@@ -168,8 +171,8 @@ def main ():
     builder = aslts_builder (args.path)
     os.chdir (args.path)
     builder.compile_test()
-    #builder.disassembler_test_sequence('')
-    #builder.converter_test_sequence()
+    builder.disassembler_test_sequence('')
+    builder.converter_test_sequence()
 
 
 if __name__ == '__main__':
