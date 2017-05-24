@@ -65,6 +65,15 @@ class filename_generator:
         else:
             return [self.emit_disasm_name('') + '.aml']
 
+    def emit_compile_artifacts(self, compilation_mode):
+        if compilation_mode == 'norm':
+            fname = self.name
+        elif compilation_mode == 'oe':
+            fname = 'oe_' + self.name
+        else:
+            fname = self.emit_disasm_name(compilation_mode)
+        return list(map(lambda x: fname + x,['.asm','.c','.h','.hex','.i','.lst','.map','.nap','.nsp','.offset.h','.src']))
+
 
 class artifact_path_builder:
     def __init__(self):
