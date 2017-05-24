@@ -171,6 +171,18 @@ class command_builder:
     def binary_compare(self, aml1, aml2):
         return ['acpibin'] + ['-a'] + self.fname_gen.emit_aml_name(aml1) + self.fname_gen.emit_aml_name(aml2)
 
+    def cleanup(self, command):
+        if command == 'compile_norm':
+            compile_mode = 'norm'
+        elif command == 'oe_compile':
+            compile_mode = 'oe'
+        elif command == 'recompile_legacy':
+            compile_mode = 'legacy'
+        elif command == 'recompile_plus':
+            compile_mode = 'plus'
+        else:
+            compile_mode = ''
+        return ['rm'] + ['-f'] + self.fname_gen.emit_compile_artifacts(compile_mode)
 
 class aslts_builder:
 
