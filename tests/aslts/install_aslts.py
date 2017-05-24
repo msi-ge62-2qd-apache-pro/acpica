@@ -99,6 +99,8 @@ class artifact_path_builder:
         index = aml_file.rfind("/")
         if index > -1:
             aml_fname = module_path[index:]
+        else:
+            aml_fname = aml_file
         os.rename(aml_file, self.get_aml_mode_path(mode) + aml_fname)
 
 
