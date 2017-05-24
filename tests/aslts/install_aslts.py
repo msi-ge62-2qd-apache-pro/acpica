@@ -5,6 +5,7 @@ import subprocess
 import re
 import argparse
 import importlib
+import collections
 
 
 '''
@@ -124,6 +125,8 @@ class command_builder:
         self.testcase_config = importlib.import_module(module_path + 'testConfig')
         self.fname_gen = filename_generator(self.testcase_config.name)
 
+        self.Command_and_artifact = collections.namedtuple('Command_and_artifact', ['command', 'artifact'])
+
     def mode_to_flags(self,mode):
         if mode == 'opt/32':
             return ['-r','1']
@@ -140,7 +143,9 @@ class command_builder:
         return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags(mode)
 
     def compile_norm(self, mode):
-        return self.compile_common(mode) + self.main_filename
+        return self.Command_and_artifact(
+                   command = self.compile_common(mode) + ['-p'] + [self.fname_gen.name] + self.main_filename,
+                   artifact = self.fname_gen.emit_aml_name('normal_compile')[0])
 
     def compile_oe(self, mode):
         return self.compile_common(mode) + ['-oE'] + ['-p'] + self.fname_gen.emit_oe_filename() + self.main_filename
@@ -188,8 +193,8 @@ def main ():
     builder = aslts_builder (args.path)
     os.chdir (args.path)
     builder.compile_test()
-    builder.disassembler_test_sequence('')
-    builder.converter_test_sequence()
+    #builder.disassembler_test_sequence('')
+    #builder.converter_test_sequence()
 
 
 if __name__ == '__main__':
