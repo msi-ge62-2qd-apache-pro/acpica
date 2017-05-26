@@ -217,12 +217,18 @@ class aslts_builder:
 
 def main ():
     args = parse_args ()
-    print (args.path)
+    old_dir = os.getcwd()
+
+    if os.path.basename != 'aslts':
+        os.chdir('aslts')
     builder = aslts_builder (args.path)
     os.chdir (args.path)
+
     builder.compile_test()
     #builder.disassembler_test_sequence('')
     #builder.converter_test_sequence()
+
+    os.chdir (old_dir)
 
 
 if __name__ == '__main__':
