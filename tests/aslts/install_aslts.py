@@ -171,7 +171,9 @@ class command_builder:
         return self.compile_with_mode('oe', mode)
 
     def recompile(self, mode, style):
-        return self.compile_common(mode) + self.fname_gen.emit_disasm_dsl_name(style)
+        return self.Command_and_artifact(
+                   command = self.compile_common(mode) + self.fname_gen.emit_disasm_dsl_name(style),
+                   artifact = self.self.fname_gen.emit_aml_name('disassemble_'+style))
 
     def disassemble(self, style):
         return self.asl_compiler + self.common_disassemble_flags + ['-oe'] + self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_aml_name('oe')
