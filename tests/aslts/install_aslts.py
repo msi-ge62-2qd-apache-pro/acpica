@@ -193,12 +193,15 @@ class aslts_builder:
     def logged_call(self, command):
         subprocess.call(command, stdout = self.artifacts.compiler_log, stderr = self.artifacts.error_log)
 
-    def compile_test(self):
-        command_and_artifact = self.commands.compile_norm('nopt/64')
+    def compile_one_mode(self, mode):
+        command_and_artifact = self.commands.compile_norm(mode)
         self.logged_call(['rm', command_and_artifact.artifact])
         self.logged_call(command_and_artifact.command)
-        self.artifacts.move_aml(command_and_artifact.artifact, 'nopt/64')
+        self.artifacts.move_aml(command_and_artifact.artifact, mode)
         self.logged_call(self.commands.cleanup('compile_norm'))
+
+    def compile_test(self):
+        list(map(lambda x: self.compile_one_mode(x), ['opt/32', 'opt/64', 'nopt/32', 'nopt/64']))
 
     def disassembler_test_sequence(self, style):
         self.logged_call(self.commands.compile_oe(''))
