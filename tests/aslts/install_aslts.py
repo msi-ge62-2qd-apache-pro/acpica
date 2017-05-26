@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import sys
+import shutil
 import subprocess
 import re
 import argparse
@@ -105,13 +106,13 @@ class artifact_path_builder:
         if mode == 'opt/32' or mode == 'opt/64' or mode == 'nopt/32' or mode == 'nopt/64':
             return self.test_directory_path + '/' + mode + '/'
 
-    def move_aml (self, aml_file, mode):
+    def copy_aml (self, aml_file, mode):
         index = aml_file.rfind("/")
         if index > -1:
             aml_fname = module_path[index:]
         else:
             aml_fname = aml_file
-        os.rename(aml_file, self.get_aml_mode_path(mode) + aml_fname)
+        shutil.copyfile(aml_file, self.get_aml_mode_path(mode) + aml_fname)
 
 
 class command_builder:
@@ -197,7 +198,7 @@ class aslts_builder:
         command_and_artifact = self.commands.compile_norm(mode)
         self.logged_call(['rm', command_and_artifact.artifact])
         self.logged_call(command_and_artifact.command)
-        self.artifacts.move_aml(command_and_artifact.artifact, mode)
+        self.artifacts.copy_aml(command_and_artifact.artifact, mode)
         self.logged_call(self.commands.cleanup('compile_norm'))
 
     def compile_test(self):
