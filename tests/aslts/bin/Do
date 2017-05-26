@@ -307,13 +307,11 @@ make_install_1()
 	dir="$1"
 	execonly=$2
 
-	cd "$dir"
-
-	echo "Running make install from $dir"
+        echo "Running make install from $dir"
 	if [ "$execonly" = "yes" ]; then
-		make install OPT=1 > /dev/null
+		./install_aslts.py -p $dir
 	else
-		make install OPT=0 > /dev/null
+		./install_aslts.py -p $dir
 	fi
 
 	if [ $? -ne 0 ]; then
