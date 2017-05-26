@@ -308,7 +308,7 @@ make_install_1()
 	execonly=$2
 
         echo "Running make install from $dir"
-	if [ "$execonly" = "yes" ]; then
+	if [ "x$execonly" = "xyes" ]; then
 		./install_aslts.py -p $dir
 	else
 		./install_aslts.py -p $dir
