@@ -59,6 +59,8 @@ class filename_generator:
     def emit_aml_name(self, aml_kind):
         if aml_kind == 'normal_compile':
             return [self.name + '.aml']
+        if aml_kind == 'oe':
+            return ['oe_' + self.name + '.aml']
         elif aml_kind == 'convert':
             return ['MAIN.aml']
         elif aml_kind == 'disassemble_legacy':
