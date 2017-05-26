@@ -176,7 +176,10 @@ class command_builder:
                    artifact = self.self.fname_gen.emit_aml_name('disassemble_'+style))
 
     def disassemble(self, style):
-        return self.asl_compiler + self.common_disassemble_flags + ['-oe'] + self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_aml_name('oe')
+        return self.Command_and_artifact(
+                   command = self.asl_compiler + self.common_disassemble_flags + ['-oe'] +
+                       self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_aml_name('oe'),
+                   artifact = self.fname_gen.emit_disasm_dsl_name(style))
 
     def convert(self):
         return self.asl_compiler + self.common_flags + ['-ca'] + self.main_filename
