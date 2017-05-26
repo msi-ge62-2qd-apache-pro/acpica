@@ -345,11 +345,10 @@ do_test_cases_make_install()
 		check_dir "$dir"
 
 		if [ $3 != 0 ]; then
-			cd "$dir"
 			if [ "x$execonly" = "xyes" ]; then
-				make install OPT=1 > /dev/null
+				./aslts/install_aslts.py -p $dir
 			else
-				make install OPT=0 > /dev/null
+				./aslts/install_aslts.py -p $dir
 			fi
 
 			if [ $? -ne 0 ]; then
