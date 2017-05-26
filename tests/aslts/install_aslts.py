@@ -219,7 +219,7 @@ def main ():
     args = parse_args ()
     old_dir = os.getcwd()
 
-    if os.path.basename != 'aslts':
+    if os.path.basename(os.getcwd()) != 'aslts':
         os.chdir('aslts')
     builder = aslts_builder (args.path)
     os.chdir (args.path)
