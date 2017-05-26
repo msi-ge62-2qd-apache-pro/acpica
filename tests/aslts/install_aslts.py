@@ -154,13 +154,21 @@ class command_builder:
     def compile_common(self, mode):
         return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags(mode)
 
+    def compile_with_mode(self, style, mode):
+        compile_command = self.compile_common(mode)
+        if style == 'oe':
+            compile_command += ['-oE'] + ['-p'] + self.fname_gen.emit_aml_name('oe') + self.main_filename
+            resulting_aml = self.fname_gen.emit_aml_name('oe')[0]
+        elif style == 'norm':
+            compile_command += ['-p'] + [self.fname_gen.name] + self.main_filename
+            resulting_aml = self.fname_gen.emit_aml_name('normal_compile')[0]
+        return self.Command_and_artifact(command = compile_command, artifact = resulting_aml)
+
     def compile_norm(self, mode):
-        return self.Command_and_artifact(
-                   command = self.compile_common(mode) + ['-p'] + [self.fname_gen.name] + self.main_filename,
-                   artifact = self.fname_gen.emit_aml_name('normal_compile')[0])
+        return self.compile_with_mode('norm', mode)
 
     def compile_oe(self, mode):
-        return self.compile_common(mode) + ['-oE'] + ['-p'] + self.fname_gen.emit_oe_filename() + self.main_filename
+        return self.compile_with_mode('oe', mode)
 
     def disassemble(self, style):
         return self.asl_compiler + self.common_disassemble_flags + ['-oe'] + self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_aml_name('oe')
