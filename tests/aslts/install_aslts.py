@@ -207,17 +207,25 @@ class aslts_builder:
         self.artifacts = artifact_path_builder()
 
     def logged_call(self, command):
-        subprocess.call(command, stdout = self.artifacts.compiler_log, stderr = self.artifacts.error_log)
+        return subprocess.call(command, stdout = self.artifacts.compiler_log, stderr = self.artifacts.error_log)
 
     def compile_one_mode(self, mode):
         command_and_artifact = self.commands.compile_norm(mode)
         self.logged_call(['rm', command_and_artifact.artifact])
+        print ('type: ' + mode, end=' ')
         self.logged_call(command_and_artifact.command)
+        print('compile =>', end=' ')
+        if os.path.exists(command_and_artifact.artifact):
+            print('PASS')
         self.artifacts.copy_aml(command_and_artifact.artifact, mode)
         self.logged_call(self.commands.cleanup('compile_norm'))
 
     def compile_test(self):
-        list(map(lambda x: self.compile_one_mode(x), ['opt/32', 'opt/64', 'nopt/32', 'nopt/64']))
+        result = list(map(lambda x: self.compile_one_mode(x), ['opt/32', 'opt/64', 'nopt/32', 'nopt/64']))
+        if all(value == None for value in result):
+            print ('compilation test - PASS')
+        else:
+            print ('compilation test - FAIL')
 
     def disassembler_test_sequence(self, style):
         self.logged_call(self.commands.compile_oe(''))
