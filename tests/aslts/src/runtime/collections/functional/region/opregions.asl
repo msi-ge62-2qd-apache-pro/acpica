@@ -492,12 +492,24 @@ Method(m702, 1)
 {
 	Concatenate(arg0, "-m702", arg0)
 
+	// In-package name strings are String typed, not ObjectReference
+	// typed. Update the package using ObjectReferences.
+
+	Store(RefOf(RGN0), Index(p702, 0))
+	Store(RefOf(RGN1), Index(p702, 3))
+	Store(RefOf(RGN2), Index(p702, 6))
+	Store(RefOf(RGN3), Index(p702, 9))
+	Store(RefOf(RGN4), Index(p702, 12))
+	Store(RefOf(RGN5), Index(p702, 15))
+	Store(RefOf(RGN6), Index(p702, 18))
+	Store(RefOf(RGN7), Index(p702, 21))
+	Store(RefOf(RGN8), Index(p702, 24))
+	Store(RefOf(RGN9), Index(p702, 27))
+	Store(RefOf(RGNa), Index(p702, 30))
+
 	Store(Sizeof(p702), Local0)
 	Divide(Local0, 3, , Local0)
 	Store(0, Local1)
-
-	Store(2, Local1)
-	Subtract(Local0, 2, Local0)
 
 	While (Local0) {
 		m70c(arg0, p702, Local1)
@@ -569,7 +581,7 @@ Method(m70c, 3, Serialized)
 
 	Name(b000, Buffer(0x100){})
 
-	CopyObject(Derefof(Index(arg1, Local4)), OPRm)
+	CopyObject(DerefOf(Derefof(Index(arg1, Local4))), OPRm)
 
 	Field(OPRm, ByteAcc, NoLock, Preserve) {
 		FU01, 0x800}
@@ -584,6 +596,8 @@ Method(m70c, 3, Serialized)
 	elseif (LEqual(Local3, 0x04 /* SMBus */)) {}
 	elseif (LEqual(Local3, 0x05 /* SystemCMOS */)) {}
 	elseif (LEqual(Local3, 0x06 /* PciBarTarget */)) {}
+	elseif (LEqual(Local3, 0x07 /* IPMI */)) {}
+	elseif (LEqual(Local3, 0x08 /* GeneralPurposeIo */)) {}
 	elseif (LGreater(Local3, 0x80 /* UserDefRegionSpace <> 0x80 */)) {}
 
 	else {

@@ -328,6 +328,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\source\components\utilities\utresdecode.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\source\components\utilities\utresrc.c"
 					>
 				</File>
@@ -707,6 +711,10 @@
 				</File>
 				<File
 					RelativePath="..\..\source\common\dmrestag.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\source\common\dmswitch.c"
 					>
 				</File>
 				<File

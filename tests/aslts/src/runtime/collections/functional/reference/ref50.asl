@@ -1560,7 +1560,7 @@ Method(m258, 1, Serialized)
 
 	// Verify p955-like Package
 
-	m1af(p100, 0, 0, 0)
+	m1af(p100, 0, 0, 0, 0)
 
 	m1a6()
 }
@@ -1592,7 +1592,7 @@ Method(m259,, Serialized)
  *	CopyObject(tz90, Index(p100, 13))
  *	CopyObject(bf90, Index(p100, 14))
  *
- *	m1af(p100, 1, 0, 0)
+ *	m1af(p100, 1, 0, 0, 0)
  *
  *
  *	m1a6()
@@ -1610,7 +1610,7 @@ Method(m25a,, Serialized)
 
 	m352(p100)
 
-	m1af(p100, 1, 1, 1)
+	m1af(p100, 1, 1, 1, 0)
 
 	m1a6()
 }
@@ -1628,7 +1628,7 @@ Method(m25b,, Serialized)
 	m353(p100, 0)
 
 	// Verify p955-like Package
-	m1af(p100, 1, 0, 1)
+	m1af(p100, 1, 0, 1, 1)
 
 	m1a6()
 }
@@ -1693,7 +1693,7 @@ Method(m25e,, Serialized)
 	m352(p100)
 
 	// Verify p955-like Package
-	m1af(p100, 1, 1, 1)
+	m1af(p100, 1, 1, 1, 0)
 
 	// Check the global *9** data are safe:
 
@@ -1723,7 +1723,7 @@ Method(m25f,, Serialized)
 	m353(p100, 0)
 
 	// Verify p955-like Package
-	m1af(p100, 1, 0, 1)
+	m1af(p100, 1, 0, 1, 1)
 
 	m1a6()
 
@@ -2394,7 +2394,7 @@ Method(m35c,, Serialized)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 1)
 
 	m1a6()
 
@@ -2470,7 +2470,7 @@ Method(m35d)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 1)
 
 	m1a6()
 
@@ -2568,7 +2568,7 @@ Method(m35e, 1, Serialized)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 1)
 
 	m1a6()
 
@@ -2644,7 +2644,7 @@ Method(m35f, 1)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 1)
 
 	m1a6()
 
@@ -2743,7 +2743,7 @@ Method(m360,, Serialized)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 0)
 
 	m1a6()
 
@@ -2821,7 +2821,7 @@ Method(m361)
 
 	// Verify p955-like Package
 
-	m1af(p000, 1, 0, 1)
+	m1af(p000, 1, 0, 1, 0)
 
 	m1a6()
 
@@ -2849,7 +2849,7 @@ Method(m267,, Serialized)
 		m353(p100, 1)
 
 		// Verify p955-like Package
-		m1af(p100, 1, 0, 1)
+		m1af(p100, 1, 0, 1, 1)
 
 		m1a6()
 	}
@@ -2910,7 +2910,7 @@ Method(m26b,, Serialized)
 	m1c2()
 
 	// Read any type named object element of Package
-	m1af(p955, 1, 1, 0)
+	m1af(p955, 1, 1, 0, 1)
 
 	// Check Uninitialized element of Package
 	m1c4()
@@ -4644,12 +4644,6 @@ Method(m34d, 1, Serialized)
 	Store(DerefOf(Local0), Local2)
 	m391(Local2, c009, 0, 9)
 
-	Store(RefOf(p000), Local0)
-	m000(Local0, c009, c00c)
-	m391(p000, c009, 0, 10)
-	Store(DerefOf(Local0), Local2)
-	m391(Local2, c009, 0, 11)
-
 	// Write String
 
 	Store(RefOf(i010), Local0)
@@ -4670,12 +4664,6 @@ Method(m34d, 1, Serialized)
 	Store(DerefOf(Local0), Local2)
 	m391(Local2, c00a, 0, 17)
 
-	Store(RefOf(p010), Local0)
-	m000(Local0, c00a, c00c)
-	m391(p010, c00a, 0, 18)
-	Store(DerefOf(Local0), Local2)
-	m391(Local2, c00a, 0, 19)
-
 	// Write Buffer
 
 	Store(RefOf(i020), Local0)
@@ -4695,12 +4683,6 @@ Method(m34d, 1, Serialized)
 	m391(b020, c00b, 0, 24)
 	Store(DerefOf(Local0), Local2)
 	m391(Local2, c00b, 0, 25)
-
-	Store(RefOf(p020), Local0)
-	m000(Local0, c00b, c00c)
-	m391(p020, c00b, 0, 26)
-	Store(DerefOf(Local0), Local2)
-	m391(Local2, c00b, 0, 27)
 
 	// Write Package
 
@@ -4744,8 +4726,6 @@ Method(m34d, 1, Serialized)
 	m391(i040, c009, 0, 37)
 	m000(RefOf(b040), c009, c00b)
 	m391(i040, c009, 0, 38)
-	m000(RefOf(p040), c009, c00c)
-	m391(i040, c009, 0, 39)
 
 	// Write String
 
@@ -4755,8 +4735,6 @@ Method(m34d, 1, Serialized)
 	m391(i050, c00a, 0, 41)
 	m000(RefOf(b050), c00a, c00b)
 	m391(i050, c00a, 0, 42)
-	m000(RefOf(p050), c00a, c00c)
-	m391(i050, c00a, 0, 43)
 
 	// Write Bufer
 
@@ -4766,8 +4744,6 @@ Method(m34d, 1, Serialized)
 	m391(i060, c00b, 0, 45)
 	m000(RefOf(b060), c00b, c00b)
 	m391(i060, c00b, 0, 46)
-	m000(RefOf(p060), c00b, c00c)
-	m391(i060, c00b, 0, 47)
 
 	// Write Package
 	if (op01) {
