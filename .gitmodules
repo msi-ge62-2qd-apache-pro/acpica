@@ -1,0 +1,12 @@
+[submodule "ras_demo/edk2"]
+	path = ras_demo/edk2
+	url = https://github.com/james-morse-arm/edk2-staging.git
+	branch = mangle-HEST
+[submodule "ras_demo/linux"]
+	path = ras_demo/linux
+	url = git://linux-arm.org/linux-jm.git
+	branch = sdei/v1/demo
+[submodule "ras_demo/arm-trusted-firmware"]
+	path = ras_demo/arm-trusted-firmware
+	url = https://github.com/ARM-software/arm-trusted-firmware.git
+	branch = prototypes/sdei/rfc_v1
