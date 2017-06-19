@@ -127,6 +127,8 @@ class command_builder:
     main_filename = ['MAIN.asl']
     asl_compiler = ['iasl']
 
+    mode_to_flags = {'opt/32':['-r','1'],'nopt/32':['-oa','-r','1'], 'opt/64':['-r','2'], 'nopt/64':['-oa','-r','2']}
+
     def __init__(self, path):
         module_path = path.replace('/','.')
         if not(module_path.endswith('.')):
@@ -139,20 +141,8 @@ class command_builder:
 
         self.Command_and_artifact = collections.namedtuple('Command_and_artifact', ['command', 'artifact'])
 
-    def mode_to_flags(self,mode):
-        if mode == 'opt/32':
-            return ['-r','1']
-        elif mode == 'opt/64':
-            return ['-r','2']
-        elif mode == 'nopt/32':
-            return ['-oa','-r','1']
-        elif mode == 'nopt/64':
-            return ['-oa','-r','2']
-        else:
-            return []
-
     def compile_common(self, mode):
-        return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags(mode)
+        return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags[mode]
 
     def compile_with_mode(self, style, mode):
         compile_command = self.compile_common(mode)
