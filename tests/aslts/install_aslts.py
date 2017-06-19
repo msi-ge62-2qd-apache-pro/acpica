@@ -32,7 +32,6 @@ def parse_args ():
 
 
 class filename_generator:
-    space = ' ' # used for join within methods
     def __init__(self, name):
         self.name = name
 
@@ -121,8 +120,8 @@ class command_builder:
 
     # constant flags
 
-    common_flags = ['-cr','-vs']
-    common_compile_flags = common_flags + ['-of','-l','-sc','-sa','-ic','-ta','-ts','-so','-lm','-ln','-ls','-li']
+    common_compile_flags = ['-cr','-vs','-of']
+    all_output_flags = ['-l','-sc','-sa','-ic','-ta','-ts','-so','-lm','-ln','-ls','-li']
     common_disassemble_flags = ['-od']
     main_filename = ['MAIN.asl']
     asl_compiler = ['iasl']
@@ -138,32 +137,67 @@ class command_builder:
             module_path = module_path[index + len("aslts."):]
         self.testcase_config = importlib.import_module(module_path + 'testConfig')
         self.fname_gen = filename_generator(self.testcase_config.name)
-
         self.Command_and_artifact = collections.namedtuple('Command_and_artifact', ['command', 'artifact'])
+
+        ###
+        # Various dictionaries used for compilation
+        ###
+
+        # Common compile flags -- these flags are common to any compilation that is done in this script
+        self.compile_common = self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags
+
+        # this contains special compilation flags
+        self.special_compilation_flags = {'compile_norm': self.all_output_flags,
+                                          'compile_oe':['-oE'],
+                                          'recompile':[],
+                                          'compileConvert':[]}
+
+        # these dictionaries contain file input names and file output prefixes for the commands
+        self.input_file = {'mainAsl':['MAIN.asl'],
+                           'mainDsl':['MAIN.dsl'],
+                           'disasmAml':[self.testcase_config.name + '-disasm.aml'],
+                           'disasmOeAml':['oe-' + self.testcase_config.name + '-disasm.aml']}
+
+        self.input_compile_file = {'compile_norm':self.input_file['mainAsl'],
+                                   'compile_oe':self.input_file['mainAsl']}
+
+        prefix = ['-p']
+        self.output_prefix = {'compile_norm':prefix + [self.testcase_config.name],
+                              'compile_oe':prefix + ['oe-' + self.testcase_config.name],
+                              'cv':[],
+                              'recompile':prefix + [self.testcase_config.name + '-disasm.aml']}
+
+        # this dictionary contains resulting aml filenames
+        self.aml_compilation_artifacts = {'compile_norm': self.output_prefix['compile_norm'][1] + '.aml',
+                                          'compile_oe': self.output_prefix['compile_oe'][1] + '.aml',
+                                          'recompile':'',
+                                          'compileConvert':''}
+
+        # this dictionary contains resulting artifacts other than aml files
+        self.other_compilation_artifacts = \
+            {'compile_norm':list(map(lambda x: self.output_prefix['compile_norm'][0] + x,
+                ['.asm','.c','.h','.hex','.i','.lst','.map','.nap','.nsp','.offset.h','.src'])),
+             'compile_oe':[]}
+
 
     def compile_common(self, mode):
         return self.asl_compiler + self.common_compile_flags + self.testcase_config.compile_flags + self.mode_to_flags[mode]
 
-    def compile_with_mode(self, style, mode):
-        compile_command = self.compile_common(mode)
-        if style == 'oe':
-            compile_command += ['-oE'] + ['-p'] + self.fname_gen.emit_aml_name('oe') + self.main_filename
-            resulting_aml = self.fname_gen.emit_aml_name('oe')[0]
-        elif style == 'norm':
-            compile_command += ['-p'] + [self.fname_gen.name] + self.main_filename
-            resulting_aml = self.fname_gen.emit_aml_name('normal_compile')[0]
-        return self.Command_and_artifact(command = compile_command, artifact = resulting_aml)
+    def compile_with_mode(self, style, bitmode):
+        compile_command = self.compile_common + self.mode_to_flags[bitmode]
+        compile_command += self.special_compilation_flags[style]
+        compile_command += self.output_prefix[style] + self.input_compile_file[style]
 
-    def compile_norm(self, mode):
-        return self.compile_with_mode('norm', mode)
+        return self.Command_and_artifact(command = compile_command, artifact = self.aml_compilation_artifacts[style])
 
-    def compile_oe(self, mode):
-        return self.compile_with_mode('oe', mode)
+    def compile_norm(self, bitmode):
+        return self.compile_with_mode('compile_norm', bitmode)
 
-    def recompile(self, mode, style):
-        return self.Command_and_artifact(
-                   command = self.compile_common(mode) + self.fname_gen.emit_disasm_dsl_name(style),
-                   artifact = self.self.fname_gen.emit_aml_name('disassemble_'+style))
+    def compile_oe(self, bitmode):
+        return self.compile_with_mode('compile_oe', bitmode)
+
+    def recompile(self, bitmode, style):
+        return self.compile_with_mode('recompile', bitmode)
 
     def disassemble(self, style):
         return self.Command_and_artifact(
@@ -177,18 +211,12 @@ class command_builder:
     def binary_compare(self, aml1, aml2):
         return ['acpibin'] + ['-a'] + self.fname_gen.emit_aml_name(aml1) + self.fname_gen.emit_aml_name(aml2)
 
-    def cleanup(self, command):
-        if command == 'compile_norm':
-            compile_mode = 'norm'
-        elif command == 'oe_compile':
-            compile_mode = 'oe'
-        elif command == 'recompile_legacy':
-            compile_mode = 'legacy'
-        elif command == 'recompile_plus':
-            compile_mode = 'plus'
+    def cleanup(self, style):
+        files_to_remove = self.other_compilation_artifacts[style]
+        if style != []:
+            return ['rm'] + ['-f'] + files_to_remove
         else:
-            compile_mode = ''
-        return ['rm'] + ['-f'] + self.fname_gen.emit_compile_artifacts(compile_mode)
+            return ['']
 
 class aslts_builder:
 
