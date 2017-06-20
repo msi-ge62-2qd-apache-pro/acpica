@@ -31,52 +31,6 @@ def parse_args ():
     return args
 
 
-class filename_generator:
-    def __init__(self, name):
-        self.name = name
-
-    def emit_oe_filename(self):
-        return ['oe_' + self.name + '.aml']
-
-    def emit_disasm_name(self, style):
-        if style == 'legacy':
-            return self.name + '-aslminus'
-        elif style == 'convert':
-            return 'MAIN'
-        else:
-            return self.name + '-aslplus'
-
-    def emit_disasm_dsl_name(self, style):
-        return [self.emit_disasm_name(style) + '.dsl']
-
-    def emit_disasm_style(self, style):
-        if style == 'legacy':
-            return ['-dl', '-p', self.emit_disasm_name(style)]
-        else:
-            return ['-d', '-p', self.emit_disasm_name(style)]
-
-    def emit_aml_name(self, aml_kind):
-        if aml_kind == 'normal_compile':
-            return [self.name + '.aml']
-        if aml_kind == 'oe':
-            return ['oe_' + self.name + '.aml']
-        elif aml_kind == 'convert':
-            return ['MAIN.aml']
-        elif aml_kind == 'disassemble_legacy':
-            return [self.emit_disasm_name('legacy') + '.aml']
-        else:
-            return [self.emit_disasm_name('') + '.aml']
-
-    def emit_compile_artifacts(self, compilation_mode):
-        if compilation_mode == 'norm':
-            fname = self.name
-        elif compilation_mode == 'oe':
-            fname = 'oe_' + self.name
-        else:
-            fname = self.emit_disasm_name(compilation_mode)
-        return list(map(lambda x: fname + x,['.asm','.c','.h','.hex','.i','.lst','.map','.nap','.nsp','.offset.h','.src']))
-
-
 class artifact_path_builder:
     def __init__(self):
         output = subprocess.check_output(['iasl','-v'])
@@ -136,7 +90,6 @@ class command_builder:
         if index > -1:
             module_path = module_path[index + len("aslts."):]
         self.testcase_config = importlib.import_module(module_path + 'testConfig')
-        self.fname_gen = filename_generator(self.testcase_config.name)
         self.Command_and_artifact = collections.namedtuple('Command_and_artifact', ['command', 'artifact'])
 
         ###
@@ -149,8 +102,8 @@ class command_builder:
         # this contains special compilation flags
         self.special_compilation_flags = {'compile_norm': self.all_output_flags,
                                           'compile_oe':['-oE'],
-                                          'recompile':[],
-                                          'compileConvert':[]}
+                                          'recompile_disassemble':[],
+                                          'recompile_convert':[]}
 
         # these dictionaries contain file input names and file output prefixes for the commands
         self.input_file = {'mainAsl':['MAIN.asl'],
@@ -161,22 +114,25 @@ class command_builder:
 
         self.input_compile_file = {'compile_norm':self.input_file['mainAsl'],
                                    'compile_oe':self.input_file['mainAsl'],
-                                   'recompile':self.input_file['disasmDsl']}
+                                   'recompile_disassemble':self.input_file['disasmDsl'],
+                                   'recompile_convert':self.input_file['mainDsl']}
 
         prefix = ['-p']
         self.output_prefix = {'compile_norm':prefix + [self.testcase_config.name],
                               'compile_oe':prefix + ['oe-' + self.testcase_config.name],
-                              'recompile':[],
-                              'cv':[],
+                              'recompile_disassemble':[],
+                              'recompile_convert':[],
+                              'convert':prefix + ['MAIN'],
                               'disassemble':prefix + [self.testcase_config.name + '-disasm']}
 
         # these dictionaries contain resulting aml or dsl filenames
         self.aml_compilation_artifacts = {'compile_norm': self.output_prefix['compile_norm'][1] + '.aml',
                                           'compile_oe': self.output_prefix['compile_oe'][1] + '.aml',
-                                          'recompile':'',
-                                          'compileConvert':''}
+                                          'recompile_disassemble':self.input_file['disasmAml'][0],
+                                          'recompile_convert':'MAIN.aml'}
 
-        # the line below might be unnecessary. Leave this comment as a reminder that I can switch over to using a dictionary for this...
+        # the line below might be unnecessary. Leave this comment as a reminder
+        # that we can switch over to using a dictionary for this...
         # self.disassembly_artifacts = {'disassemble': self.output_prefix['disassemble'][1] + '.dsl'}
 
         # this dictionary contains resulting artifacts other than aml files
@@ -202,8 +158,11 @@ class command_builder:
     def compile_oe(self, bitmode):
         return self.compile_with_mode('compile_oe', bitmode)
 
-    def recompile(self, bitmode):
-        return self.compile_with_mode('recompile', bitmode)
+    def recompile_disassemble(self, bitmode):
+        return self.compile_with_mode('recompile_disassemble', bitmode)
+
+    def recompile_convert(self):
+        return self.compile_with_mode('recompile_convert', 'nopt/64')
 
     def disassemble(self, style):
         return self.Command_and_artifact(
@@ -213,10 +172,15 @@ class command_builder:
                    artifact = self.output_prefix['disassemble'][1] + '.dsl')
 
     def convert(self):
-        return self.asl_compiler + self.common_flags + ['-ca'] + self.main_filename
+        return self.Command_and_artifact(
+                   command = self.asl_compiler + self.common_compile_flags +
+                       self.testcase_config.compile_flags + ['-ca'] +
+                       self.input_file['mainAsl'],
+                   artifact = self.output_prefix['convert'][1] + '.dsl')
 
+    #inputs are names of AML files
     def binary_compare(self, aml1, aml2):
-        return ['acpibin'] + ['-a'] + self.fname_gen.emit_aml_name(aml1) + self.fname_gen.emit_aml_name(aml2)
+        return ['acpibin'] + ['-a'] + [aml1] + [aml2]
 
     def cleanup(self, style):
         files_to_remove = self.other_compilation_artifacts[style]
@@ -264,16 +228,37 @@ class aslts_builder:
             print('FAIL')
         self.logged_call(self.commands.cleanup('compile_oe'))
 
+        print('disassemble =>', end=' ')
         command_and_artifact = self.commands.disassemble('asl+')
         self.logged_call(command_and_artifact.command)
-        command_and_artifact = self.commands.recompile(mode)
+        print('recompile =>', end=' ')
+        command_and_artifact = self.commands.recompile_disassemble(mode)
         self.logged_call(command_and_artifact.command)
+        print('binary compare =>', end=' ')
+        result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
+        print ("Disassembler test sequence:", end=' ')
+        if result == 0:
+            print ("PASS")
+        else:
+            print ("FAIL")
 
 
     def converter_test_sequence(self):
-        self.logged_call(self.commands.convert())
-        self.logged_call(self.commands.recompile('', 'convert'))
-        self.logged_call(self.commands.binary_compare('normal_compile', 'convert'))
+        mode = 'nopt/64'
+        print ('    type: ' + mode, end=' ')
+        print('convert =>', end=' ')
+        command_and_artifact = self.commands.convert()
+        self.logged_call(command_and_artifact.command)
+        print('recompile =>', end=' ')
+        command_and_artifact = self.commands.recompile_convert()
+        self.logged_call(command_and_artifact.command)
+        print('binary compare =>', end=' ')
+        result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
+        print ("Converter test sequence:", end=' ')
+        if result == 0:
+            print ("PASS")
+        else:
+            print ("FAIL")
 
 
 def main ():
@@ -287,7 +272,7 @@ def main ():
 
     builder.compile_test()
     builder.disassembler_test_sequence('')
-    #builder.converter_test_sequence()
+    builder.converter_test_sequence()
 
     os.chdir (old_dir)
 
