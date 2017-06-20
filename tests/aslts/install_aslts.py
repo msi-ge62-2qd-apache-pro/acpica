@@ -31,6 +31,7 @@ def parse_args ():
     return args
 
 
+# This builds and provides an interface to the test directory.
 class artifact_path_builder:
     def __init__(self):
         output = subprocess.check_output(['iasl','-v'])
@@ -69,6 +70,10 @@ class artifact_path_builder:
         shutil.copyfile(aml_file, self.get_aml_mode_path(mode) + aml_fname)
 
 
+# This class is responsible providing test commands as well as test artifacts
+# resulting from these commands. If a function returns a command_and_artifact,
+# It means that we will assume the command has completed if the artifacts are
+# present after the command has been run.
 class command_builder:
 
     # constant flags
@@ -125,11 +130,12 @@ class command_builder:
                               'convert':prefix + ['MAIN'],
                               'disassemble':prefix + [self.testcase_config.name + '-disasm']}
 
-        # these dictionaries contain resulting aml or dsl filenames
-        self.aml_compilation_artifacts = {'compile_norm': self.output_prefix['compile_norm'][1] + '.aml',
-                                          'compile_oe': self.output_prefix['compile_oe'][1] + '.aml',
-                                          'recompile_disassemble':self.input_file['disasmAml'][0],
-                                          'recompile_convert':'MAIN.aml'}
+        # this dictionary contains resulting AML or DSL filenames
+        self.command_artifacts = {'compile_norm': self.output_prefix['compile_norm'][1] + '.aml',
+                                  'compile_oe': self.output_prefix['compile_oe'][1] + '.aml',
+                                  'recompile_disassemble':self.input_file['disasmAml'][0],
+                                  'recompile_convert':'MAIN.aml',
+                                  'disassemble':self.input_file['disasmDsl'][0]}
 
         # the line below might be unnecessary. Leave this comment as a reminder
         # that we can switch over to using a dictionary for this...
@@ -150,7 +156,7 @@ class command_builder:
         compile_command += self.special_compilation_flags[style]
         compile_command += self.output_prefix[style] + self.input_compile_file[style]
 
-        return self.Command_and_artifact(command = compile_command, artifact = self.aml_compilation_artifacts[style])
+        return self.Command_and_artifact(command = compile_command, artifact = self.command_artifacts[style])
 
     def compile_norm(self, bitmode):
         return self.compile_with_mode('compile_norm', bitmode)
