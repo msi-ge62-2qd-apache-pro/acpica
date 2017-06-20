@@ -79,7 +79,6 @@ class filename_generator:
 
 class artifact_path_builder:
     def __init__(self):
-        print ("current dir: " + os.getcwd())
         output = subprocess.check_output(['iasl','-v'])
         version = re.search('(?<=version )\w+', output.decode("utf-8")).group(0)
         self.test_directory_path = os.getcwd() + '/tmp/aml/' + version + '/'
@@ -122,11 +121,12 @@ class command_builder:
 
     common_compile_flags = ['-cr','-vs','-of']
     all_output_flags = ['-l','-sc','-sa','-ic','-ta','-ts','-so','-lm','-ln','-ls','-li']
-    common_disassemble_flags = ['-od']
+    common_disassemble_flags = ['-od'] + ['-oe']
     main_filename = ['MAIN.asl']
     asl_compiler = ['iasl']
 
     mode_to_flags = {'opt/32':['-r','1'],'nopt/32':['-oa','-r','1'], 'opt/64':['-r','2'], 'nopt/64':['-oa','-r','2']}
+    disasm_flag = {'asl':['-dl'], 'asl+':['-d']}
 
     def __init__(self, path):
         module_path = path.replace('/','.')
@@ -155,23 +155,29 @@ class command_builder:
         # these dictionaries contain file input names and file output prefixes for the commands
         self.input_file = {'mainAsl':['MAIN.asl'],
                            'mainDsl':['MAIN.dsl'],
+                           'disasmDsl':[self.testcase_config.name + '-disasm.dsl'],
                            'disasmAml':[self.testcase_config.name + '-disasm.aml'],
-                           'disasmOeAml':['oe-' + self.testcase_config.name + '-disasm.aml']}
+                           'disasmOeAml':['oe-' + self.testcase_config.name + '.aml']}
 
         self.input_compile_file = {'compile_norm':self.input_file['mainAsl'],
-                                   'compile_oe':self.input_file['mainAsl']}
+                                   'compile_oe':self.input_file['mainAsl'],
+                                   'recompile':self.input_file['disasmDsl']}
 
         prefix = ['-p']
         self.output_prefix = {'compile_norm':prefix + [self.testcase_config.name],
                               'compile_oe':prefix + ['oe-' + self.testcase_config.name],
+                              'recompile':[],
                               'cv':[],
-                              'recompile':prefix + [self.testcase_config.name + '-disasm.aml']}
+                              'disassemble':prefix + [self.testcase_config.name + '-disasm']}
 
-        # this dictionary contains resulting aml filenames
+        # these dictionaries contain resulting aml or dsl filenames
         self.aml_compilation_artifacts = {'compile_norm': self.output_prefix['compile_norm'][1] + '.aml',
                                           'compile_oe': self.output_prefix['compile_oe'][1] + '.aml',
                                           'recompile':'',
                                           'compileConvert':''}
+
+        # the line below might be unnecessary. Leave this comment as a reminder that I can switch over to using a dictionary for this...
+        # self.disassembly_artifacts = {'disassemble': self.output_prefix['disassemble'][1] + '.dsl'}
 
         # this dictionary contains resulting artifacts other than aml files
         self.other_compilation_artifacts = \
@@ -196,14 +202,15 @@ class command_builder:
     def compile_oe(self, bitmode):
         return self.compile_with_mode('compile_oe', bitmode)
 
-    def recompile(self, bitmode, style):
+    def recompile(self, bitmode):
         return self.compile_with_mode('recompile', bitmode)
 
     def disassemble(self, style):
         return self.Command_and_artifact(
-                   command = self.asl_compiler + self.common_disassemble_flags + ['-oe'] +
-                       self.fname_gen.emit_disasm_style(style) + self.fname_gen.emit_aml_name('oe'),
-                   artifact = self.fname_gen.emit_disasm_dsl_name(style))
+                   command = self.asl_compiler + self.common_disassemble_flags +
+                       self.disasm_flag[style] + self.output_prefix['disassemble'] +
+                       self.input_file['disasmOeAml'],
+                   artifact = self.output_prefix['disassemble'][1] + '.dsl')
 
     def convert(self):
         return self.asl_compiler + self.common_flags + ['-ca'] + self.main_filename
@@ -230,7 +237,7 @@ class aslts_builder:
     def compile_one_mode(self, mode):
         command_and_artifact = self.commands.compile_norm(mode)
         self.logged_call(['rm', command_and_artifact.artifact])
-        print ('type: ' + mode, end=' ')
+        print ('    type: ' + mode, end=' ')
         self.logged_call(command_and_artifact.command)
         print('compile =>', end=' ')
         if os.path.exists(command_and_artifact.artifact):
@@ -246,10 +253,22 @@ class aslts_builder:
             print ('compilation test - FAIL')
 
     def disassembler_test_sequence(self, style):
-        self.logged_call(self.commands.compile_oe(''))
-        self.logged_call(self.commands.disassemble(style))
-        self.logged_call(self.commands.recompile('', style))
-        self.logged_call(self.commands.binary_compare('normal_compile', ''))
+        print('compile with externals')
+        mode = 'nopt/64'
+        command_and_artifact = self.commands.compile_oe(mode)
+        self.logged_call(['rm', command_and_artifact.artifact])
+        print ('    type: ' + mode, end=' ')
+        self.logged_call(command_and_artifact.command)
+        print('compile with externals =>', end=' ')
+        if not(os.path.exists(command_and_artifact.artifact)):
+            print('FAIL')
+        self.logged_call(self.commands.cleanup('compile_oe'))
+
+        command_and_artifact = self.commands.disassemble('asl+')
+        self.logged_call(command_and_artifact.command)
+        command_and_artifact = self.commands.recompile(mode)
+        self.logged_call(command_and_artifact.command)
+
 
     def converter_test_sequence(self):
         self.logged_call(self.commands.convert())
@@ -267,7 +286,7 @@ def main ():
     os.chdir (args.path)
 
     builder.compile_test()
-    #builder.disassembler_test_sequence('')
+    builder.disassembler_test_sequence('')
     #builder.converter_test_sequence()
 
     os.chdir (old_dir)
