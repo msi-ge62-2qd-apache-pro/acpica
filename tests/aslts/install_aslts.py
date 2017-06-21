@@ -195,6 +195,7 @@ class command_builder:
         else:
             return ['']
 
+
 class aslts_builder:
 
     def __init__(self, test_module_path): # consume the config file
@@ -232,7 +233,6 @@ class aslts_builder:
         print('compile with externals =>', end=' ')
         if not(os.path.exists(command_and_artifact.artifact)):
             print('FAIL')
-        self.logged_call(self.commands.cleanup('compile_oe'))
 
         print('disassemble =>', end=' ')
         command_and_artifact = self.commands.disassemble('asl+')
@@ -247,7 +247,6 @@ class aslts_builder:
             print ("PASS")
         else:
             print ("FAIL")
-
 
     def converter_test_sequence(self):
         mode = 'nopt/64'
