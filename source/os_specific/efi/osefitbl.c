@@ -849,64 +849,69 @@ OslGetTable (
         ACPI_COMPARE_NAME (Signature, ACPI_SIG_DSDT) ||
         ACPI_COMPARE_NAME (Signature, ACPI_SIG_FACS))
     {
-        /*
-         * Get the appropriate address, either 32-bit or 64-bit. Be very
-         * careful about the FADT length and validate table addresses.
-         * Note: The 64-bit addresses have priority.
-         */
-        if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_DSDT))
-        {
-            if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_XDSDT) &&
-                Gbl_Fadt->XDsdt)
-            {
-                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->XDsdt;
-            }
-            else if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_DSDT) &&
-                Gbl_Fadt->Dsdt)
-            {
-                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->Dsdt;
-            }
-        }
-        else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_FACS))
-        {
-            if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_XFACS) &&
-                Gbl_Fadt->XFacs)
-            {
-                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->XFacs;
-            }
-            else if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_FACS) &&
-                Gbl_Fadt->Facs)
-            {
-                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->Facs;
-            }
-        }
-        else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_XSDT))
-        {
-            if (!Gbl_Revision)
-            {
-                return (AE_BAD_SIGNATURE);
-            }
-            TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Rsdp.XsdtPhysicalAddress;
-        }
-        else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_RSDT))
-        {
-            TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Rsdp.RsdtPhysicalAddress;
-        }
-        else
-        {
-            TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_RsdpAddress;
-            Signature = ACPI_SIG_RSDP;
-        }
+        /* These special tables only have 1 instance, respectively. */
 
-        /* Now we can get the requested special table */
-
-        Status = OslMapTable (TableAddress, Signature, &MappedTable);
-        if (ACPI_FAILURE (Status))
+        if (Instance == 0)
         {
-            return (Status);
-        }
+            /*
+             * Get the appropriate address, either 32-bit or 64-bit. Be very
+             * careful about the FADT length and validate table addresses.
+             * Note: The 64-bit addresses have priority.
+             */
+            if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_DSDT))
+            {
+                if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_XDSDT) &&
+                    Gbl_Fadt->XDsdt)
+                {
+                    TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->XDsdt;
+                }
+                else if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_DSDT) &&
+                    Gbl_Fadt->Dsdt)
+                {
+                    TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->Dsdt;
+                }
+            }
+            else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_FACS))
+            {
+                if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_XFACS) &&
+                    Gbl_Fadt->XFacs)
+                {
+                    TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->XFacs;
+                }
+                else if ((Gbl_Fadt->Header.Length >= MIN_FADT_FOR_FACS) &&
+                    Gbl_Fadt->Facs)
+                {
+                    TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Fadt->Facs;
+                }
+            }
+            else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_XSDT))
+            {
+                if (!Gbl_Revision)
+                {
+                    return (AE_BAD_SIGNATURE);
+                }
+                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Rsdp.XsdtPhysicalAddress;
+            }
+            else if (ACPI_COMPARE_NAME (Signature, ACPI_SIG_RSDT))
+            {
+                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_Rsdp.RsdtPhysicalAddress;
+            }
+            else
+            {
+                TableAddress = (ACPI_PHYSICAL_ADDRESS) Gbl_RsdpAddress;
+                Signature = ACPI_SIG_RSDP;
+            }
 
-        TableLength = ApGetTableLength (MappedTable);
+            /* Now we can get the requested special table */
+
+            Status = OslMapTable (TableAddress, Signature, &MappedTable);
+            if (ACPI_FAILURE (Status))
+            {
+                return (Status);
+            }
+
+            TableLength = ApGetTableLength (MappedTable);
+        }
     }
     else /* Case for a normal ACPI table */
     {
