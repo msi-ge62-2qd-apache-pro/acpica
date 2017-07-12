@@ -143,7 +143,7 @@ class command_builder:
 
         # this dictionary contains resulting artifacts other than aml files
         self.other_compilation_artifacts = \
-            {'compile_norm':list(map(lambda x: self.output_prefix['compile_norm'][0] + x,
+            {'compile_norm':list(map(lambda x: self.output_prefix['compile_norm'][1] + x,
                 ['.asm','.c','.h','.hex','.i','.lst','.map','.nap','.nsp','.offset.h','.src'])),
              'compile_oe':[]}
 
@@ -201,19 +201,30 @@ class aslts_builder:
     def __init__(self, test_module_path): # consume the config file
         self.commands = command_builder(test_module_path)
         self.artifacts = artifact_path_builder()
+        self.current_aml_artifacts = set()
+
+    # A successful command is one that results in the correct output files.
+    def exec_command(self, command, expected_artifact):
+        self.logged_call(['rm', expected_artifact])
+        result = self.logged_call(command)
+        if os.path.exists(expected_artifact):
+            self.current_aml_artifacts.add(expected_artifact)
+        else:
+            print('FAIL')
+        return result
+
 
     def logged_call(self, command):
         return subprocess.call(command, stdout = self.artifacts.compiler_log, stderr = self.artifacts.error_log)
 
     def compile_one_mode(self, mode):
         command_and_artifact = self.commands.compile_norm(mode)
-        self.logged_call(['rm', command_and_artifact.artifact])
-        print ('    type: ' + mode, end=' ')
-        self.logged_call(command_and_artifact.command)
+        print('    type: ' + mode, end=' ')
         print('compile =>', end=' ')
-        if os.path.exists(command_and_artifact.artifact):
+        result = self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+        if result == 0:
             print('PASS')
-        self.artifacts.copy_aml(command_and_artifact.artifact, mode)
+            self.artifacts.copy_aml(command_and_artifact.artifact, mode)
         self.logged_call(self.commands.cleanup('compile_norm'))
 
     def compile_test(self):
@@ -226,20 +237,16 @@ class aslts_builder:
     def disassembler_test_sequence(self, style):
         print('compile with externals')
         mode = 'nopt/64'
-        command_and_artifact = self.commands.compile_oe(mode)
-        self.logged_call(['rm', command_and_artifact.artifact])
         print ('    type: ' + mode, end=' ')
-        self.logged_call(command_and_artifact.command)
         print('compile with externals =>', end=' ')
-        if not(os.path.exists(command_and_artifact.artifact)):
-            print('FAIL')
-
+        command_and_artifact = self.commands.compile_oe(mode)
+        self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         print('disassemble =>', end=' ')
         command_and_artifact = self.commands.disassemble('asl+')
-        self.logged_call(command_and_artifact.command)
+        self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         print('recompile =>', end=' ')
         command_and_artifact = self.commands.recompile_disassemble(mode)
-        self.logged_call(command_and_artifact.command)
+        self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         print('binary compare =>', end=' ')
         result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
         print ("Disassembler test sequence:", end=' ')
@@ -253,10 +260,10 @@ class aslts_builder:
         print ('    type: ' + mode, end=' ')
         print('convert =>', end=' ')
         command_and_artifact = self.commands.convert()
-        self.logged_call(command_and_artifact.command)
+        self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         print('recompile =>', end=' ')
         command_and_artifact = self.commands.recompile_convert()
-        self.logged_call(command_and_artifact.command)
+        self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         print('binary compare =>', end=' ')
         result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
         print ("Converter test sequence:", end=' ')
@@ -264,6 +271,9 @@ class aslts_builder:
             print ("PASS")
         else:
             print ("FAIL")
+
+    def clean_all_artifacts(self):
+        list(map(lambda x: os.remove(x), self.current_aml_artifacts))
 
 
 def main ():
@@ -278,6 +288,7 @@ def main ():
     builder.compile_test()
     builder.disassembler_test_sequence('')
     builder.converter_test_sequence()
+    builder.clean_all_artifacts()
 
     os.chdir (old_dir)
 
