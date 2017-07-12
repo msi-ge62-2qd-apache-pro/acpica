@@ -223,32 +223,37 @@ class aslts_builder:
         print('compile =>', end=' ')
         result = self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
         if result == 0:
-            print('PASS')
+            print('PASS', end='')
             self.artifacts.copy_aml(command_and_artifact.artifact, mode)
         self.logged_call(self.commands.cleanup('compile_norm'))
 
     def compile_test(self):
         result = list(map(lambda x: self.compile_one_mode(x), ['opt/32', 'opt/64', 'nopt/32', 'nopt/64']))
+        print('') #intended as a line break
         if all(value == None for value in result):
-            print ('compilation test - PASS')
+            print ('    compilation test - PASS')
         else:
-            print ('compilation test - FAIL')
+            print ('    compilation test - FAIL')
 
-    def disassembler_test_sequence(self, style):
+    def disassembler_test_sequence(self):
         print('compile with externals')
         mode = 'nopt/64'
         print ('    type: ' + mode, end=' ')
         print('compile with externals =>', end=' ')
         command_and_artifact = self.commands.compile_oe(mode)
         self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+
         print('disassemble =>', end=' ')
         command_and_artifact = self.commands.disassemble('asl+')
         self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+
         print('recompile =>', end=' ')
         command_and_artifact = self.commands.recompile_disassemble(mode)
         self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+
         print('binary compare =>', end=' ')
         result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
+
         print ("Disassembler test sequence:", end=' ')
         if result == 0:
             print ("PASS")
@@ -261,11 +266,14 @@ class aslts_builder:
         print('convert =>', end=' ')
         command_and_artifact = self.commands.convert()
         self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+
         print('recompile =>', end=' ')
         command_and_artifact = self.commands.recompile_convert()
         self.exec_command(command_and_artifact.command, command_and_artifact.artifact)
+
         print('binary compare =>', end=' ')
         result = self.logged_call(self.commands.binary_compare(self.commands.compile_norm(mode).artifact, command_and_artifact.artifact))
+
         print ("Converter test sequence:", end=' ')
         if result == 0:
             print ("PASS")
@@ -286,7 +294,7 @@ def main ():
     os.chdir (args.path)
 
     builder.compile_test()
-    builder.disassembler_test_sequence('')
+    builder.disassembler_test_sequence()
     builder.converter_test_sequence()
     builder.clean_all_artifacts()
 
