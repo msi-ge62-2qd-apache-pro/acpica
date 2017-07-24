@@ -459,6 +459,15 @@ AcpiDsGetPackageArguments (
     ACPI_FUNCTION_TRACE_PTR (DsGetPackageArguments, ObjDesc);
 
 
+    /*
+     * Resolve all named references in package objects (and all
+     * sub-packages). This action has been deferred until the entire
+     * namespace has been loaded, in order to support external and
+     * forward references from individual package elements (05/2017).
+     */
+    (void) AcpiUtWalkPackageTree (ObjDesc, NULL,
+            AcpiDsInitPackageElement, NULL);
+
     if (ObjDesc->Common.Flags & AOPOBJ_DATA_VALID)
     {
         return_ACPI_STATUS (AE_OK);

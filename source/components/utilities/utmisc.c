@@ -395,8 +395,10 @@ AcpiUtWalkPackageTree (
         /* Get one element of the package */
 
         ThisIndex = State->Pkg.Index;
-        ThisSourceObj = (ACPI_OPERAND_OBJECT *)
+        ThisSourceObj =
             State->Pkg.SourceObject->Package.Elements[ThisIndex];
+        State->Pkg.ThisTargetObj =
+            &State->Pkg.SourceObject->Package.Elements[ThisIndex];
 
         /*
          * Check for:

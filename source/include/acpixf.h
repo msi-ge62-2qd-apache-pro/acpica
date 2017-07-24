@@ -310,7 +310,7 @@ ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_GroupModuleLevelCode, FALSE);
  * a TermList. Default is FALSE, do not execute entire table until some
  * lock order issues are fixed.
  */
-ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_ParseTableAsTermList, FALSE);
+ACPI_INIT_GLOBAL (UINT8,            AcpiGbl_ParseTableAsTermList, TRUE);
 
 /*
  * Optionally use 32-bit FADT addresses if and when there is a conflict

@@ -546,11 +546,12 @@ typedef struct acpi_object_reference
     ACPI_OBJECT_COMMON_HEADER
     UINT8                           Class;              /* Reference Class */
     UINT8                           TargetType;         /* Used for Index Op */
-    UINT8                           Reserved;
+    UINT8                           Resolved;           /* ObjectReference has been resolved to a value */
     void                            *Object;            /* NameOp=>HANDLE to obj, IndexOp=>ACPI_OPERAND_OBJECT */
     ACPI_NAMESPACE_NODE             *Node;              /* RefOf or Namepath */
     union acpi_operand_object       **Where;            /* Target of Index */
     UINT8                           *IndexPointer;      /* Used for Buffers and Strings */
+    UINT8                           *Aml;               /* Used for deferred resolution of ObjectReference */
     UINT32                          Value;              /* Used for Local/Arg/Index/DdbHandle */
 
 } ACPI_OBJECT_REFERENCE;

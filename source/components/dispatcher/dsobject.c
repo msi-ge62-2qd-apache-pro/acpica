@@ -168,6 +168,10 @@ AcpiDsBuildInternalObject (
     ACPI_PARSE_OBJECT       *Op,
     ACPI_OPERAND_OBJECT     **ObjDescPtr);
 
+static void
+AcpiDsResolvePackageElement (
+    ACPI_OPERAND_OBJECT     **ElementPtr);
+
 
 #ifndef ACPI_NO_METHOD_EXECUTION
 /*******************************************************************************
@@ -193,7 +197,6 @@ AcpiDsBuildInternalObject (
 {
     ACPI_OPERAND_OBJECT     *ObjDesc;
     ACPI_STATUS             Status;
-    ACPI_OBJECT_TYPE        Type;
 
 
     ACPI_FUNCTION_TRACE (DsBuildInternalObject);
@@ -209,123 +212,28 @@ AcpiDsBuildInternalObject (
          */
         if (!Op->Common.Node)
         {
-            Status = AcpiNsLookup (WalkState->ScopeInfo,
-                Op->Common.Value.String,
-                ACPI_TYPE_ANY, ACPI_IMODE_EXECUTE,
-                ACPI_NS_SEARCH_PARENT | ACPI_NS_DONT_OPEN_SCOPE, NULL,
-                ACPI_CAST_INDIRECT_PTR (ACPI_NAMESPACE_NODE, &(Op->Common.Node)));
-            if (ACPI_FAILURE (Status))
+            if ((Op->Common.Parent->Common.AmlOpcode == AML_PACKAGE_OP) ||
+                (Op->Common.Parent->Common.AmlOpcode == AML_VARIABLE_PACKAGE_OP))
             {
-                /* Check if we are resolving a named reference within a package */
-
-                if ((Status == AE_NOT_FOUND) && (AcpiGbl_EnableInterpreterSlack) &&
-
-                    ((Op->Common.Parent->Common.AmlOpcode == AML_PACKAGE_OP) ||
-                     (Op->Common.Parent->Common.AmlOpcode == AML_VARIABLE_PACKAGE_OP)))
-                {
-                    /*
-                     * We didn't find the target and we are populating elements
-                     * of a package - ignore if slack enabled. Some ASL code
-                     * contains dangling invalid references in packages and
-                     * expects that no exception will be issued. Leave the
-                     * element as a null element. It cannot be used, but it
-                     * can be overwritten by subsequent ASL code - this is
-                     * typically the case.
-                     */
-                    ACPI_DEBUG_PRINT ((ACPI_DB_INFO,
-                        "Ignoring unresolved reference in package [%4.4s]\n",
-                        WalkState->ScopeInfo->Scope.Node->Name.Ascii));
-
-                    return_ACPI_STATUS (AE_OK);
-                }
-                else
+                goto CreateNewObject;
+            }
+            else
+            {
+                Status = AcpiNsLookup (WalkState->ScopeInfo,
+                    Op->Common.Value.String,
+                    ACPI_TYPE_ANY, ACPI_IMODE_EXECUTE,
+                    ACPI_NS_SEARCH_PARENT | ACPI_NS_DONT_OPEN_SCOPE, NULL,
+                    ACPI_CAST_INDIRECT_PTR (ACPI_NAMESPACE_NODE, &(Op->Common.Node)));
+                if (ACPI_FAILURE (Status))
                 {
                     ACPI_ERROR_NAMESPACE (Op->Common.Value.String, Status);
+                    return_ACPI_STATUS (AE_OK);
                 }
-
-                return_ACPI_STATUS (Status);
-            }
-        }
-
-        /* Special object resolution for elements of a package */
-
-        if ((Op->Common.Parent->Common.AmlOpcode == AML_PACKAGE_OP) ||
-            (Op->Common.Parent->Common.AmlOpcode == AML_VARIABLE_PACKAGE_OP))
-        {
-            /*
-             * Attempt to resolve the node to a value before we insert it into
-             * the package. If this is a reference to a common data type,
-             * resolve it immediately. According to the ACPI spec, package
-             * elements can only be "data objects" or method references.
-             * Attempt to resolve to an Integer, Buffer, String or Package.
-             * If cannot, return the named reference (for things like Devices,
-             * Methods, etc.) Buffer Fields and Fields will resolve to simple
-             * objects (int/buf/str/pkg).
-             *
-             * NOTE: References to things like Devices, Methods, Mutexes, etc.
-             * will remain as named references. This behavior is not described
-             * in the ACPI spec, but it appears to be an oversight.
-             */
-            ObjDesc = ACPI_CAST_PTR (ACPI_OPERAND_OBJECT, Op->Common.Node);
-
-            Status = AcpiExResolveNodeToValue (
-                ACPI_CAST_INDIRECT_PTR (ACPI_NAMESPACE_NODE, &ObjDesc),
-                WalkState);
-            if (ACPI_FAILURE (Status))
-            {
-                return_ACPI_STATUS (Status);
-            }
-
-            /*
-             * Special handling for Alias objects. We need to setup the type
-             * and the Op->Common.Node to point to the Alias target. Note,
-             * Alias has at most one level of indirection internally.
-             */
-            Type = Op->Common.Node->Type;
-            if (Type == ACPI_TYPE_LOCAL_ALIAS)
-            {
-                Type = ObjDesc->Common.Type;
-                Op->Common.Node = ACPI_CAST_PTR (ACPI_NAMESPACE_NODE,
-                    Op->Common.Node->Object);
-            }
-
-            switch (Type)
-            {
-            /*
-             * For these types, we need the actual node, not the subobject.
-             * However, the subobject did not get an extra reference count above.
-             *
-             * TBD: should ExResolveNodeToValue be changed to fix this?
-             */
-            case ACPI_TYPE_DEVICE:
-            case ACPI_TYPE_THERMAL:
-
-                AcpiUtAddReference (Op->Common.Node->Object);
-
-                /*lint -fallthrough */
-            /*
-             * For these types, we need the actual node, not the subobject.
-             * The subobject got an extra reference count in ExResolveNodeToValue.
-             */
-            case ACPI_TYPE_MUTEX:
-            case ACPI_TYPE_METHOD:
-            case ACPI_TYPE_POWER:
-            case ACPI_TYPE_PROCESSOR:
-            case ACPI_TYPE_EVENT:
-            case ACPI_TYPE_REGION:
-
-                /* We will create a reference object for these types below */
-                break;
-
-            default:
-                /*
-                 * All other types - the node was resolved to an actual
-                 * object, we are done.
-                 */
-                goto Exit;
             }
         }
     }
+
+CreateNewObject:
 
     /* Create and init a new internal ACPI object */
 
@@ -344,7 +252,6 @@ AcpiDsBuildInternalObject (
         return_ACPI_STATUS (Status);
     }
 
-Exit:
     *ObjDescPtr = ObjDesc;
     return_ACPI_STATUS (Status);
 }
@@ -940,8 +847,28 @@ AcpiDsInitObjectFromOp (
                 /* Node was saved in Op */
 
                 ObjDesc->Reference.Node = Op->Common.Node;
-                ObjDesc->Reference.Object = Op->Common.Node->Object;
                 ObjDesc->Reference.Class = ACPI_REFCLASS_NAME;
+                if (Op->Common.Node)
+                {
+                    ObjDesc->Reference.Object = Op->Common.Node->Object;
+                    ObjDesc->Reference.Resolved = TRUE;
+                }
+                else
+                {
+                    ObjDesc->Reference.Resolved = FALSE;
+                    if ((Op->Common.Parent->Common.AmlOpcode != AML_PACKAGE_OP) &&
+                        (Op->Common.Parent->Common.AmlOpcode != AML_VARIABLE_PACKAGE_OP))
+                    {
+                        return_ACPI_STATUS (AE_AML_OPERAND_TYPE);
+                    }
+
+                    /*
+                     * Name was unresolved above, get prefix node for
+                     * later lookup.
+                     */
+                    ObjDesc->Reference.Node = WalkState->ScopeInfo->Scope.Node;
+                    ObjDesc->Reference.Aml = Op->Common.Aml;
+                }
                 break;
 
             case AML_DEBUG_OP:
@@ -969,4 +896,190 @@ AcpiDsInitObjectFromOp (
     }
 
     return_ACPI_STATUS (Status);
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiDsInitPackageElement
+ *
+ * PARAMETERS:  ACPI_PKG_CALLBACK
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Resolve a named reference element within a package object
+ *
+ ******************************************************************************/
+
+ACPI_STATUS
+AcpiDsInitPackageElement (
+    UINT8                   ObjectType,
+    ACPI_OPERAND_OBJECT     *SourceObject,
+    ACPI_GENERIC_STATE      *State,
+    void                    *Context)
+{
+    ACPI_OPERAND_OBJECT     **ElementPtr;
+
+
+    if (!SourceObject)
+    {
+        return (AE_OK);
+    }
+
+    /*
+     * The following code is a bit of a hack to workaround a (current)
+     * limitation of the ACPI_PKG_CALLBACK interface. We need a pointer
+     * to the location within the element array because a new object
+     * may be created and stored there.
+     */
+    if (Context)
+    {
+        /* A direct call was made to this function */
+
+        ElementPtr = (ACPI_OPERAND_OBJECT **) Context;
+    }
+    else
+    {
+        /* Call came from AcpiUtWalkPackageTree */
+
+        ElementPtr = State->Pkg.ThisTargetObj;
+    }
+
+    /* We are only interested in reference objects/elements */
+
+    if (SourceObject->Common.Type == ACPI_TYPE_LOCAL_REFERENCE)
+    {
+        /* Resolve the (named) reference to a namespace node */
+
+        AcpiDsResolvePackageElement (ElementPtr);
+    }
+
+    return (AE_OK);
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    AcpiDsResolvePackageElement
+ *
+ * PARAMETERS:  ElementPtr          - Pointer to a reference object
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Resolve a package element that is a reference to a named
+ *              object.
+ *
+ ******************************************************************************/
+
+static void
+AcpiDsResolvePackageElement (
+    ACPI_OPERAND_OBJECT     **ElementPtr)
+{
+    ACPI_STATUS             Status;
+    ACPI_OPERAND_OBJECT     *Element = *ElementPtr;
+    ACPI_NAMESPACE_NODE     *ResolvedNode;
+    ACPI_OBJECT_TYPE        Type;
+    char                    *Path;
+
+
+    ACPI_FUNCTION_TRACE (DsResolvePackageElement);
+
+
+    /* Check if reference element is already resolved */
+
+    if (Element->Reference.Resolved)
+    {
+        return_VOID;
+    }
+    Element->Reference.Resolved = TRUE;
+
+    /* Element must be a reference object of correct type */
+
+    Status = AcpiNsExternalizeName (ACPI_UINT32_MAX,
+        (char *) Element->Reference.Aml, NULL, &Path);
+    if (ACPI_FAILURE (Status))
+    {
+        return_VOID;
+    }
+
+    Status = AcpiNsGetNodeUnlocked (Element->Reference.Node, Path,
+        ACPI_NS_SEARCH_PARENT | ACPI_NS_DONT_OPEN_SCOPE, &ResolvedNode);
+    if (ACPI_FAILURE (Status) ||
+        ResolvedNode->Type == ACPI_TYPE_ANY ||
+        ResolvedNode->Flags & ANOBJ_TEMPORARY)
+    {
+        /*
+         * A temporary node found here indicates that the reference is
+         * to a node that was created within this method. We are not
+         * going to allow it (especially if the package is returned
+         * from the method) -- the temporary node will be deleted out
+         * from under the method. (05/2017).
+         */
+        ACPI_DEBUG_PRINT ((ACPI_DB_DISPATCH,
+            "Could not find package element - %s", Path));
+        AcpiUtRemoveReference (*ElementPtr);
+        *ElementPtr = NULL;
+        goto Exit;
+    }
+
+    /* Update the reference object */
+
+    Element->Reference.Node = ResolvedNode;
+    Type = Element->Reference.Node->Type;
+
+    /*
+     * Attempt to resolve the node to a value before we insert it into
+     * the package. If this is a reference to a common data type,
+     * resolve it immediately. According to the ACPI spec, package
+     * elements can only be "data objects" or method references.
+     * Attempt to resolve to an Integer, Buffer, String or Package.
+     * If cannot, return the named reference (for things like Devices,
+     * Methods, etc.) Buffer Fields and Fields will resolve to simple
+     * objects (int/buf/str/pkg).
+     *
+     * NOTE: References to things like Devices, Methods, Mutexes, etc.
+     * will remain as named references. This behavior is not described
+     * in the ACPI spec, but it appears to be an oversight.
+     */
+    Status = AcpiExResolveNodeToValue (&ResolvedNode, NULL);
+    if (ACPI_FAILURE (Status))
+    {
+        ACPI_ERROR ((AE_INFO,
+            "Could not resolve package element - %s", Path));
+        AcpiUtRemoveReference (*ElementPtr);
+        *ElementPtr = NULL;
+        goto Exit;
+    }
+
+    switch (Type)
+    {
+    /*
+     * These object types are a result of named references, so we will
+     * leave them as reference objects. In other words, these types
+     * have no intrinsic "value".
+     */
+    case ACPI_TYPE_DEVICE:
+    case ACPI_TYPE_THERMAL:
+    case ACPI_TYPE_MUTEX:
+    case ACPI_TYPE_METHOD:
+    case ACPI_TYPE_POWER:
+    case ACPI_TYPE_PROCESSOR:
+    case ACPI_TYPE_EVENT:
+    case ACPI_TYPE_REGION:
+
+        break;
+
+    default:
+        /*
+         * For all other types - the node was resolved to an actual
+         * operand object with a value, return the object
+         */
+        AcpiUtRemoveReference (*ElementPtr);
+        *ElementPtr = (ACPI_OPERAND_OBJECT *) ResolvedNode;
+        break;
+    }
+
+Exit:
+    ACPI_FREE (Path);
+    return_VOID;
 }

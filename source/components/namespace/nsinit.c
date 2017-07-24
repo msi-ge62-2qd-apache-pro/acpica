@@ -492,7 +492,8 @@ AcpiNsInitOneObject (
 
     /* If the object is already initialized, nothing else to do */
 
-    if (ObjDesc->Common.Flags & AOPOBJ_DATA_VALID)
+    if (ObjDesc->Common.Flags & AOPOBJ_DATA_VALID &&
+        ObjDesc->Common.Type != ACPI_TYPE_PACKAGE)
     {
         return (AE_OK);
     }

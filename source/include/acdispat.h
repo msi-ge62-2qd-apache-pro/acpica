@@ -430,6 +430,13 @@ AcpiDsInitObjectFromOp (
     ACPI_OPERAND_OBJECT     **ObjDesc);
 
 ACPI_STATUS
+AcpiDsInitPackageElement (
+    UINT8                   ObjectType,
+    ACPI_OPERAND_OBJECT     *SourceObject,
+    ACPI_GENERIC_STATE      *State,
+    void                    *Context);
+
+ACPI_STATUS
 AcpiDsCreateNode (
     ACPI_WALK_STATE         *WalkState,
     ACPI_NAMESPACE_NODE     *Node,
