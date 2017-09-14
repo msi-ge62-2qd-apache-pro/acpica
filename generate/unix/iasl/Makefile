@@ -104,7 +104,6 @@ OBJECTS = \
 	$(OBJDIR)/asltransform.o\
 	$(OBJDIR)/asltree.o\
 	$(OBJDIR)/aslutils.o\
-	$(OBJDIR)/asluuid.o\
 	$(OBJDIR)/aslwalks.o\
 	$(OBJDIR)/aslxref.o\
 	$(OBJDIR)/aslxrefout.o\

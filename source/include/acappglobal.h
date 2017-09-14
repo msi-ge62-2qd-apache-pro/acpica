@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Module Name: adfile - Application-level disassembler file support routines
+ * Module Name: acappglobal.h - Global variable definitions for applications
  *
  *****************************************************************************/
 
@@ -149,194 +149,70 @@
  *
  *****************************************************************************/
 
-#include "acpi.h"
-#include "accommon.h"
-#include "acapps.h"
+#ifndef __ACAPPGLOBAL_H
+#define __ACAPPGLOBAL_H
 
-#include <stdio.h>
+#include "asltypes.h"
+/*
+ * Global variables. Defined in aslmain.c only, externed in all other files
+ */
 
+#undef ASL_EXTERN
 
-#define _COMPONENT          ACPI_TOOLS
-        ACPI_MODULE_NAME    ("adfile")
+#ifdef _DECLARE_GLOBALS
+#define ASL_EXTERN
+#define ASL_INIT_GLOBAL(a,b)        (a)=(b)
+#else
+#define ASL_EXTERN                  extern
+#define ASL_INIT_GLOBAL(a,b)        (a)
+#endif
 
-/* Local prototypes */
+/*
+ * Older versions of Bison won't emit this external in the generated header.
+ * Newer versions do emit the external, so we don't need to do it.
+ */
+#ifndef ASLCOMPILER_ASLCOMPILERPARSE_H
+extern int                  AslCompilerdebug;
+#endif
 
-static INT32
-AdWriteBuffer (
-    char                    *Filename,
-    char                    *Buffer,
-    UINT32                  Length);
+#ifdef _DECLARE_GLOBALS
 
-static char                 FilenameBuf[20];
+/* Table below must match ASL_FILE_TYPES in asltypes.h */
 
-
-/******************************************************************************
- *
- * FUNCTION:    AdGenerateFilename
- *
- * PARAMETERS:  Prefix              - prefix string
- *              TableId             - The table ID
- *
- * RETURN:      Pointer to the completed string
- *
- * DESCRIPTION: Build an output filename from an ACPI table ID string
- *
- ******************************************************************************/
-
-char *
-AdGenerateFilename (
-    char                    *Prefix,
-    char                    *TableId)
+ASL_FILE_INFO                       Gbl_Files [ASL_NUM_FILES] =
 {
-    UINT32                  i;
-    UINT32                  j;
+    {NULL, NULL, "stdout:       ", "Standard Output"},
+    {NULL, NULL, "stderr:       ", "Standard Error"},
+    {NULL, NULL, "Table Input:  ", "Source Input"},
+    {NULL, NULL, "Binary Output:", "AML Output"},
+    {NULL, NULL, "Source Output:", "Source Output"},
+    {NULL, NULL, "Preprocessor: ", "Preprocessor Output"},
+    {NULL, NULL, "Preprocessor: ", "Preprocessor Temp File"},
+    {NULL, NULL, "Listing File: ", "Listing Output"},
+    {NULL, NULL, "Hex Dump:     ", "Hex Table Output"},
+    {NULL, NULL, "Namespace:    ", "Namespace Output"},
+    {NULL, NULL, "Debug File:   ", "Debug Output"},
+    {NULL, NULL, "ASM Source:   ", "Assembly Code Output"},
+    {NULL, NULL, "C Source:     ", "C Code Output"},
+    {NULL, NULL, "ASM Include:  ", "Assembly Header Output"},
+    {NULL, NULL, "C Include:    ", "C Header Output"},
+    {NULL, NULL, "Offset Table: ", "C Offset Table Output"},
+    {NULL, NULL, "Device Map:   ", "Device Map Output"},
+    {NULL, NULL, "Cross Ref:    ", "Cross-reference Output"},
+    {NULL, NULL, "Converter db :", "Converter debug Output"}
+};
+#else
+extern ASL_FILE_INFO                Gbl_Files [ASL_NUM_FILES];
+#endif
+
+#define ASL_MSG_BUFFER_SIZE             (1024 * 32) /* 32k */
+
+ASL_EXTERN char                     MsgBuffer[ASL_MSG_BUFFER_SIZE];
+ASL_EXTERN char                     StringBuffer[ASL_MSG_BUFFER_SIZE];
+ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_VerboseTemplates, FALSE);
+ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_DoTemplates, FALSE);
+ASL_EXTERN char                     ASL_INIT_GLOBAL (*Gbl_ExternalRefFilename, NULL);
+ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_MapfileFlag, FALSE);
 
 
-    for (i = 0; Prefix[i]; i++)
-    {
-        FilenameBuf[i] = Prefix[i];
-    }
-
-    FilenameBuf[i] = '_';
-    i++;
-
-    for (j = 0; j < 8 && (TableId[j] != ' ') && (TableId[j] != 0); i++, j++)
-    {
-        FilenameBuf[i] = TableId[j];
-    }
-
-    FilenameBuf[i] = 0;
-    strcat (FilenameBuf, FILE_SUFFIX_BINARY_TABLE);
-    return (FilenameBuf);
-}
-
-
-/******************************************************************************
- *
- * FUNCTION:    AdWriteBuffer
- *
- * PARAMETERS:  Filename            - name of file
- *              Buffer              - data to write
- *              Length              - length of data
- *
- * RETURN:      Actual number of bytes written
- *
- * DESCRIPTION: Open a file and write out a single buffer
- *
- ******************************************************************************/
-
-static INT32
-AdWriteBuffer (
-    char                    *Filename,
-    char                    *Buffer,
-    UINT32                  Length)
-{
-    FILE                    *File;
-    ACPI_SIZE               Actual;
-
-
-    File = fopen (Filename, "wb");
-    if (!File)
-    {
-        printf ("Could not open file %s\n", Filename);
-        return (-1);
-    }
-
-    Actual = fwrite (Buffer, 1, (size_t) Length, File);
-    if (Actual != Length)
-    {
-        printf ("Could not write to file %s\n", Filename);
-    }
-
-    fclose (File);
-    return ((INT32) Actual);
-}
-
-
-/******************************************************************************
- *
- * FUNCTION:    AdWriteTable
- *
- * PARAMETERS:  Table               - pointer to the ACPI table
- *              Length              - length of the table
- *              TableName           - the table signature
- *              OemTableID          - from the table header
- *
- * RETURN:      None
- *
- * DESCRIPTION: Dump the loaded tables to a file (or files)
- *
- ******************************************************************************/
-
-void
-AdWriteTable (
-    ACPI_TABLE_HEADER       *Table,
-    UINT32                  Length,
-    char                    *TableName,
-    char                    *OemTableId)
-{
-    char                    *Filename;
-
-
-    Filename = AdGenerateFilename (TableName, OemTableId);
-    AdWriteBuffer (Filename, (char *) Table, Length);
-
-    AcpiOsPrintf ("Table [%s] written to \"%s\"\n", TableName, Filename);
-}
-
-
-/*******************************************************************************
- *
- * FUNCTION:    FlGenerateFilename
- *
- * PARAMETERS:  InputFilename       - Original ASL source filename
- *              Suffix              - New extension.
- *
- * RETURN:      New filename containing the original base + the new suffix
- *
- * DESCRIPTION: Generate a new filename from the ASL source filename and a new
- *              extension. Used to create the *.LST, *.TXT, etc. files.
- *
- ******************************************************************************/
-
-char *
-FlGenerateFilename (
-    char                    *InputFilename,
-    char                    *Suffix)
-{
-    char                    *Position;
-    char                    *NewFilename;
-    char                    *DirectoryPosition;
-
-
-    /*
-     * Copy the original filename to a new buffer. Leave room for the worst
-     * case where we append the suffix, an added dot and the null terminator.
-     */
-    NewFilename = AcpiOsAllocateZeroed((ACPI_SIZE)
-        strlen (InputFilename) + strlen (Suffix) + 2);
-    strcpy (NewFilename, InputFilename);
-
-    /* Try to find the last dot in the filename */
-
-    DirectoryPosition = strrchr (NewFilename, '/');
-    Position = strrchr (NewFilename, '.');
-
-    if (Position && (Position > DirectoryPosition))
-    {
-        /* Tack on the new suffix */
-
-        Position++;
-        *Position = 0;
-        strcat (Position, Suffix);
-    }
-    else
-    {
-        /* No dot, add one and then the suffix */
-
-        strcat (NewFilename, ".");
-        strcat (NewFilename, Suffix);
-    }
-
-    return (NewFilename);
-}
+#endif

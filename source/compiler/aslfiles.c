@@ -993,6 +993,119 @@ FlOpenMiscOutputFiles (
 }
 
 
+/*******************************************************************************
+ *
+ * FUNCTION:    FlStrdup
+ *
+ * DESCRIPTION: Local strdup function
+ *
+ ******************************************************************************/
+
+static char *
+FlStrdup (
+    char                *String)
+{
+    char                *NewString;
+
+
+    NewString = UtLocalCacheCalloc ((ACPI_SIZE) strlen (String) + 1);
+    strcpy (NewString, String);
+    return (NewString);
+}
+
+
+/*******************************************************************************
+ *
+ * FUNCTION:    FlSplitInputPathname
+ *
+ * PARAMETERS:  InputFilename       - The user-specified ASL source file to be
+ *                                    compiled
+ *              OutDirectoryPath    - Where the directory path prefix is
+ *                                    returned
+ *              OutFilename         - Where the filename part is returned
+ *
+ * RETURN:      Status
+ *
+ * DESCRIPTION: Split the input path into a directory and filename part
+ *              1) Directory part used to open include files
+ *              2) Filename part used to generate output filenames
+ *
+ ******************************************************************************/
+
+ACPI_STATUS
+FlSplitInputPathname (
+    char                    *InputPath,
+    char                    **OutDirectoryPath,
+    char                    **OutFilename)
+{
+    char                    *Substring;
+    char                    *DirectoryPath;
+    char                    *Filename;
+
+
+    if (OutDirectoryPath)
+    {
+        *OutDirectoryPath = NULL;
+    }
+
+    if (!InputPath)
+    {
+        return (AE_OK);
+    }
+
+    /* Get the path to the input filename's directory */
+
+    DirectoryPath = FlStrdup (InputPath);
+    if (!DirectoryPath)
+    {
+        return (AE_NO_MEMORY);
+    }
+
+    /* Convert backslashes to slashes in the entire path */
+
+    UtConvertBackslashes (DirectoryPath);
+
+    /* Backup to last slash or colon */
+
+    Substring = strrchr (DirectoryPath, '/');
+    if (!Substring)
+    {
+        Substring = strrchr (DirectoryPath, ':');
+    }
+
+    /* Extract the simple filename */
+
+    if (!Substring)
+    {
+        Filename = FlStrdup (DirectoryPath);
+        DirectoryPath[0] = 0;
+    }
+    else
+    {
+        Filename = FlStrdup (Substring + 1);
+        *(Substring+1) = 0;
+    }
+
+    if (!Filename)
+    {
+        return (AE_NO_MEMORY);
+    }
+
+    if (OutDirectoryPath)
+    {
+        *OutDirectoryPath = DirectoryPath;
+    }
+
+    if (OutFilename)
+    {
+        *OutFilename = Filename;
+        return (AE_OK);
+    }
+
+    return (AE_OK);
+}
+
+
 #ifdef ACPI_OBSOLETE_FUNCTIONS
 /*******************************************************************************
  *

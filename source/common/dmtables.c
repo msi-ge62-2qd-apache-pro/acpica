@@ -149,20 +149,22 @@
  *
  *****************************************************************************/
 
-#include "aslcompiler.h"
+#include "acpi.h"
+#include "accommon.h"
+#include "amlresrc.h"
+#include "acdebug.h"
 #include "acdispat.h"
 #include "acnamesp.h"
 #include "actables.h"
 #include "acparser.h"
 #include "acapps.h"
-#include "acmacros.h"
 #include "acconvert.h"
 
 
 #define _COMPONENT          ACPI_TOOLS
         ACPI_MODULE_NAME    ("dmtables")
 
-
+#define AML_DISASSEMBLER_NAME "DISASSEMBLER"
 /* Local prototypes */
 
 static void
@@ -364,7 +366,7 @@ AdDisplayTables (
     }
 
     AcpiDmDisassemble (NULL, AcpiGbl_ParseOpRoot, ACPI_UINT32_MAX);
-    MpEmitMappingInfo ();
+    //MpEmitMappingInfo ();
 
     if (AcpiGbl_DmOpt_Listing)
     {

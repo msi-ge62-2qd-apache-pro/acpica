@@ -1247,18 +1247,6 @@ UtDoConstant (
 
 
 /*
- * asluuid - UUID support
- */
-ACPI_STATUS
-AuValidateUuid (
-    char                    *InString);
-
-ACPI_STATUS
-AuConvertUuidToString (
-    char                    *UuIdBuffer,
-    char                    *OutString);
-
-/*
  * aslresource - Resource template generation utilities
  */
 void

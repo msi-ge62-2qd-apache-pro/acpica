@@ -1246,6 +1246,15 @@ const char *
 AcpiAhMatchUuid (
     UINT8                   *Data);
 
+ACPI_STATUS
+AuValidateUuid (
+    char                    *InString);
+
+ACPI_STATUS
+AuConvertUuidToString (
+    char                    *UuIdBuffer,
+    char                    *OutString);
+
 
 /*
  * utuuid -- UUID support functions

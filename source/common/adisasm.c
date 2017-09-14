@@ -149,14 +149,17 @@
  *
  *****************************************************************************/
 
-#include "aslcompiler.h"
+#include "acpi.h"
+#include "accommon.h"
+#include "amlresrc.h"
+#include "acdebug.h"
 #include "amlcode.h"
 #include "acdisasm.h"
 #include "acdispat.h"
 #include "acnamesp.h"
 #include "acparser.h"
 #include "acapps.h"
-
+#include "acappglobal.h"
 
 #define _COMPONENT          ACPI_TOOLS
         ACPI_MODULE_NAME    ("adisasm")
@@ -507,8 +510,8 @@ AdDisassembleOneTable (
     {
         AcpiOsPrintf ("/**** Before second load\n");
 
-        NsSetupNamespaceListing (File);
-        NsDisplayNamespace ();
+        //NsSetupNamespaceListing (File);
+        //NsDisplayNamespace ();
 
         AcpiOsPrintf ("*****/\n");
     }
@@ -581,7 +584,7 @@ AdDisassembleOneTable (
             fprintf (stderr, "%14s %s - %u bytes\n",
                 Gbl_Files[ASL_FILE_MAP_OUTPUT].ShortDescription,
                 Gbl_Files[ASL_FILE_MAP_OUTPUT].Filename,
-                FlGetFileSize (ASL_FILE_MAP_OUTPUT));
+                CmGetFileSize (Gbl_Files[ASL_FILE_MAP_OUTPUT].Handle));
         }
     }
 
@@ -680,8 +683,8 @@ AdReparseOneTable (
         AcpiOsPrintf ("/**** After second load and resource conversion\n");
         if (File)
         {
-            NsSetupNamespaceListing (File);
-            NsDisplayNamespace ();
+            //NsSetupNamespaceListing (File);
+            //NsDisplayNamespace ();
         }
 
         AcpiOsPrintf ("*****/\n");

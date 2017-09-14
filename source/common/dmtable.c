@@ -153,7 +153,8 @@
 #include "accommon.h"
 #include "acdisasm.h"
 #include "actables.h"
-#include "aslcompiler.h"
+#include "acappglobal.h"
+#include "dtcompilerfunctions.h"
 
 /* This module used for application-level code only */
 

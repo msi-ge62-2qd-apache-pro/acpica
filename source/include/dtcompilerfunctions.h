@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Module Name: asluuid-- compiler UUID support
+ * Module Name: dtcompilerfunction.h - header for data table functions
  *
  *****************************************************************************/
 
@@ -149,113 +149,272 @@
  *
  *****************************************************************************/
 
-#include "aslcompiler.h"
+#define __DTCOMPILERFUNCTIONS_H__
 
-#define _COMPONENT          ACPI_COMPILER
-        ACPI_MODULE_NAME    ("asluuid")
+#ifndef _DTCOMPILERFUNCTIONS
+#define _DTCOMPILERFUNCTIONS
+
+/*
+ * Structure used for each individual field within an ACPI table
+ */
+typedef struct dt_field
+{
+    char                    *Name;       /* Field name (from name : value) */
+    char                    *Value;      /* Field value (from name : value) */
+    UINT32                  StringLength;/* Length of Value */
+    struct dt_field         *Next;       /* Next field */
+    struct dt_field         *NextLabel;  /* If field is a label, next label */
+    UINT32                  Line;        /* Line number for this field */
+    UINT32                  ByteOffset;  /* Offset in source file for field */
+    UINT32                  NameColumn;  /* Start column for field name */
+    UINT32                  Column;      /* Start column for field value */
+    UINT32                  TableOffset; /* Binary offset within ACPI table */
+    UINT8                   Flags;
+
+} DT_FIELD;
 
 
-extern UINT8                AcpiGbl_MapToUuidOffset[UUID_BUFFER_LENGTH];
-
-
-/*******************************************************************************
- *
- * FUNCTION:    AuValiduateUuid
- *
- * PARAMETERS:  InString            - 36-byte formatted UUID string
- *
- * RETURN:      Status
- *
- * DESCRIPTION: Check all 36 characters for correct format
- *
- ******************************************************************************/
+/* dttable - individual table compilation */
 
 ACPI_STATUS
-AuValidateUuid (
-    char                    *InString)
-{
-    UINT32                  i;
-
-
-    if (!InString || (strlen (InString) != UUID_STRING_LENGTH))
-    {
-        return (AE_BAD_PARAMETER);
-    }
-
-    /* Check all 36 characters for correct format */
-
-    for (i = 0; i < UUID_STRING_LENGTH; i++)
-    {
-        /* Must have 4 hyphens (dashes) in these positions: */
-
-        if ((i == UUID_HYPHEN1_OFFSET) ||
-            (i == UUID_HYPHEN2_OFFSET) ||
-            (i == UUID_HYPHEN3_OFFSET) ||
-            (i == UUID_HYPHEN4_OFFSET))
-        {
-            if (InString[i] != '-')
-            {
-                return (AE_BAD_PARAMETER);
-            }
-        }
-        else
-        {
-            /* All other positions must contain hex digits */
-
-            if (!isxdigit ((int) InString[i]))
-            {
-                return (AE_BAD_PARAMETER);
-            }
-        }
-    }
-
-    return (AE_OK);
-}
-
-
-/*******************************************************************************
- *
- * FUNCTION:    AuConvertUuidToString
- *
- * PARAMETERS:  UuidBuffer          - 16-byte UUID buffer
- *              OutString           - 36-byte formatted UUID string
- *
- * RETURN:      Status
- *
- * DESCRIPTION: Convert 16-byte UUID buffer to 36-byte formatted UUID string
- *              OutString must be 37 bytes to include null terminator.
- *
- ******************************************************************************/
+DtCompileFacs (
+    DT_FIELD                **PFieldList);
 
 ACPI_STATUS
-AuConvertUuidToString (
-    char                    *UuidBuffer,
-    char                    *OutString)
-{
-    UINT32                  i;
+DtCompileRsdp (
+    DT_FIELD                **PFieldList);
+
+ACPI_STATUS
+DtCompileAsf (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileCpep (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileCsrt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileDbg2 (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileDmar (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileDrtm (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileEinj (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileErst (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileFadt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileFpdt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileGtdt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileHest (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileHmat (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileIort (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileIvrs (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileLpit (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileMadt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileMcfg (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileMpst (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileMsct (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileMtmr (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileNfit (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompilePcct (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompilePdtt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompilePmtt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompilePptt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileRsdt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileS3pt (
+    DT_FIELD                **PFieldList);
+
+ACPI_STATUS
+DtCompileSdev (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileSlic (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileSlit (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileSrat (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileStao (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileTcpa (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileTpm2 (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileUefi (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileVrtc (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileWdat (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileWpbt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileXsdt (
+    void                    **PFieldList);
+
+ACPI_STATUS
+DtCompileGeneric (
+    void                    **PFieldList,
+    char                    *TermFieldName,
+    UINT32                  *PFieldLength);
+
+ACPI_DMTABLE_INFO *
+DtGetGenericTableInfo (
+    char                    *Name);
 
 
-    if (!UuidBuffer || !OutString)
-    {
-        return (AE_BAD_PARAMETER);
-    }
+/* ACPI Table templates */
 
-    for (i = 0; i < UUID_BUFFER_LENGTH; i++)
-    {
-        OutString[AcpiGbl_MapToUuidOffset[i]] =
-            AcpiUtHexToAsciiChar (UuidBuffer[i], 4);
+extern const unsigned char  TemplateAsf[];
+extern const unsigned char  TemplateBoot[];
+extern const unsigned char  TemplateBert[];
+extern const unsigned char  TemplateBgrt[];
+extern const unsigned char  TemplateCpep[];
+extern const unsigned char  TemplateCsrt[];
+extern const unsigned char  TemplateDbg2[];
+extern const unsigned char  TemplateDbgp[];
+extern const unsigned char  TemplateDmar[];
+extern const unsigned char  TemplateDrtm[];
+extern const unsigned char  TemplateEcdt[];
+extern const unsigned char  TemplateEinj[];
+extern const unsigned char  TemplateErst[];
+extern const unsigned char  TemplateFadt[];
+extern const unsigned char  TemplateFpdt[];
+extern const unsigned char  TemplateGtdt[];
+extern const unsigned char  TemplateHest[];
+extern const unsigned char  TemplateHmat[];
+extern const unsigned char  TemplateHpet[];
+extern const unsigned char  TemplateIort[];
+extern const unsigned char  TemplateIvrs[];
+extern const unsigned char  TemplateLpit[];
+extern const unsigned char  TemplateMadt[];
+extern const unsigned char  TemplateMcfg[];
+extern const unsigned char  TemplateMchi[];
+extern const unsigned char  TemplateMpst[];
+extern const unsigned char  TemplateMsct[];
+extern const unsigned char  TemplateMsdm[];
+extern const unsigned char  TemplateMtmr[];
+extern const unsigned char  TemplateNfit[];
+extern const unsigned char  TemplatePcct[];
+extern const unsigned char  TemplatePdtt[];
+extern const unsigned char  TemplatePmtt[];
+extern const unsigned char  TemplatePptt[];
+extern const unsigned char  TemplateRasf[];
+extern const unsigned char  TemplateRsdt[];
+extern const unsigned char  TemplateS3pt[];
+extern const unsigned char  TemplateSbst[];
+extern const unsigned char  TemplateSdei[];
+extern const unsigned char  TemplateSdev[];
+extern const unsigned char  TemplateSlic[];
+extern const unsigned char  TemplateSlit[];
+extern const unsigned char  TemplateSpcr[];
+extern const unsigned char  TemplateSpmi[];
+extern const unsigned char  TemplateSrat[];
+extern const unsigned char  TemplateStao[];
+extern const unsigned char  TemplateTcpa[];
+extern const unsigned char  TemplateTpm2[];
+extern const unsigned char  TemplateUefi[];
+extern const unsigned char  TemplateVrtc[];
+extern const unsigned char  TemplateWaet[];
+extern const unsigned char  TemplateWdat[];
+extern const unsigned char  TemplateWddt[];
+extern const unsigned char  TemplateWdrt[];
+extern const unsigned char  TemplateWpbt[];
+extern const unsigned char  TemplateWsmt[];
+extern const unsigned char  TemplateXenv[];
+extern const unsigned char  TemplateXsdt[];
 
-        OutString[AcpiGbl_MapToUuidOffset[i] + 1] =
-            AcpiUtHexToAsciiChar (UuidBuffer[i], 0);
-    }
 
-    /* Insert required hyphens (dashes) */
-
-    OutString[UUID_HYPHEN1_OFFSET] =
-    OutString[UUID_HYPHEN2_OFFSET] =
-    OutString[UUID_HYPHEN3_OFFSET] =
-    OutString[UUID_HYPHEN4_OFFSET] = '-';
-
-    OutString[UUID_STRING_LENGTH] = 0; /* Null terminate */
-    return (AE_OK);
-}
+#endif

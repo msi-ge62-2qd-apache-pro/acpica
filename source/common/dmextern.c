@@ -154,7 +154,7 @@
 #include "amlcode.h"
 #include "acnamesp.h"
 #include "acdisasm.h"
-#include "aslcompiler.h"
+#include "acappglobal.h"
 #include <stdio.h>
 #include <errno.h>
 
@@ -532,8 +532,7 @@ AcpiDmGetExternalsFromFile (
     {
         fprintf (stderr, "Could not open external reference file \"%s\"\n",
             Gbl_ExternalRefFilename);
-        AslAbort ();
-        return;
+        exit (1);
     }
 
     /* Each line defines a method */
