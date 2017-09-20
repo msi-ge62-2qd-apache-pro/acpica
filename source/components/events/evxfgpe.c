@@ -212,6 +212,16 @@ AcpiUpdateAllGpes (
 
 UnlockAndExit:
     (void) AcpiUtReleaseMutex (ACPI_MTX_EVENTS);
+
+    /*
+     * Poll GPEs to handle already triggered events.
+     * It is not sufficient to trigger edge-triggered GPE with specific
+     * GPE chips, software need to poll once after enabling.
+     */
+    if (AcpiGbl_AllGpesInitialized)
+    {
+        AcpiEvGpeDetect (AcpiGbl_GpeXruptListHead);
+    }
     return_ACPI_STATUS (Status);
 }
 
@@ -240,6 +250,7 @@ AcpiEnableGpe (
     ACPI_STATUS             Status = AE_BAD_PARAMETER;
     ACPI_GPE_EVENT_INFO     *GpeEventInfo;
     ACPI_CPU_FLAGS          Flags;
+    BOOLEAN                 PollGpes = FALSE;
 
 
     ACPI_FUNCTION_TRACE (AcpiEnableGpe);
@@ -259,6 +270,11 @@ AcpiEnableGpe (
             ACPI_GPE_DISPATCH_NONE)
         {
             Status = AcpiEvAddGpeReference (GpeEventInfo);
+            if (ACPI_SUCCESS (Status) &&
+                GpeEventInfo->RuntimeCount == 1)
+            {
+                PollGpes = TRUE;
+            }
         }
         else
         {
@@ -267,6 +283,16 @@ AcpiEnableGpe (
     }
 
     AcpiOsReleaseLock (AcpiGbl_GpeLock, Flags);
+
+    /*
+     * Poll GPEs to handle already triggered events.
+     * It is not sufficient to trigger edge-triggered GPE with specific
+     * GPE chips, software need to poll once after enabling.
+     */
+    if (PollGpes && AcpiGbl_AllGpesInitialized)
+    {
+        AcpiEvGpeDetect (AcpiGbl_GpeXruptListHead);
+    }
     return_ACPI_STATUS (Status);
 }
 
