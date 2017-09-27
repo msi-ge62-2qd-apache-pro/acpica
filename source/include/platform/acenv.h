@@ -179,12 +179,13 @@
 
 #if (defined ACPI_ASL_COMPILER) || \
     (defined ACPI_BIN_APP)      || \
+    (defined ACPI_DISASM_APP)   || \
     (defined ACPI_DUMP_APP)     || \
+    (defined ACPI_EXAMPLE_APP)  || \
     (defined ACPI_HELP_APP)     || \
     (defined ACPI_NAMES_APP)    || \
     (defined ACPI_SRC_APP)      || \
     (defined ACPI_XTRACT_APP)   || \
-    (defined ACPI_EXAMPLE_APP)  || \
     (defined ACPI_EFI_HELLO)
 #define ACPI_APPLICATION
 #define ACPI_SINGLE_THREADED
@@ -196,6 +197,16 @@
 #ifdef ACPI_ASL_COMPILER
 #define ACPI_DEBUG_OUTPUT
 #define ACPI_CONSTANT_EVAL_ONLY
+#define ACPI_LARGE_NAMESPACE_NODE
+#define ACPI_DATA_TABLE_DISASSEMBLY
+#define ACPI_32BIT_PHYSICAL_ADDRESS
+#define ACPI_DISASSEMBLER 1
+#endif
+
+/* standalone disassembler configuration */
+
+#ifdef ACPI_DISASM_APP
+#define ACPI_DEBUG_OUTPUT
 #define ACPI_LARGE_NAMESPACE_NODE
 #define ACPI_DATA_TABLE_DISASSEMBLY
 #define ACPI_32BIT_PHYSICAL_ADDRESS
