@@ -610,7 +610,7 @@
 /*
  * Macors used for the ASL-/ASL+ converter utility
  */
-#ifdef ACPI_ASL_COMPILER
+#if (defined ACPI_ASL_COMPILER && !defined ACPI_DISASM_APP)
 
 #define ASL_CV_LABEL_FILENODE(a)         CvLabelFileNode(a);
 #define ASL_CV_CAPTURE_COMMENTS_ONLY(a)   CvCaptureCommentsOnly (a);

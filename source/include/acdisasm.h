@@ -291,6 +291,15 @@ typedef
 ACPI_STATUS (*ACPI_CMTABLE_HANDLER) (
     void                    **PFieldList);
 
+#if defined ACPI_DISASM_APP
+typedef struct acpi_dmtable_data
+{
+    char                    *Signature;
+    ACPI_DMTABLE_INFO       *TableInfo;
+    ACPI_DMTABLE_HANDLER    TableHandler;
+
+} ACPI_DMTABLE_DATA;
+#else
 typedef struct acpi_dmtable_data
 {
     char                    *Signature;
@@ -300,6 +309,8 @@ typedef struct acpi_dmtable_data
     const unsigned char     *Template;
 
 } ACPI_DMTABLE_DATA;
+#endif
+
 
 
 typedef struct acpi_op_walk_info
