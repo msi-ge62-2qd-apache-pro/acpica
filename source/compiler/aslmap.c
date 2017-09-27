@@ -149,9 +149,14 @@
  *
  *****************************************************************************/
 
-#include "aslcompiler.h"
+#include "acpi.h"
+#include "accommon.h"
+#include "amlresrc.h"
 #include "amlcode.h"
 #include "acparser.h"
+#include "asldefine.h"
+#include "acappglobal.h"
+#include "acapps.h"
 
 
 #define _COMPONENT          ACPI_COMPILER

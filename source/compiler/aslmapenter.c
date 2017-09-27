@@ -152,7 +152,9 @@
 #include "acpi.h"
 #include "accommon.h"
 #include "acapps.h"
-#include "aslcompiler.h"
+#include "amlresrc.h"
+#include "asltypes.h"
+#include "acappglobal.h"
 
 /* This module used for application-level code only */
 
@@ -332,7 +334,7 @@ MpCreateGpioInfo (
      * sorted by both source device name and then the pin number. There is
      * one block per pin.
      */
-    Buffer = UtLocalCacheCalloc (sizeof (ACPI_GPIO_INFO));
+    Buffer = AcpiOsAllocateZeroed(sizeof (ACPI_GPIO_INFO));
     Info = ACPI_CAST_PTR (ACPI_GPIO_INFO, Buffer);
 
     NextGpio = Gbl_GpioList;
@@ -409,7 +411,7 @@ MpCreateSerialInfo (
      * Allocate a new info block and insert it into the global Serial list
      * sorted by both source device name and then the address.
      */
-    Buffer = UtLocalCacheCalloc (sizeof (ACPI_SERIAL_INFO));
+    Buffer = AcpiOsAllocateZeroed(sizeof (ACPI_SERIAL_INFO));
     Info = ACPI_CAST_PTR (ACPI_SERIAL_INFO, Buffer);
 
     NextSerial = Gbl_SerialList;
