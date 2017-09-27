@@ -188,9 +188,9 @@ ACPI_TABLE_DESC             LocalTables[1];
 ACPI_PARSE_OBJECT           *AcpiGbl_ParseOpRoot;
 
 
-/* Stubs for everything except ASL compiler */
+/* Stubs for everything except ASL compiler and standalone disassembler */
 
-#ifndef ACPI_ASL_COMPILER
+#if (!defined ACPI_ASL_COMPILER || (!defined ACPI_ASL_COMPILER && !defined ACPI_DISASM_APP))
 BOOLEAN
 AcpiDsIsResultUsed (
     ACPI_PARSE_OBJECT       *Op,
