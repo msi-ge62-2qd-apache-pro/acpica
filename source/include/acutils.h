@@ -202,7 +202,7 @@ extern const char                       *AcpiGbl_PtypDecode[];
  * any of the various ACPI errors and warnings do not appear in the output
  * files, for either the compiler or disassembler portions of the tool.
  */
-#ifdef ACPI_ASL_COMPILER
+#if (defined ACPI_ASL_COMPILER || defined ACPI_DISASM_APP)
 
 #include <stdio.h>
 
@@ -951,7 +951,7 @@ BOOLEAN
 AcpiUtIsPciRootBridge (
     char                    *Id);
 
-#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_NAMES_APP)
+#if (defined ACPI_ASL_COMPILER || defined ACPI_EXEC_APP || defined ACPI_NAMES_APP || defined ACPI_DISASM_APP)
 BOOLEAN
 AcpiUtIsAmlTable (
     ACPI_TABLE_HEADER       *Table);

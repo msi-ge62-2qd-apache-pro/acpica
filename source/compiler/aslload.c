@@ -153,6 +153,7 @@
 #include "amlcode.h"
 #include "acdispat.h"
 #include "acnamesp.h"
+#include "acapps.h"
 
 #include "aslcompiler.y.h"
 

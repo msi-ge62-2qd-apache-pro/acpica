@@ -303,7 +303,7 @@ AcpiUtGetExpectedReturnTypes (
  *
  ******************************************************************************/
 
-#if (defined ACPI_ASL_COMPILER || defined ACPI_HELP_APP)
+#if ((defined ACPI_ASL_COMPILER || defined ACPI_HELP_APP) && !defined ACPI_DISASM_APP)
 
 /* Local prototypes */
 

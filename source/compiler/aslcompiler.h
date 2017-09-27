@@ -156,6 +156,7 @@
 #include "accommon.h"
 #include "amlresrc.h"
 #include "acdebug.h"
+#include "acapps.h"
 
 /* Microsoft-specific */
 
