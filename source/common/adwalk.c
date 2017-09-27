@@ -162,13 +162,6 @@
 #define _COMPONENT          ACPI_TOOLS
         ACPI_MODULE_NAME    ("adwalk")
 
-/*
- * aslmap - opcode mappings and reserved method names
- */
-ACPI_OBJECT_TYPE
-AslMapNamedOpcodeToDataType (
-    UINT16                  Opcode);
-
 /* Local prototypes */
 
 static ACPI_STATUS

@@ -37,6 +37,7 @@ HEADERS = \
     $(wildcard $(ASL_COMPILER)/*.h)
 
 OBJECTS = \
+	$(OBJDIR)/aslmap.o\
 	$(OBJDIR)/aslmapenter.o\
 	$(OBJDIR)/aslstubs.o\
 	$(OBJDIR)/admain.o\

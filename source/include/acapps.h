@@ -336,4 +336,11 @@ AdWriteTable (
     char                    *TableName,
     char                    *OemTableId);
 
+/*
+ * aslmap - opcode mappings and reserved method names
+ */
+ACPI_OBJECT_TYPE
+AslMapNamedOpcodeToDataType (
+    UINT16                  Opcode);
+
 #endif /* _ACAPPS */
