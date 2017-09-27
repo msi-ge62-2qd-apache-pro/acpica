@@ -172,7 +172,7 @@
  * Newer versions do emit the external, so we don't need to do it.
  */
 #ifndef ASLCOMPILER_ASLCOMPILERPARSE_H
-extern int                  AslCompilerdebug;
+ASL_EXTERN int                  AslCompilerdebug;
 #endif
 
 #ifdef _DECLARE_GLOBALS
