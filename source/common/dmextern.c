@@ -1409,18 +1409,27 @@ AcpiDmEmitExternals (
     {
         if (!(AcpiGbl_ExternalList->Flags & ACPI_EXT_EXTERNAL_EMITTED))
         {
+            //REVIEW_REHABMAN: not really used anymore, but original intent of flag
+            AcpiGbl_ExternalList->Flags |= ACPI_EXT_EXTERNAL_EMITTED;
+
             AcpiOsPrintf ("    External (%s%s)",
                 AcpiGbl_ExternalList->Path,
                 AcpiDmGetObjectTypeName (AcpiGbl_ExternalList->Type));
 
-            /* Check for "unresolved" method reference */
+            /* Check for "unresolved" references */
 
-            if ((AcpiGbl_ExternalList->Type == ACPI_TYPE_METHOD) &&
-                (!(AcpiGbl_ExternalList->Flags & ACPI_EXT_RESOLVED_REFERENCE)))
+            if (!(AcpiGbl_ExternalList->Flags & ACPI_EXT_RESOLVED_REFERENCE))
             {
-                AcpiOsPrintf ("    // Warning: Unknown method, "
-                    "guessing %u arguments",
-                    AcpiGbl_ExternalList->Value);
+                if (AcpiGbl_ExternalList->Type == ACPI_TYPE_METHOD)
+                {
+                    AcpiOsPrintf ("    // Warning: Unknown method, "
+                        "guessing %u arguments",
+                        AcpiGbl_ExternalList->Value);
+                }
+                else
+                {
+                    AcpiOsPrintf ("    // Warning: Unknown object");
+                }
             }
 
             /* Check for external from a external references file */
@@ -1429,11 +1438,13 @@ AcpiDmEmitExternals (
             {
                 if (AcpiGbl_ExternalList->Type == ACPI_TYPE_METHOD)
                 {
-                    AcpiOsPrintf ("    // %u Arguments",
+                    AcpiOsPrintf ("    // Imported: %u Arguments",
                         AcpiGbl_ExternalList->Value);
                 }
-
-                AcpiOsPrintf ("    // From external reference file");
+                else
+                {
+                    AcpiOsPrintf ("    // Imported");
+                }
             }
 
             /* This is the normal external case */
@@ -1446,6 +1457,14 @@ AcpiDmEmitExternals (
                 {
                     AcpiOsPrintf ("    // %u Arguments",
                         AcpiGbl_ExternalList->Value);
+
+                    if (AcpiGbl_ExternalList->Flags & ACPI_EXT_ORIGIN_FROM_OPCODE)
+                        AcpiOsPrintf(" (from opcode)");
+                }
+                else
+                {
+                    if (AcpiGbl_ExternalList->Flags & ACPI_EXT_ORIGIN_FROM_OPCODE)
+                        AcpiOsPrintf("    // (from opcode)");
                 }
             }
 

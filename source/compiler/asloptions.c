@@ -176,7 +176,7 @@ AslDoResponseFile (
 
 
 #define ASL_TOKEN_SEPARATORS    " \t\n"
-#define ASL_SUPPORTED_OPTIONS   "@:a:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^q^r:s|t|T+G^v^w|x:z"
+#define ASL_SUPPORTED_OPTIONS   "@:a:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^q^R:r:s|t|T+G^v^w|x:z"
 
 
 /*******************************************************************************
@@ -417,24 +417,26 @@ AslDoOptions (
         case '^':
 
             /* Get the required argument */
-
+//REVIEW_REHABMAN: this is wrong: breaks common use (similar to -da below)
+#if 0
             if (AcpiGetoptArgument (argc, argv))
             {
                 return (-1);
             }
-
+#endif
             Gbl_DoCompile = FALSE;
             break;
 
         case 'a':
 
             /* Get the required argument */
-
+//REVIEW_REHABMAN: this is wrong: breaks common use (similar to -d^ above)
+#if 0
             if (AcpiGetoptArgument (argc, argv))
             {
                 return (-1);
             }
-
+#endif
             Gbl_DoCompile = FALSE;
             Gbl_DisassembleAll = TRUE;
             break;
@@ -787,6 +789,20 @@ AslDoOptions (
         Gbl_OutputFilenamePrefix = AcpiGbl_Optarg;
         UtConvertBackslashes (Gbl_OutputFilenamePrefix);
         Gbl_UseDefaultAmlFilename = FALSE;
+        break;
+
+    case 'R':   /* RehabMan options */
+        switch (AcpiGbl_Optarg[0])
+        {
+            case 'd':
+                /* Disable RehabMan hacks */
+                Gbl_RehabManHacks = FALSE;
+                break;
+
+            default:
+                printf ("Unknown option: -R%s\n", AcpiGbl_Optarg);
+                return (-1);
+        }
         break;
 
     case 'q':   /* ASL/ASl+ converter: compile only and leave badaml. */

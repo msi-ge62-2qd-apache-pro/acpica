@@ -214,7 +214,7 @@ AcpiDmDisasmByteList (
     UINT32                  i;
     UINT32                  j;
     UINT32                  CurrentIndex;
-    UINT8                   BufChar;
+/*    UINT8                   BufChar; */
 
 
     if (!ByteCount)
@@ -259,8 +259,10 @@ AcpiDmDisasmByteList (
             }
         }
 
+        /*REVIEW_REHAB: disable this for now as it causes problems for MaciASL */
+#if 0
         /* Dump the ASCII equivalents within a comment */
-
+        
         AcpiOsPrintf ("  // ");
         for (j = 0; j < ACPI_BUFFER_BYTES_PER_LINE; j++)
         {
@@ -269,7 +271,7 @@ AcpiDmDisasmByteList (
             {
                 break;
             }
-
+            
             BufChar = ByteData[CurrentIndex];
             if (isprint (BufChar))
             {
@@ -280,7 +282,8 @@ AcpiDmDisasmByteList (
                 AcpiOsPrintf (".");
             }
         }
-
+        
+#endif
         /* Finished with this line */
 
         AcpiOsPrintf ("\n");
@@ -539,8 +542,10 @@ AcpiDmIsUnicodeBuffer (
      * Unicode string must have an even number of bytes and last
      * word must be zero
      */
+    //REVIEW_REHABMAN: changed ByteCount < 4 to ByteCount <= 4
+    // ... so that 4 byte buffers will not be disassembled as Unicode
     if ((!ByteCount)     ||
-         (ByteCount < 4) ||
+         (ByteCount <= 4) ||
          (ByteCount & 1) ||
         ((UINT16 *) (void *) ByteData)[WordCount - 1] != 0)
     {
@@ -674,6 +679,8 @@ AcpiDmIsPldBuffer (
     UINT64                  BufferSize;
     UINT64                  InitializerSize;
 
+    //REVIEW_REHAB: disable special case for _PLD (ToPLD is problematic)
+    return 0;
 
     /*
      * Get the BufferSize argument - Buffer(BufferSize)
@@ -1159,7 +1166,10 @@ AcpiDmDecompressEisaId (
     UINT32                  EncodedId)
 {
     char                    IdBuffer[ACPI_EISAID_STRING_SIZE];
+/*REVIEW_REHAB: disable this for now as it causes issues with MaciASL...*/
+#if 0
     const AH_DEVICE_ID      *Info;
+#endif
 
 
     /* Convert EISAID to a string an emit the statement */
@@ -1168,10 +1178,12 @@ AcpiDmDecompressEisaId (
     AcpiOsPrintf ("EisaId (\"%s\")", IdBuffer);
 
     /* If we know about the ID, emit the description */
-
+/*REVIEW_REHAB: disable this for now as it causes issues with MaciASL...*/
+#if 0
     Info = AcpiAhMatchHardwareId (IdBuffer);
     if (Info)
     {
         AcpiOsPrintf (" /* %s */", Info->Description);
     }
+#endif
 }

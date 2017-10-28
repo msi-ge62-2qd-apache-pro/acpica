@@ -317,7 +317,7 @@ AnCheckId (
         {
             if (!isupper ((int) Op->Asl.Value.String[i]))
             {
-                AslError (ASL_ERROR, ASL_MSG_UPPER_CASE,
+                AslError (Gbl_RehabManHacks ? ASL_WARNING : ASL_ERROR, ASL_MSG_UPPER_CASE,
                     Op, &Op->Asl.Value.String[i]);
                 return;
             }

@@ -246,7 +246,9 @@ AcpiDmDisplayTargetPathname (
 
     if (!PrevOp->Asl.Node)
     {
+#if 0
         AcpiOsPrintf (" /* External reference */");
+#endif
         return;
     }
 
@@ -258,7 +260,7 @@ AcpiDmDisplayTargetPathname (
     }
 
     /* Now: we can get the full pathname */
-
+#if 0
     Pathname = AcpiNsGetExternalPathname (PrevOp->Asl.Node);
     if (!Pathname)
     {
@@ -267,6 +269,7 @@ AcpiDmDisplayTargetPathname (
 
     AcpiOsPrintf (" /* %s */", Pathname);
     ACPI_FREE (Pathname);
+#endif
 }
 
 
@@ -325,8 +328,9 @@ AcpiDmNotifyDescription (
     {
         Type = Node->Type;
     }
-
+#if 0
     AcpiOsPrintf (" // %s", AcpiUtGetNotifyName (NotifyValue, Type));
+#endif
 }
 
 
@@ -917,12 +921,13 @@ AcpiDmDisassembleOneOp (
         if (Op->Common.DisasmOpcode == ACPI_DASM_HID_STRING)
         {
             /* If we know about the ID, emit the description */
-
+#if 0
             IdInfo = AcpiAhMatchHardwareId (Op->Common.Value.String);
             if (IdInfo)
             {
                 AcpiOsPrintf (" /* %s */", IdInfo->Description);
             }
+#endif
         }
         break;
 

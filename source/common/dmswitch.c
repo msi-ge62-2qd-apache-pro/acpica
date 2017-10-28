@@ -359,6 +359,8 @@ AcpiDmIsSwitchBlock (
     ACPI_PARSE_OBJECT       *OneOp;
     ACPI_PARSE_OBJECT       *StoreOp;
     ACPI_PARSE_OBJECT       *NamePathOp;
+    ACPI_PARSE_OBJECT       *FirstIfOp;
+    ACPI_PARSE_OBJECT       *BreakOp;
     ACPI_PARSE_OBJECT       *PredicateOp;
     ACPI_PARSE_OBJECT       *CurrentOp;
     ACPI_PARSE_OBJECT       *TempOp;
@@ -394,9 +396,37 @@ AcpiDmIsSwitchBlock (
         return (FALSE);
     }
 
-    *Temp = (char *) (NamePathOp->Common.Value.Name);
+    /* Check for If Statment */
+
+    FirstIfOp = StoreOp->Common.Next;
+    if (!(FirstIfOp &&
+          FirstIfOp->Common.AmlOpcode == AML_IF_OP))
+    {
+        return (FALSE);
+    }
+
+    /* Check for Break Statment */
+
+    BreakOp = FirstIfOp->Common.Next;
+    if (!BreakOp)
+    {
+        return (FALSE);
+    }
+
+    if (BreakOp->Common.AmlOpcode == AML_ELSE_OP)
+    {
+        BreakOp = BreakOp->Common.Next;
+    }
+
+    if (!(BreakOp &&
+          BreakOp->Common.AmlOpcode == AML_BREAK_OP))
+    {
+        return (FALSE);
+    }
 
     /* This is a Switch/Case control block */
+
+    *Temp = (char *) (NamePathOp->Common.Value.Name);
 
     /* Ignore the One Op Predicate */
 
@@ -421,7 +451,7 @@ AcpiDmIsSwitchBlock (
 
     /* Remaining opcodes are the Case statements (If/ElseIf's) */
 
-    CurrentOp = StoreOp->Common.Next;
+    CurrentOp = FirstIfOp;
     while (AcpiDmIsCaseBlock (CurrentOp))
     {
         /* Block is a Case structure */
@@ -537,20 +567,9 @@ AcpiDmIsSwitchBlock (
         CurrentOp->Common.DisasmOpcode = ACPI_DASM_DEFAULT;
     }
 
-    /*
-     * From the first If advance to the Break op. It's possible to
-     * have an Else (Default) op here when there is only one Case
-     * statement, so check for it.
-     */
-    CurrentOp = StoreOp->Common.Next->Common.Next;
-    if (CurrentOp->Common.AmlOpcode == AML_ELSE_OP)
-    {
-        CurrentOp = CurrentOp->Common.Next;
-    }
-
     /* Ignore the Break Op */
 
-    CurrentOp->Common.DisasmFlags |= ACPI_PARSEOP_IGNORE;
+    BreakOp->Common.DisasmFlags |= ACPI_PARSEOP_IGNORE;
     return (TRUE);
 }
 

@@ -278,6 +278,9 @@ Usage (
     ACPI_OPTION ("-oc",             "Display compile times and statistics");
     ACPI_OPTION ("-x <level>",      "Set debug level for trace output");
     ACPI_OPTION ("-z",              "Do not insert new compiler ID for DataTables");
+
+    printf ("\nRehabMan Options:\n");
+    ACPI_OPTION ("-Rd",             "Disable RehabMan hacks");
 }
 
 

@@ -699,7 +699,7 @@ AcpiDmDescendingOp (
         Info->LastLevel = Level;
         Info->Count = 0;
     }
-
+#if 0 //REVIEW: rehabman change... line breaks just make patching more difficult
     /*
      * This is an inexpensive mechanism to try and keep lines from getting
      * too long. When the limit is hit, start a new line at the previous
@@ -713,7 +713,7 @@ AcpiDmDescendingOp (
         AcpiOsPrintf ("\n");
         AcpiDmIndent (Info->LastLevel + 1);
     }
-
+#endif
     /* If ASL+ is enabled, check for a C-style operator */
 
     if (AcpiDmCheckForSymbolicOpcode (Op, Info))

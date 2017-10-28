@@ -323,6 +323,8 @@ ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_DoExternalsInPlace, FAL
 ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_DoAslConversion, FALSE);
 ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_OptimizeTrivialParseNodes, TRUE);
 
+// special hacks for RehabMan fork...
+ASL_EXTERN BOOLEAN                  ASL_INIT_GLOBAL (Gbl_RehabManHacks, TRUE);
 
 #define HEX_OUTPUT_NONE             0
 #define HEX_OUTPUT_C                1

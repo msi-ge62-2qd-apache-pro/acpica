@@ -317,7 +317,7 @@ LdLoadFieldElements (
                 }
                 else if (Status == AE_ALREADY_EXISTS &&
                     (Node->Flags & ANOBJ_IS_EXTERNAL) &&
-                    Node->OwnerId != WalkState->OwnerId)
+                    (Node->OwnerId != WalkState->OwnerId || Gbl_RehabManHacks))
                 {
                     Node->Type = (UINT8) ACPI_TYPE_LOCAL_REGION_FIELD;
                 }
@@ -694,7 +694,7 @@ LdNamespace1Begin (
                 {
                     /* Not in a control method, error */
 
-                    AslError (ASL_ERROR, ASL_MSG_CROSS_TABLE_SCOPE, Op, NULL);
+                    AslError (Gbl_RehabManHacks ? ASL_WARNING : ASL_ERROR, ASL_MSG_CROSS_TABLE_SCOPE, Op, NULL);
                 }
             }
         }
@@ -805,6 +805,16 @@ LdNamespace1Begin (
             else if ((Node->Flags & ANOBJ_IS_EXTERNAL) &&
                      (Op->Asl.ParseOpcode != PARSEOP_EXTERNAL))
             {
+                if (Gbl_RehabManHacks && Node->Type != ACPI_TYPE_ANY && Node->Type != ObjectType
+                    // this exception for External(CPU0, DeviceObj), followed by Processor(CPU0,...)
+                    && !(ObjectType == ACPI_TYPE_PROCESSOR && Node->Type == ACPI_TYPE_DEVICE)
+                    && !(ObjectType == ACPI_TYPE_THERMAL && Node->Type == ACPI_TYPE_DEVICE))
+                {
+                    sprintf (MsgBuffer, "%s [%s]", Op->Asl.ExternalName, AcpiUtGetTypeName (Node->Type));
+                    AslError (ASL_ERROR, ASL_MSG_NAME_ALREADY_HAS_TYPE, Op, MsgBuffer);
+                    //REVIEW_REHABMAN: we can't just ignore it here, as there is no good way to avoid opening the scope...
+                    //return_ACPI_STATUS (AE_OK);
+                }
                 /*
                  * Allow one create on an object or segment that was
                  * previously declared External only if WalkState->OwnerId and
@@ -827,7 +837,8 @@ LdNamespace1Begin (
 
                 Status = AE_OK;
 
-                if (Node->OwnerId == WalkState->OwnerId &&
+                if (!Gbl_RehabManHacks &&
+                    Node->OwnerId == WalkState->OwnerId &&
                     !(Node->Flags & IMPLICIT_EXTERNAL))
                 {
                     AslDualParseOpError (ASL_ERROR, ASL_MSG_NAME_EXISTS, Op,
@@ -851,7 +862,17 @@ LdNamespace1Begin (
                  */
                 Status = AE_OK;
 
-                if (Node->OwnerId == WalkState->OwnerId)
+                if (Gbl_RehabManHacks && Node->Type != ActualObjectType)
+                {
+                    if (ActualObjectType != ACPI_TYPE_ANY)
+                    {
+                        sprintf (MsgBuffer, "%s [%s]", Op->Asl.ExternalName, AcpiUtGetTypeName (Node->Type));
+                        AslError (ASL_ERROR, ASL_MSG_NAME_ALREADY_HAS_TYPE, Op, MsgBuffer);
+                    }
+                    return_ACPI_STATUS (Status);
+                }
+
+                if (!Gbl_RehabManHacks && Node->OwnerId == WalkState->OwnerId)
                 {
                     AslDualParseOpError (ASL_ERROR, ASL_MSG_NAME_EXISTS, Op,
                         Op->Asl.ExternalName, ASL_MSG_FOUND_HERE, Node->Op,
@@ -893,7 +914,17 @@ LdNamespace1Begin (
                  */
                 Node->OwnerId = WalkState->OwnerId;
 
-                if (AcpiNsOpensScope (ActualObjectType))
+                if (Gbl_RehabManHacks && Node->Type != ACPI_TYPE_ANY && Node->Type != ActualObjectType)
+                {
+                    if (ActualObjectType != ACPI_TYPE_ANY)
+                    {
+                        sprintf (MsgBuffer, "%s [%s]", Op->Asl.ExternalName, AcpiUtGetTypeName (Node->Type));
+                        AslError (ASL_ERROR, ASL_MSG_NAME_ALREADY_HAS_TYPE, Op, MsgBuffer);
+                    }
+                    return_ACPI_STATUS (AE_OK);
+                }
+                else if (AcpiNsOpensScope (ActualObjectType) ||
+                         (Gbl_RehabManHacks && Node->Type == ACPI_TYPE_ANY) || Node->Type == ActualObjectType)
                 {
                     Node->Type = (UINT8) ActualObjectType;
                     Status = AE_OK;

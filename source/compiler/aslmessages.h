@@ -356,6 +356,9 @@ typedef enum
     ASL_MSG_FOUND_HERE,
     ASL_MSG_ILLEGAL_RECURSION,
 
+//REVIEW_REHABMAN: added
+    ASL_MSG_NAME_ALREADY_HAS_TYPE,
+
     /* These messages are used by the Data Table compiler only */
 
     ASL_MSG_BUFFER_ELEMENT = ASL_MSG_TABLE_COMPILER,
