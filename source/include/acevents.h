@@ -363,6 +363,18 @@ AcpiEvInstallSpaceHandler (
     ACPI_ADR_SPACE_SETUP    Setup,
     void                    *Context);
 
+void
+AcpiEvGetSpaceHandler (
+    ACPI_OPERAND_OBJECT     *HandlerDesc);
+
+void
+AcpiEvPutSpaceHandler (
+    ACPI_OPERAND_OBJECT     *HandlerDesc);
+
+UINT32
+AcpiEvSpaceHandlerCount (
+    ACPI_OPERAND_OBJECT     *HandlerDesc);
+
 
 /*
  * evregion - Operation region support
