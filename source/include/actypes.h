@@ -460,6 +460,9 @@ typedef UINT64                          ACPI_PHYSICAL_ADDRESS;
 #endif
 
 
+/* This is just an example */
+/* This is just another example */
+
 /*******************************************************************************
  *
  * Configuration
