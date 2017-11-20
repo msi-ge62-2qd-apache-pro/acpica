@@ -25,7 +25,6 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /*
  * Objects of common use to provide the common control of test run,
  * provide the uniform structure of all run-time tests.
@@ -37,83 +36,80 @@
  * - test (or root method) simplest test unit supplied with the
  *         status line and evaluated as [PASS|FAIL|BLOCKED|SKIPPED].
  */
+    Name (Z062, 0x3E)
+    Name (FF32, 0xFFFFFFFF)          /* -1, 32-bit */
+    Name (FF64, Ones)                /* -1, 64-bit */
+    /* Test execution trace */
 
-Name(z062, 62)
+    Name (TRCF, 0x00)            /* Trace enabling flag */
+    Name (TRCH, "ASLTS")      /* Head of trace message */
+    Name (STST, "STST")   /* Head of summary status message of test run */
+    Name (CTST, "CTST")   /* Head of curent status message of test run */
+    Name (PR01, 0x01)            /* Printing starts of sub-tests */
+    Name (PR02, 0x01)            /* More detailed printing */
+    /* Start time (Timer-time) of running test */
 
-Name(ff32, 0xffffffff)          // -1, 32-bit
-Name(ff64, Ones)                // -1, 64-bit
+    Name (TMT0, 0x00)
+    /* Flag of multi-threading mode */
 
-// Test execution trace
+    Name (MTHR, 0x00)
+    /* Set the multi-threading mode flag */
 
-Name(TRCF, 0)            // Trace enabling flag
-Name(TRCH, "ASLTS")      // Head of trace message
-Name(STST, "STST")	 // Head of summary status message of test run
-Name(CTST, "CTST")	 // Head of curent status message of test run
-
-Name(pr01, 1)            // Printing starts of sub-tests
-Name(pr02, 1)            // More detailed printing
-
-// Start time (Timer-time) of running test
-Name(tmt0, 0)
-
-// Flag of multi-threading mode
-Name(MTHR, 0)
-
-/* Set the multi-threading mode flag */
-Method(SET3, 1)
+    Method (SET3, 1, NotSerialized)
 {
-	Store(arg0, MTHR)
+        MTHR = Arg0
 }
 
-// From Integer arithmetic
-Name(c000, 10)
-Name(c001, 5)
+    /* From Integer arithmetic */
 
-// From Logical operators
-Name(c002, 13)
-Name(c003, 12)
-Name(c004, 6)
-Name(c005, 4)
-Name(c006, 31)
-Name(c007, 51)
+    Name (C000, 0x0A)
+    Name (C001, 0x05)
+    /* From Logical operators */
 
-// Types, as returned by ObjectType
-Name(c008, 0)	// Uninitialized
-Name(c009, 1)	// Integer
-Name(c00a, 2)	// String
-Name(c00b, 3)	// Buffer
-Name(c00c, 4)	// Package
-Name(c00d, 5)	// Field Unit
-Name(c00e, 6)	// Device
-Name(c00f, 7)	// Event
-Name(c010, 8)	// Method
-Name(c011, 9)	// Mutex
-Name(c012, 10)	// Operation Region
-Name(c013, 11)	// Power Resource
-Name(c014, 12)	// Processor
-Name(c015, 13)	// Thermal Zone
-Name(c016, 14)	// Buffer Field
-Name(c017, 15)	// DDB Handle
-Name(c018, 16)	// Debug Object
-Name(c019, 17)	// LOCAL_REGION_FIELD
-Name(c01a, 18)	// LOCAL_BANK_FIELD
-Name(c01b, 19)	// LOCAL_INDEX_FIELD
-Name(c01c, 20)	// LOCAL_REFERENCE
-Name(c01d, 21)	// LOCAL_ALIAS
-Name(c01e, 22)	// LOCAL_METHOD_ALIAS
-Name(c01f, 23)	// LOCAL_NOTIFY
-Name(c020, 24)	// LOCAL_ADDRESS_HANDLER
-Name(c021, 25)	// LOCAL_RESOURCE
-Name(c022, 26)	// LOCAL_RESOURCE_FIELD
-Name(c023, 27)	// LOCAL_SCOPE
-Name(c024, 28)	// LOCAL_EXTRA
-Name(c025, 29)	// LOCAL_DATA
-Name(c027, 30)	// Number of different types
+    Name (C002, 0x0D)
+    Name (C003, 0x0C)
+    Name (C004, 0x06)
+    Name (C005, 0x04)
+    Name (C006, 0x1F)
+    Name (C007, 0x33)
+    /* Types, as returned by ObjectType */
 
-Name(c028, 0)	// Reserved (first)
+    Name (C008, 0x00)   /* Uninitialized */
+    Name (C009, 0x01)   /* Integer */
+    Name (C00A, 0x02)   /* String */
+    Name (C00B, 0x03)   /* Buffer */
+    Name (C00C, 0x04)   /* Package */
+    Name (C00D, 0x05)   /* Field Unit */
+    Name (C00E, 0x06)   /* Device */
+    Name (C00F, 0x07)   /* Event */
+    Name (C010, 0x08)   /* Method */
+    Name (C011, 0x09)   /* Mutex */
+    Name (C012, 0x0A)  /* Operation Region */
+    Name (C013, 0x0B)  /* Power Resource */
+    Name (C014, 0x0C)  /* Processor */
+    Name (C015, 0x0D)  /* Thermal Zone */
+    Name (C016, 0x0E)  /* Buffer Field */
+    Name (C017, 0x0F)  /* DDB Handle */
+    Name (C018, 0x10)  /* Debug Object */
+    Name (C019, 0x11)  /* LOCAL_REGION_FIELD */
+    Name (C01A, 0x12)  /* LOCAL_BANK_FIELD */
+    Name (C01B, 0x13)  /* LOCAL_INDEX_FIELD */
+    Name (C01C, 0x14)  /* LOCAL_REFERENCE */
+    Name (C01D, 0x15)  /* LOCAL_ALIAS */
+    Name (C01E, 0x16)  /* LOCAL_METHOD_ALIAS */
+    Name (C01F, 0x17)  /* LOCAL_NOTIFY */
+    Name (C020, 0x18)  /* LOCAL_ADDRESS_HANDLER */
+    Name (C021, 0x19)  /* LOCAL_RESOURCE */
+    Name (C022, 0x1A)  /* LOCAL_RESOURCE_FIELD */
+    Name (C023, 0x1B)  /* LOCAL_SCOPE */
+    Name (C024, 0x1C)  /* LOCAL_EXTRA */
+    Name (C025, 0x1D)  /* LOCAL_DATA */
+    Name (C027, 0x1E)  /* Number of different types */
+    Name (C028, 0x00)   /* Reserved (first) */
+    /* The name of type Package */
 
-// The name of type Package
-Name(NMTP, Package() {
+    Name (NMTP, Package (0x20)
+    {
 	"Uninitialized",
 	"Integer",
 	"String",
@@ -145,32 +141,30 @@ Name(NMTP, Package() {
 	"LOCAL_EXTRA",
 	"LOCAL_DATA",
 	"--",
-	"--"})
+        "--"
+    })
+    /* Global variables for an arbitrary use inside the particular Run-methods */
 
-// Global variables for an arbitrary use inside the particular Run-methods
-Name(c080, 0)
-Name(c081, 0)
-Name(c082, 0)
-Name(c083, 0)
-Name(c084, 0)
-Name(c085, 0)
-Name(c086, 0)
-Name(c087, 0)
-Name(c088, 0)
-Name(c089, 0)
-Name(c08a, 0)
-Name(c08b, 0)
-Name(c08c, 7900000) // used in operand tests (801 - 2 msec)
-
+    Name (C080, 0x00)
+    Name (C081, 0x00)
+    Name (C082, 0x00)
+    Name (C083, 0x00)
+    Name (C084, 0x00)
+    Name (C085, 0x00)
+    Name (C086, 0x00)
+    Name (C087, 0x00)
+    Name (C088, 0x00)
+    Name (C089, 0x00)
+    Name (C08A, 0x00)
+    Name (C08B, 0x00)
+    Name (C08C, 0x00788B60) /* used in operand tests (801 - 2 msec) */
 /*
  * Flag:
  *    non-zero - prohibits non-precise opcode exceptions
  *               (one particular opcode of exception is verified).
  *    0 - only presence of some exception(s) is verified.
  */
-Name(EXCV, 0)
-
-
+    Name (EXCV, 0x00)
 /*
  * An "absolute index of file reporting error" used for reporting errors
  * from the bug-demo files (only!). It is the same for all the bug-demo files
@@ -182,19 +176,16 @@ Name(EXCV, 0)
  * (inside the file)" corresponding to the same bug should differ through
  * all files of that bug.
  */
-Name(zFFF, 0x7FF)
-
+    Name (ZFFF, 0x07FF)
 /*
  * Flag: 0 - 32, 1 - 64
  */
-Name(F64, 0)
-
+    Name (F64, 0x00)
 /*
  * Byte and character size of Integer
  */
-Name(ISZ0, 0)
-Name(ISZC, 0)
-
+    Name (ISZ0, 0x00)
+    Name (ISZC, 0x00)
 /*
  * The tests execution trace.
  *
@@ -205,30 +196,27 @@ Name(ISZC, 0)
  *        root Methods run results.
  * RMRC - current number of root Methods runs
  */
-Name(ETR0, 1200)
-Name(ETR1, 400)
+    Name (ETR0, 0x04B0)
+    Name (ETR1, 0x0190)
 Name(ERRP, Package(ETR0) {})
 Name(RP0P, Package(ETR0) {})
-Name(RMRC, 0)
-
+    Name (RMRC, 0x00)
 /*
  * Errors handling
  * (ERR0 & ERR2) overwrite (arg3 & arg4) of err()
  * (but there is no remained ArgX for ERR1 in err()).
  */
-Name(ERRS, 0)	// Errors counter
-Name(ERRB, 0)	// Error opcode base
-Name(ERR0, 0)	// Absolute index of file initiating the checking
-Name(ERR1, 0)	// Name of Method initiating the checking
-Name(ERR2, 0)	// Index of checking
-Name(ERR3, 0)	// Current indicator of errors
-Name(ERR4, 0)	// Full print out of ERRORS SUMMARY
-Name(ERR5, 0)	// Used to calculate the number of errors of root Method
-Name(ERR6, 0)	// The number of failed root Methods (tests)
-Name(ERR7, 0)	// The number of errors detected during the loading stage
-
-Name(FNAM, 0)   // Test filename
-
+    Name (ERRS, 0x00)   /* Errors counter */
+    Name (ERRB, 0x00)   /* Error opcode base */
+    Name (ERR0, 0x00)   /* Absolute index of file initiating the checking */
+    Name (ERR1, 0x00)   /* Name of Method initiating the checking */
+    Name (ERR2, 0x00)   /* Index of checking */
+    Name (ERR3, 0x00)   /* Current indicator of errors */
+    Name (ERR4, 0x00)   /* Full print out of ERRORS SUMMARY */
+    Name (ERR5, 0x00)   /* Used to calculate the number of errors of root Method */
+    Name (ERR6, 0x00)   /* The number of failed root Methods (tests) */
+    Name (ERR7, 0x00)   /* The number of errors detected during the loading stage */
+    Name (FNAM, 0x00)   /* Test filename */
 /*
  * Set parameters of current checking
  *
@@ -271,58 +259,68 @@ Name(FNAM, 0)   // Test filename
  * not exact address of error but only hints where
  * to seek the actual source Method of error.
  */
-Method(SET0, 3) {
-	if (ERR0) {
-		err("SET0", z062, __LINE__, 0, 0, ERR0, 0)
-	} else {
-		CopyObject(arg0, ERR0)
-		CopyObject(arg1, ERR1)
-		CopyObject(arg2, ERR2)
+    Method (SET0, 3, NotSerialized)
+    {
+        If (ERR0)
+        {
+            ERR ("SET0", Z062, 0x0114, 0x00, 0x00, ERR0, 0x00)
+        }
+        Else
+        {
+            CopyObject (Arg0, ERR0) /* \ERR0 */
+            CopyObject (Arg1, ERR1) /* \ERR1 */
+            CopyObject (Arg2, ERR2) /* \ERR2 */
 	}
 }
 
-// Reset parameters of current checking
-Method(RST0) {
-	CopyObject(0, ERR0)
-	CopyObject(0, ERR1)
-	CopyObject(0, ERR2)
-	CopyObject(0, FNAM)
+    /* Reset parameters of current checking */
+
+    Method (RST0, 0, NotSerialized)
+    {
+        CopyObject (0x00, ERR0) /* \ERR0 */
+        CopyObject (0x00, ERR1) /* \ERR1 */
+        CopyObject (0x00, ERR2) /* \ERR2 */
+        CopyObject (0x00, FNAM) /* \FNAM */
 }
 
-// Reset current indicator of errors
-Method(RST2) {
-	Store(0, ERR3)
+    /* Reset current indicator of errors */
+
+    Method (RST2, 0, NotSerialized)
+    {
+        ERR3 = 0x00
 }
 
-// Get current indicator of errors
-Method(GET2) {
-	Return (ERR3)
+    /* Get current indicator of errors */
+
+    Method (GET2, 0, NotSerialized)
+    {
+        Return (ERR3) /* \ERR3 */
 }
 
-// Collections of tests
-Name(TCLA, 0)	// compilation
-Name(TCLF, 1)	// functional
-Name(TCLC, 2)	// complex
-Name(TCLE, 3)	// exceptions
-Name(TCLD, 4)	// bug-demo (bdemo)
-Name(TCLS, 5)	// service
-Name(TCLM, 6)	// mt
-Name(TCLT, 7)	// Identity2MS
-Name(TCLI, 8)	// implementation dependent
-Name(MAXC, 8)	// equal to last maximal
+    /* Collections of tests */
 
-// Current index of tests collection
-Name(TCLL, 0)
+    Name (TCLA, 0x00)   /* compilation */
+    Name (TCLF, 0x01)   /* functional */
+    Name (TCLC, 0x02)   /* complex */
+    Name (TCLE, 0x03)   /* exceptions */
+    Name (TCLD, 0x04)   /* bug-demo (bdemo) */
+    Name (TCLS, 0x05)   /* service */
+    Name (TCLM, 0x06)   /* mt */
+    Name (TCLT, 0x07)   /* Identity2MS */
+    Name (TCLI, 0x08)   /* implementation dependent */
+    Name (MAXC, 0x08)   /* equal to last maximal */
+    /* Current index of tests collection */
 
-// Index of current test inside the collection
+    Name (TCLL, 0x00)
+    /* Index of current test inside the collection */
+
 Name(TIND, 0x12345678)
+    /* Name of test */
 
-// Name of test
 Name(TSNM, "NAME_OF_TEST")
+    /* Name of root method */
 
-// Name of root method
 Name(NRMT, "")
-
 /*
  * Flag, execution of root-method was skipped.
  *
@@ -336,8 +334,7 @@ Name(NRMT, "")
  * 32-bit mode, dont run it but only report the status of
  * test as skipped.
  */
-Name(FLG5, 0)
-
+    Name (FLG5, 0x00)
 /*
  * Flag, execution of root-method was blocked.
  *
@@ -353,16 +350,16 @@ Name(FLG5, 0)
  * we block the tests which prevent normal work
  * until the relevant causes are fixed in ACPICA.
  */
-Name(FLG6, 0)
-
+    Name (FLG6, 0x00)
 /*
  * Flag, compiler the test in the abbu layout
  */
-Name(ABUU, 0)
+    Name (ABUU, 0x00)
+    /* Set global test filename */
 
-// Set global test filename
-Method(SETF, 1) {
-    CopyObject(arg0, FNAM)
+    Method (SETF, 1, NotSerialized)
+    {
+        CopyObject (Arg0, FNAM) /* \FNAM */
 }
 
 /*
@@ -372,32 +369,32 @@ Method(SETF, 1) {
  * Arg1 - Full Name of test ("Resource Descriptor Macro", etc.)
  * Arg2 - Test filename (via __FILE__ macro)
  */
-Method (THDR, 3)
+    Method (THDR, 3, NotSerialized)
 {
-    // Save the test filename in the FNAM global
-	SETF (Arg2)
+        /* Save the test filename in the FNAM global */
 
-	// Build output string and store to debug object
+	SETF (Arg2)
+        /* Build output string and store to debug object */
+
     Concatenate ("TEST: ", Arg0, Local1)
     Concatenate (Local1, ", ", Local2)
     Concatenate (Local2, Arg1, Local3)
     Concatenate (Local3, " (", Local4)
     Concatenate (Local4, Arg2, Local5)
     Concatenate (Local5, ")", Local6)
-
-    Store (Local6, Debug)
+        Debug = Local6
 }
 
+    /* Report completion of root Method */
 
-// Report completion of root Method
-Method(RPT0) {
+    Method (RPT0, 0, NotSerialized)
+    {
+        /* To get the same view in both 32-bit and 64-bit modes */
 
-	// To get the same view in both 32-bit and 64-bit modes
-	Name(b000, Buffer(4) {})
-
-	if (SizeOf(NRMT)) {
-
-		// Analize previous run of root Method
+        Name (B000, Buffer (0x04){})
+        If (SizeOf (NRMT))
+        {
+            /* Analize previous run of root Method */
 
 		Concatenate(":", TCN0(TCLL), Local1)
 		Concatenate(Local1, ":", Local0)
@@ -405,55 +402,62 @@ Method(RPT0) {
 		Concatenate(Local1, ":", Local0)
 		Concatenate(Local0, NRMT, Local1)
 		Concatenate(Local1, ":", Local0)
-
-		Subtract(ERRS, ERR5, Local7)
-
-		if (FLG5) {
+            Local7 = (ERRS - ERR5) /* \ERR5 */
+            If (FLG5)
+            {
 			Concatenate(Local0, "SKIPPED:", Local1)
-		} elseif (FLG6) {
+            }
+            ElseIf (FLG6)
+            {
 			Concatenate(Local0, "BLOCKED:", Local1)
-		} elseif (Local7) {
+            }
+            ElseIf (Local7)
+            {
 			Concatenate(Local0, "FAIL:Errors # ", Local2)
-			Store(Local7, b000)
-			Concatenate(Local2, b000, Local0)
+                B000 = Local7
+                Concatenate (Local2, B000, Local0)
 			Concatenate(Local0, ":", Local1)
-			Increment(ERR6)
-		} else {
+                ERR6++
+            }
+            Else
+            {
 			Concatenate(Local0, "PASS:", Local1)
 		}
 
 		Concatenate(":", CTST, Local0)
 		Concatenate(Local0, Local1, Local2)
-
-		Store(Local2, Debug)
-
-		if (LLess(RMRC, ETR0)) {
+            Debug = Local2
+            If ((RMRC < ETR0))
+            {
 			Concatenate(":", STST, Local2)
 			Concatenate(Local2, Local1, Local0)
-			Store(Local0, Index(RP0P, RMRC))
+                RP0P [RMRC] = Local0
 		}
 
-		Increment(RMRC)
+            RMRC++
 	}
-	Store(0, ERR5)
-	Store(0, FLG5)
-	Store(0, FLG6)
+
+        ERR5 = 0x00
+        FLG5 = 0x00
+        FLG6 = 0x00
 }
 
-// Set the name of current root method
-Method(SRMT, 1) {
+    /* Set the name of current root method */
 
-	// Report completion of previous root Method
+    Method (SRMT, 1, NotSerialized)
+    {
+        /* Report completion of previous root Method */
+
 	RPT0()
+        /* Current number of errors */
 
-	// Current number of errors
-	Store(ERRS, ERR5)
-
-	if (1) {
-		Concatenate(arg0, " test started", Debug)
+        ERR5 = ERRS /* \ERRS */
+        If (0x01)
+        {
+            Concatenate (Arg0, " test started", Debug)
 	}
 
-	Store(arg0, NRMT)
+        NRMT = Arg0
 }
 
 /*
@@ -461,8 +465,9 @@ Method(SRMT, 1) {
  * Used only to report that the root-method was not
  * run but skipped.
  */
-Method(SKIP) {
-	Store(1, FLG5)
+    Method (SKIP, 0, NotSerialized)
+    {
+        FLG5 = 0x01
 }
 
 /*
@@ -470,8 +475,9 @@ Method(SKIP) {
  * Used only to report that the root-method was not
  * run, it was blocked.
  */
-Method(BLCK) {
-	Store(1, FLG6)
+    Method (BLCK, 0, NotSerialized)
+    {
+        FLG6 = 0x01
 }
 
 /*
@@ -480,12 +486,15 @@ Method(BLCK) {
  * arg0 - absolute index of file initiating the checking
  * arg1 - the name of Method initiating the checking
  */
-Method(BEG0, 2) {
-	SET0(arg0, arg1, 0)
+    Method (BEG0, 2, NotSerialized)
+    {
+        SET0 (Arg0, Arg1, 0x00)
 }
 
-// Close sub-test
-Method(END0) {
+    /* Close sub-test */
+
+    Method (END0, 0, NotSerialized)
+    {
 	RST0()
 }
 
@@ -496,80 +505,94 @@ Method(END0) {
  * arg2 - index of test inside the collection
  * arg3 - run mode parameter of test
  */
-Method(STTT, 4) {
-	Store(arg0, TSNM)
-	Store(arg1, TCLL)
-	Store(arg2, TIND)
+    Method (STTT, 4, NotSerialized)
+    {
+        TSNM = Arg0
+        TCLL = Arg1
+        TIND = Arg2
+        NRMT = ""
+        FLG5 = 0x00
+        FLG6 = 0x00
+        ERR5 = 0x00
+        /* Pack up ID of test case to use it in err() */
 
-	Store("", NRMT)
-	Store(0, FLG5)
-	Store(0, FLG6)
-	Store(0, ERR5)
-
-	// Pack up ID of test case to use it in err()
-	Store(PK00(arg1, arg2), ERRB)
-
-	// Initial work for any test
+        ERRB = PK00 (Arg1, Arg2)
+        /* Initial work for any test */
 
 	Concatenate("TEST (", TCN0(TCLL), Local1)
 	Concatenate(Local1, "), ", Local0)
 	Concatenate(Local0, TSNM, Local1)
-
-	if (RTPT) {
-
-		// Run Tests Parameters Technique (RTPT)
-		// When running a group of tests (collections), full*
-
-		Store(0, Local7)
-		if (LEqual(RUN0, 0)) {
-			Store(1, Local7)
-		} elseif (LEqual(RUN0, 1)) {
-			if (arg3) {
-				Store(1, Local7)
+        If (RTPT)
+        {
+            /* Run Tests Parameters Technique (RTPT) */
+            /* When running a group of tests (collections), full* */
+            Local7 = 0x00
+            If ((RUN0 == 0x00))
+            {
+                Local7 = 0x01
 			}
-		} elseif (LEqual(RUN0, 2)) {
-			if (LEqual(arg3, 0)) {
-				Store(1, Local7)
+            ElseIf ((RUN0 == 0x01))
+            {
+                If (Arg3)
+                {
+                    Local7 = 0x01
 			}
-		} elseif (LEqual(RUN0, 3)) {
-			if (LEqual(arg3, RUN1)) {
-				Store(1, Local7)
 			}
-		} elseif (LEqual(RUN0, 4)) {
-			if (LEqual(arg1, RUN2)) {
-				if (LEqual(arg2, RUN3)) {
-					Store(1, Local7)
+            ElseIf ((RUN0 == 0x02))
+            {
+                If ((Arg3 == 0x00))
+                {
+                    Local7 = 0x01
 				}
 			}
+            ElseIf ((RUN0 == 0x03))
+            {
+                If ((Arg3 == RUN1))
+                {
+                    Local7 = 0x01
 		}
-	} else {
-		Store(1, Local7)
 	}
+            ElseIf ((RUN0 == 0x04))
+            {
+                If ((Arg1 == RUN2))
+                {
+                    If ((Arg2 == RUN3))
+                    {
+                        Local7 = 0x01
+                    }
+                }
+            }
+        }
+        Else
+        {
+            Local7 = 0x01
+        }
 
-	if (LNot(Local7)) {
+        If (!Local7)
+        {
 		Concatenate(Local1, ", SKIPPED", Local0)
-		Store(Local0, Local1)
+            Local1 = Local0
 	}
 
-	Store(Local1, Debug)
+        Debug = Local1
+        Return (Local7)
+    }
 
-	return (Local7)
-}
+    /* Current test finish */
 
-// Current test finish
-Method(FTTT) {
-	CH03("FTTT", 0, 0, __LINE__, 0)
+    Method (FTTT, 0, NotSerialized)
+    {
+        CH03 ("FTTT", 0x00, 0x00, 0x0231, 0x00)
+        /* Report completion of previous root Method */
 
-	// Report completion of previous root Method
 	RPT0()
-
-	Store("NAME_OF_TEST", TSNM)
-	Store(0, TCLL)
-	Store(0x12345678, TIND)
-	Store("", NRMT)
-	Store(0, FLG5)
-	Store(0, FLG6)
-	Store(0, ERR5)
+        TSNM = "NAME_OF_TEST"
+        TCLL = 0x00
+        TIND = 0x12345678
+        NRMT = ""
+        FLG5 = 0x00
+        FLG6 = 0x00
+        ERR5 = 0x00
 }
 
 /*
@@ -578,14 +601,14 @@ Method(FTTT) {
  * arg0 - index of tests collection
  * arg1 - index of test inside the collection
  */
-Method(PK00, 2)
+    Method (PK00, 2, NotSerialized)
 {
-	And(arg0, 0x0f, Local0)
-	And(arg1, 0x1f, Local1)
-	ShiftLeft(Local0, 5, Local2)
-	Or(Local2, Local1, Local0)
-	ShiftLeft(Local0, 23, Local7)
-	return (Local7)
+        Local0 = (Arg0 & 0x0F)
+        Local1 = (Arg1 & 0x1F)
+        Local2 = (Local0 << 0x05)
+        Local0 = (Local2 | Local1)
+        Local7 = (Local0 << 0x17)
+        Return (Local7)
 }
 
 /*
@@ -594,14 +617,13 @@ Method(PK00, 2)
  * arg0 - absolute index of file initiating the checking
  * arg1 - index of checking (inside the file)
  */
-Method(PK01, 2)
+    Method (PK01, 2, NotSerialized)
 {
-	And(arg0, 0x07ff, Local0)
-	And(arg1, 0x0fff, Local1)
-	ShiftLeft(Local0, 12, Local2)
-	Or(Local2, Local1, Local7)
-
-	return (Local7)
+        Local0 = (Arg0 & 0x07FF)
+        Local1 = (Arg1 & 0x0FFF)
+        Local2 = (Local0 << 0x0C)
+        Local7 = (Local2 | Local1)
+        Return (Local7)
 }
 
 /*
@@ -609,12 +631,11 @@ Method(PK01, 2)
  *
  * arg0 - index of bug
  */
-Method(PK02, 1)
+    Method (PK02, 1, NotSerialized)
 {
-	And(arg0, 0x1ff, Local0)
-	ShiftLeft(Local0, 23, Local7)
-
-	return (Local7)
+        Local0 = (Arg0 & 0x01FF)
+        Local7 = (Local0 << 0x17)
+        Return (Local7)
 }
 
 /*
@@ -623,15 +644,14 @@ Method(PK02, 1)
  * arg0 - absolute index of file reporting the error
  * arg1 - index of error (inside the file)
  */
-Method(PK03, 2)
+    Method (PK03, 2, NotSerialized)
 {
-	And(arg0, 0x07ff, Local0)
-	And(arg1, 0x0fff, Local1)
-	ShiftLeft(Local0, 12, Local2)
-	Or(Local2, Local1, Local7)
-	return (Local7)
+        Local0 = (Arg0 & 0x07FF)
+        Local1 = (Arg1 & 0x0FFF)
+        Local2 = (Local0 << 0x0C)
+        Local7 = (Local2 | Local1)
+        Return (Local7)
 }
-
 
 /*
  * Errors processing
@@ -676,118 +696,122 @@ Method(PK03, 2)
  * arg5 - first value (usually, received value)
  * arg6 - second value (usually, expected value)
  */
-
-Method(err, 7)
+    Method (ERR, 7, NotSerialized)
 {
-	Store(0, Local3)
-	Store(0, Local6)
-
-	if (ERR0) {
-
-		// ERR0 (Local4) - absolute index of file initiating the checking
-		// ERR1 (Local3) - name of Method initiating the checking
-		// ERR2 (Local5) - index of checking
-
-		Store(ERR0, Local4)
-		Store(ERR1, Local3)
-
-		// Dont attempt to set up the zero "index of checking"
-		// by SET0. It will be ignored and overwritten by arg4
-		// of err().
-
-		if (ERR2) {
-			Store(ERR2, Local5)
-		} else {
-			Store(arg4, Local5)
+        Local3 = 0x00
+        Local6 = 0x00
+        If (ERR0)
+        {
+            /* ERR0 (Local4) - absolute index of file initiating the checking */
+            /* ERR1 (Local3) - name of Method initiating the checking */
+            /* ERR2 (Local5) - index of checking */
+            Local4 = ERR0 /* \ERR0 */
+            Local3 = ERR1 /* \ERR1 */
+            /* Dont attempt to set up the zero "index of checking" */
+            /* by SET0. It will be ignored and overwritten by arg4 */
+            /* of err(). */
+            If (ERR2)
+            {
+                Local5 = ERR2 /* \ERR2 */
 		}
-
-	} else {
-		Store(0, Local4)
-		Store(arg4, Local5)
-		if (LEqual(TCLL, TCLD)) {
-			if (Local5) {
-				Store(zFFF, Local4)
+            Else
+            {
+                Local5 = Arg4
 			}
-		} else {
-			Store(arg3, Local4)
 		}
-		if (LEqual(ObjectType(arg0), c00a)) {
-			Store(arg0, Local3)
+        Else
+        {
+            Local4 = 0x00
+            Local5 = Arg4
+            If ((TCLL == TCLD))
+            {
+                If (Local5)
+                {
+                    Local4 = ZFFF /* \ZFFF */
+                }
 		}
+            Else
+            {
+                Local4 = Arg3
 	}
 
-	if (Local4) {
-		// Pack up information of checking
-		Store(PK01(Local4, Local5), Local6)
+            If ((ObjectType (Arg0) == C00A))
+            {
+                Local3 = Arg0
+	}
+        }
+
+        If (Local4)
+        {
+            /* Pack up information of checking */
+
+            Local6 = PK01 (Local4, Local5)
 	}
 
-	if (LEqual(TCLL, TCLD)) {
+        If ((TCLL == TCLD))
+        {
+            /* Pack up index of bug */
 
-		// Pack up index of bug
-		Store(PK02(TIND), Local0)
-		Or(Local6, Local0, Local6)
-	}
+            Local0 = PK02 (TIND)
+            Local6 |= Local0
+        }
 
-	// Pack up information of error
-	Store(PK03(arg1, arg2), Local0)
+        /* Pack up information of error */
 
-	// Add ID of test case being executed
-	Or(ERRB, Local0, Local7)
+        Local0 = PK03 (Arg1, Arg2)
+        /* Add ID of test case being executed */
 
-	Store("---------- ERROR    : ", Local1)
-	Concatenate(Local1, arg0, Local0)
-	Store(Local0, Debug)
-
-	ERP0(arg1, arg2, Local4, Local3, Local5)
-
-    if (LEqual (ObjectType (arg5), 1)) // Check for Integer
+        Local7 = (ERRB | Local0)
+        Local1 = "---------- ERROR    : "
+        Concatenate (Local1, Arg0, Local0)
+        Debug = Local0
+        ERP0 (Arg1, Arg2, Local4, Local3, Local5)
+        If ((ObjectType (Arg5) == 0x01)) /* Check for Integer */
     {
         /* Format/print the Expected result value */
 
-        ToHexString (arg6, Local0)
-        ToDecimalString (arg6, Local1)
-
+            ToHexString (Arg6, Local0)
+            ToDecimalString (Arg6, Local1)
         Concatenate ("**** Expected Result: 0x", Local0, Local0)
         Concatenate (Local0, ", (", Local0)
         Concatenate (Local0, Local1, Local0)
         Concatenate (Local0, ")", Local0)
-        Store (Local0, Debug)
-
+            Debug = Local0
          /* Format/print the Actual result value */
 
-        ToHexString (arg5, Local0)
-        ToDecimalString (arg5, Local1)
-
+            ToHexString (Arg5, Local0)
+            ToDecimalString (Arg5, Local1)
         Concatenate ("**** Actual Result  : 0x", Local0, Local0)
         Concatenate (Local0, ", (", Local0)
         Concatenate (Local0, Local1, Local0)
         Concatenate (Local0, ")", Local0)
-        Store (Local0, Debug)
+            Debug = Local0
    }
-    else
+        Else
     {
-	    Store("**** Actual Result:", Debug)
-	    Store(arg5, Debug)
-	    Store("**** Expected Result:", Debug)
-	    Store(arg6, Debug)
+            Debug = "**** Actual Result:"
+            Debug = Arg5
+            Debug = "**** Expected Result:"
+            Debug = Arg6
     }
-	Store("---------- END\n", Debug)
 
-	// Pack the summary information about the first N errors
+        Debug = "---------- END\n"
+        /* Pack the summary information about the first N errors */
 
-	if (LLess(ERRS, ETR1)) {
-		Multiply(ERRS, 3, Local0)
-		Store(Local7, Index(ERRP, Local0)) // information of error
-		Increment(Local0)
-		Store(Local6, Index(ERRP, Local0)) // information of checking
-		Increment(Local0)
-		Store(Local3, Index(ERRP, Local0)) // name of method
+        If ((ERRS < ETR1))
+        {
+            Local0 = (ERRS * 0x03)
+            ERRP [Local0] = Local7 /* information of error */
+            Local0++
+            ERRP [Local0] = Local6 /* information of checking */
+            Local0++
+            ERRP [Local0] = Local3 /* name of method */
 	}
 
-	Increment(ERRS)
+        ERRS++
+        /* Set current indicator of errors */
 
-	// Set current indicator of errors
-	Store(1, ERR3)
+        ERR3 = 0x01
 }
 
 /*
@@ -798,66 +822,68 @@ Method(err, 7)
  * arg3 - name of Method initiating the checking
  * arg4 - index of checking
  */
-Method(ERP0, 5)
+    Method (ERP0, 5, NotSerialized)
 {
 	Concatenate("TITLE               : ", TSNM, Local0)
-	Store(Local0, Debug)
-
+        Debug = Local0
 	Concatenate("COLLECTION          : ", TCN0(TCLL), Local0)
-	Store(TNIC(TCLL, TIND), Local1)
-
-	Store(Local0, Debug)
-
+        Local1 = TNIC (TCLL, TIND)
+        Debug = Local0
 	Concatenate("TEST CASE           : ", Local1, Local0)
-	Store(Local0, Debug)
+        Debug = Local0
+        Concatenate ("TEST                : ", NRMT, Local0)
+        Debug = Local0
+        /* Error */
 
-	Concatenate("TEST                : ", NRMT, Local0)
-	Store(Local0, Debug)
+        If ((FNAM != 0x00))
+        {
+            /* Use global filename, set via SETF */
 
-	// Error
+            Local1 = FNAM /* \FNAM */
+        }
+        ElseIf ((Arg0 == ZFFF))
+        {
+            /* ATTENTION: dont use zFFF in tests other than TCLD */
 
-    if (LNotEqual (FNAM, 0))
+            Local1 = SB00 (TIND, 0x00)
+        }
+        Else
     {
-        // Use global filename, set via SETF
-        Store (FNAM, Local1)
+            Local1 = DerefOf (TFN0 [Arg0])
     }
-	elseif (LEqual(arg0, zFFF)) {
 
-		// ATTENTION: dont use zFFF in tests other than TCLD
-
-		Store(SB00(TIND, 0), Local1)
-	} else {
-		Store(DeRefOf(Index(TFN0, arg0)), Local1)
-	}
 	Concatenate("ERROR,    File      : ", Local1, Local0)
-	Store(Local0, Debug)
-
-	Concatenate("          Index     : 0x", arg1, Local0)
+        Debug = Local0
+        Concatenate ("          Index     : 0x", Arg1, Local0)
 	Concatenate(Local0, ", (", Local0)
-	Concatenate(Local0, ToDecimalString (arg1), Local0)
+        Concatenate (Local0, ToDecimalString (Arg1), Local0)
 	Concatenate(Local0, ")", Local0)
-	Store(Local0, Debug)
+        Debug = Local0
+        /* Checking */
 
-	// Checking
+        If (Arg2)
+        {
+            If ((Arg2 == ZFFF))
+            {
+                /* ATTENTION: dont use zFFF in tests other than TCLD */
 
-	if (arg2) {
-		if (LEqual(arg2, zFFF)) {
-			// ATTENTION: dont use zFFF in tests other than TCLD
-			Store(SB00(TIND, 0), Local1)
-		} else {
-			Store(DeRefOf(Index(TFN0, arg2)), Local1)
+                Local1 = SB00 (TIND, 0x00)
+            }
+            Else
+            {
+                Local1 = DerefOf (TFN0 [Arg2])
 		}
 
 		Concatenate("CHECKING, File      : ", Local1, Local0)
-		Store(Local0, Debug)
-
-		if (LEqual(ObjectType(arg3), c00a)) {
-			Concatenate("             Method : ", arg3, Local0)
-			Store(Local0, Debug)
+            Debug = Local0
+            If ((ObjectType (Arg3) == C00A))
+            {
+                Concatenate ("             Method : ", Arg3, Local0)
+                Debug = Local0
 		}
 
-		Concatenate("             Index  : ", arg4, Local0)
-		Store(Local0, Debug)
+            Concatenate ("             Index  : ", Arg4, Local0)
+            Debug = Local0
 	}
 }
 
@@ -869,36 +895,38 @@ Method(ERP0, 5)
  *          0 - return the name of test corresponding to bug-demo
  *          1 - return the name of file ..
  */
-Method(SB00, 2) {
-
-	Store("?", Local7)
-
-	if (LEqual(arg1, 0)) {
-		ToDecimalString(arg0, Local0)
+    Method (SB00, 2, NotSerialized)
+    {
+        Local7 = "?"
+        If ((Arg1 == 0x00))
+        {
+            ToDecimalString (Arg0, Local0)
 		Concatenate("*", Local0, Local1)
 		Concatenate(Local1, ".asl", Local7)
-	} elseif (LEqual(arg1, 1)) {
-		ToDecimalString(arg0, Local0)
+        }
+        ElseIf ((Arg1 == 0x01))
+        {
+            ToDecimalString (Arg0, Local0)
 		Concatenate("Demo of bug ", Local0, Local7)
 	}
 
-	return (Local7)
+        Return (Local7)
 }
 
-// Print out the whole contents, not only 32 bytes as debugger does
-Method(prn0, 1, Serialized) {
+    /* Print out the whole contents, not only 32 bytes as debugger does */
 
-	Name(lpN0, 0)
-	Name(lpC0, 0)
-
-	Store(SizeOf(arg0), lpN0)
-	Store(0, lpC0)
-
-	While (lpN0) {
-		Store(DeRefOf(Index(arg0, lpC0)), Local0)
-		Store(Local0, Debug)
-		Decrement(lpN0)
-		Increment(lpC0)
+    Method (PRN0, 1, Serialized)
+    {
+        Name (LPN0, 0x00)
+        Name (LPC0, 0x00)
+        LPN0 = SizeOf (Arg0)
+        LPC0 = 0x00
+        While (LPN0)
+        {
+            Local0 = DerefOf (Arg0 [LPC0])
+            Debug = Local0
+            LPN0--
+            LPC0++
 	}
 }
 
@@ -909,10 +937,11 @@ Method(prn0, 1, Serialized) {
  * arg2 - arg6 of err, "expected value"
  * arg3 - value
  */
-Method(CH00, 4)
+    Method (CH00, 4, NotSerialized)
 {
-	if (LNotEqual(arg3, Zero)) {
-		err(arg0, z062, __LINE__, 0, 0, arg1, arg2)
+        If ((Arg3 != Zero))
+        {
+            ERR (Arg0, Z062, 0x0393, 0x00, 0x00, Arg1, Arg2)
 	}
 }
 
@@ -923,10 +952,11 @@ Method(CH00, 4)
  * arg2 - arg6 of err, "expected value"
  * arg3 - value
  */
-Method(CH01, 4)
+    Method (CH01, 4, NotSerialized)
 {
-	if (LNotEqual(arg3, Ones)) {
-		err(arg0, z062, __LINE__, 0, 0, arg1, arg2)
+        If ((Arg3 != Ones))
+        {
+            ERR (Arg0, Z062, 0x03A1, 0x00, 0x00, Arg1, Arg2)
 	}
 }
 
@@ -937,110 +967,164 @@ Method(CH01, 4)
  * arg1 - RangeMin
  * arg2 - RangeMax
  */
-Method(RNG0, 3)
+    Method (RNG0, 3, NotSerialized)
 {
-	if (LGreater(arg1, arg2)) {
-		Store("RNG0: RangeMin greater than RangeMax", Debug)
-		Fatal(0, 0, 0) // Type, Code, Arg
+        If ((Arg1 > Arg2))
+        {
+            Debug = "RNG0: RangeMin greater than RangeMax"
+            Fatal (0x00, 0x00000000, 0x00) /* Type, Code, Arg */
 	}
-	if (LGreater(arg1, arg0)) {
-		return (Zero)
-	} else {
-		if (LGreater(arg0, arg2)) {
-			return (Zero)
+
+        If ((Arg1 > Arg0))
+        {
+            Return (Zero)
 		}
+        ElseIf ((Arg0 > Arg2))
+        {
+            Return (Zero)
 	}
-	return (Ones)
+
+        Return (Ones)
 }
 
-// 200 symbols (without '\0')
+    /* 200 symbols (without '\0') */
+
 Name(BIG0, "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdf")
+    /* All symbols */
 
-// All symbols
-Name(ALL0, "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?")
+    Name (ALL0, "`1234567890-=qwertyuiop[]\\asdfghjkl;\'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?")
+    /* Check all the constants are not corrupted */
 
-// Check all the constants are not corrupted
-Method(CST0)
+    Method (CST0, 0, NotSerialized)
 {
-	if (LNotEqual(c000, 10)) {
-		err("c000 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c001, 5)) {
-		err("c001 corrupted", z062, __LINE__, 0, 0, 0, 0)
+        If ((C000 != 0x0A))
+        {
+            ERR ("c000 corrupted", Z062, 0x03C6, 0x00, 0x00, 0x00, 0x00)
 	}
 
-	if (LNotEqual(c002, 13)) {
-		err("c002 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c003, 12)) {
-		err("c003 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c004, 6)) {
-		err("c004 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c005, 4)) {
-		err("c005 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c006, 31)) {
-		err("c006 corrupted", z062, __LINE__, 0, 0, 0, 0)
-	}
-	if (LNotEqual(c007, 51)) {
-		err("c007 corrupted", z062, __LINE__, 0, 0, 0, 0)
+        If ((C001 != 0x05))
+        {
+            ERR ("c001 corrupted", Z062, 0x03C9, 0x00, 0x00, 0x00, 0x00)
 	}
 
-	if (LNotEqual(c008, 0)) {
-		err("c008 corrupted", z062, __LINE__, 0, 0, 0, 0)
+        If ((C002 != 0x0D))
+        {
+            ERR ("c002 corrupted", Z062, 0x03CD, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c009, 1)) {
-		err("c009 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C003 != 0x0C))
+        {
+            ERR ("c003 corrupted", Z062, 0x03D0, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00a, 2)) {
-		err("c00a corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C004 != 0x06))
+        {
+            ERR ("c004 corrupted", Z062, 0x03D3, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00b, 3)) {
-		err("c00b corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C005 != 0x04))
+        {
+            ERR ("c005 corrupted", Z062, 0x03D6, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00c, 4)) {
-		err("c00c corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C006 != 0x1F))
+        {
+            ERR ("c006 corrupted", Z062, 0x03D9, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00d, 5)) {
-		err("c00d corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C007 != 0x33))
+        {
+            ERR ("c007 corrupted", Z062, 0x03DC, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00e, 6)) {
-		err("c00e corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C008 != 0x00))
+        {
+            ERR ("c008 corrupted", Z062, 0x03E0, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c00f, 7)) {
-		err("c00f corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C009 != 0x01))
+        {
+            ERR ("c009 corrupted", Z062, 0x03E3, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c010, 8)) {
-		err("c010 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00A != 0x02))
+        {
+            ERR ("c00a corrupted", Z062, 0x03E6, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c011, 9)) {
-		err("c011 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00B != 0x03))
+        {
+            ERR ("c00b corrupted", Z062, 0x03E9, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c012, 10)) {
-		err("c012 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00C != 0x04))
+        {
+            ERR ("c00c corrupted", Z062, 0x03EC, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c013, 11)) {
-		err("c013 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00D != 0x05))
+        {
+            ERR ("c00d corrupted", Z062, 0x03EF, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c014, 12)) {
-		err("c014 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00E != 0x06))
+        {
+            ERR ("c00e corrupted", Z062, 0x03F2, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c015, 13)) {
-		err("c015 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C00F != 0x07))
+        {
+            ERR ("c00f corrupted", Z062, 0x03F5, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c016, 14)) {
-		err("c016 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C010 != 0x08))
+        {
+            ERR ("c010 corrupted", Z062, 0x03F8, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c017, 15)) {
-		err("c017 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C011 != 0x09))
+        {
+            ERR ("c011 corrupted", Z062, 0x03FB, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c018, 16)) {
-		err("c018 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C012 != 0x0A))
+        {
+            ERR ("c012 corrupted", Z062, 0x03FE, 0x00, 0x00, 0x00, 0x00)
 	}
-	if (LNotEqual(c019, 17)) {
-		err("c019 corrupted", z062, __LINE__, 0, 0, 0, 0)
+
+        If ((C013 != 0x0B))
+        {
+            ERR ("c013 corrupted", Z062, 0x0401, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C014 != 0x0C))
+        {
+            ERR ("c014 corrupted", Z062, 0x0404, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C015 != 0x0D))
+        {
+            ERR ("c015 corrupted", Z062, 0x0407, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C016 != 0x0E))
+        {
+            ERR ("c016 corrupted", Z062, 0x040A, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C017 != 0x0F))
+        {
+            ERR ("c017 corrupted", Z062, 0x040D, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C018 != 0x10))
+        {
+            ERR ("c018 corrupted", Z062, 0x0410, 0x00, 0x00, 0x00, 0x00)
+	}
+
+        If ((C019 != 0x11))
+        {
+            ERR ("c019 corrupted", Z062, 0x0413, 0x00, 0x00, 0x00, 0x00)
 	}
 }
 
@@ -1051,46 +1135,44 @@ Method(CST0)
  * <cmd: 0 - left, 1 - right>
  * <n shift: {1-7}>
  */
-Method(sft0, 4, Serialized)
+    Method (SFT0, 4, Serialized)
 {
-	Name(n000, 0)
-	Name(ncur, 0)
+        Name (N000, 0x00)
+        Name (NCUR, 0x00)
+        N000 = Arg1
+        NCUR = 0x00
+        Local6 = 0x00
+        If (Arg2)
+        {
+            Local3 = Arg3
+            Local5 = (0x08 - Local3)
+	}
+        Else
+        {
+            Local5 = Arg3
+            Local3 = (0x08 - Local5)
+        }
 
-	Store(arg1, n000)
-	Store(0, ncur)
-
-	Store(0, Local6)
-
-	if (arg2) {
-		Store(arg3, Local3)
-		Subtract(8, Local3, Local5)
-	} else {
-		Store(arg3, Local5)
-		Subtract(8, Local5, Local3)
+        Local0 = Arg1
+        Local0++
+        Name (B000, Buffer (Local0){})
+        While (N000)
+        {
+            Local0 = DerefOf (Arg0 [NCUR])
+            Local1 = (Local0 >> Local3)
+            Local2 = (Local1 & 0xFF)
+            Local1 = (Local2 | Local6)
+            Local4 = (Local0 << Local5)
+            Local6 = (Local4 & 0xFF)
+            B000 [NCUR] = Local1
+            N000--
+            NCUR++
 	}
 
-	Store(arg1, Local0)
-	Increment(Local0)
-	Name(b000, Buffer(Local0) {})
-
-	While (n000) {
-		Store(DeRefOf(Index(arg0, ncur)), Local0)
-		ShiftRight(Local0, Local3, Local1)
-		And(Local1, 0xff, Local2)
-		Or(Local2, Local6, Local1)
-		ShiftLeft(Local0, Local5, Local4)
-		And(Local4, 0xff, Local6)
-		Store(Local1, Index(b000, ncur))
-		Decrement(n000)
-		Increment(ncur)
-	}
-
-	Store(Local6, Index(b000, ncur))
-
-	// Store(arg0, Debug)
-	// Store(b000, Debug)
-
-	return (b000)
+        B000 [NCUR] = Local6
+        /* Store(arg0, Debug) */
+        /* Store(b000, Debug) */
+        Return (B000) /* \SFT0.B000 */
 }
 
 /*
@@ -1100,13 +1182,12 @@ Method(sft0, 4, Serialized)
  * <index of bit>,
  * <num of bits>,
  */
-Method(MBS0, 2)
+    Method (MBS0, 2, NotSerialized)
 {
-	Add(arg0, arg1, Local0)
-	Add(Local0, 7, Local1)
-	Divide(Local1, 8, Local2, Local0)
-
-	return (Local0)
+        Local0 = (Arg0 + Arg1)
+        Local1 = (Local0 + 0x07)
+        Divide (Local1, 0x08, Local2, Local0)
+        Return (Local0)
 }
 
 /*
@@ -1118,122 +1199,128 @@ Method(MBS0, 2)
  * <source value of first byte>,
  * <source value of last byte>,
  */
-Method(sft1, 5, Serialized)
+    Method (SFT1, 5, Serialized)
 {
-	Name(prev, 0)
-	Name(ms00, 0)
-	Name(ms01, 0)
-	Name(ms02, 0)
-	Name(ms03, 0)
-	Name(tail, 0)
-	Name(lbt0, 0)
+        Name (PREV, 0x00)
+        Name (MS00, 0x00)
+        Name (MS01, 0x00)
+        Name (MS02, 0x00)
+        Name (MS03, 0x00)
+        Name (TAIL, 0x00)
+        Name (LBT0, 0x00)
+        /* Loop 0 */
 
-	// Loop 0
-	Name(lpN0, 0)
-	Name(lpC0, 0)
+        Name (LPN0, 0x00)
+        Name (LPC0, 0x00)
+        /* Byte size of result buffer */
 
-	// Byte size of result buffer
-	Name(nb01, 0)
+        Name (NB01, 0x00)
+        /* Reqular processed bytes number */
 
-	// Reqular processed bytes number
-	Name(nreg, 0)
+        Name (NREG, 0x00)
+        /* Bit-size of low part of byte */
 
-	// Bit-size of low part of byte
-	Name(nb08, 0)
-	// Bit-size of high part of byte
-	Name(nb09, 0)
-	// Bit-size of last byte
-	Name(rest, 0)
+        Name (NB08, 0x00)
+        /* Bit-size of high part of byte */
 
-	if (LLess(arg2, 1)) {
-		err("sft", z062, __LINE__, 0, 0, arg2, 1)
-		return (Ones)
+        Name (NB09, 0x00)
+        /* Bit-size of last byte */
+
+        Name (REST, 0x00)
+        If ((Arg2 < 0x01))
+        {
+            ERR ("sft", Z062, 0x047D, 0x00, 0x00, Arg2, 0x01)
+            Return (Ones)
 	}
 
-	if (LGreater(arg1, 7)) {
-		err("sft", z062, __LINE__, 0, 0, arg1, 7)
-		return (Ones)
+        If ((Arg1 > 0x07))
+        {
+            ERR ("sft", Z062, 0x0482, 0x00, 0x00, Arg1, 0x07)
+            Return (Ones)
 	}
 
-	Store(MBS0(arg1, arg2), nb01)
+        NB01 = MBS0 (Arg1, Arg2)
+        Name (B000, Buffer (NB01){})
+        /* Layout of regulsr bytes */
 
-	Name(b000, Buffer(nb01) {})
+        NB08 = Arg1
+        NB09 = (0x08 - NB08) /* \SFT1.NB08 */
+        /* Produce masks of regulsr byte */
 
-	// Layout of regulsr bytes
-	Store(arg1, nb08)
-	Subtract(8, nb08, nb09)
+        Local0 = (0xFF >> NB08) /* \SFT1.NB08 */
+        MS01 = (Local0 << NB08) /* \SFT1.NB08 */
+        MS00 = ~MS01 /* \SFT1.MS01 */
+        /* Last byte size */
 
-	// Produce masks of regulsr byte
-	ShiftRight(0xff, nb08, Local0)
-	ShiftLeft(Local0, nb08, ms01)
-	Not(ms01, ms00)
+        Local7 = (Arg1 + Arg2)
+        REST = (Local7 % 0x08)
+        If ((REST == 0x00))
+        {
+            REST = 0x08
+        }
 
-	// Last byte size
-	Add(arg1, arg2, Local7)
-	Mod(Local7, 8, rest)
-	if (LEqual(rest, 0)) {
-		Store(8, rest)
+        /* Substitute field usually determined on previous step */
+
+        PREV = (Arg3 & MS00) /* \SFT1.MS00 */
+        /* Reqular processing repetition number */
+
+        If ((Arg2 >= NB09))
+        {
+            NREG = 0x01
+            Local7 = (Arg2 - NB09) /* \SFT1.NB09 */
+            Divide (Local7, 0x08, Local1, Local0)
+            NREG += Local0
 	}
 
-	// Substitute field usually determined on previous step
-	And(arg3, ms00, prev)
+        /* Regular processing */
 
-	// Reqular processing repetition number
-	if (LGreaterEqual(arg2, nb09)) {
-		Store(1, nreg)
-		Subtract(arg2, nb09, Local7)
-		Divide(Local7, 8, Local1, Local0)
-		Add(nreg, Local0, nreg)
+        LPN0 = NREG /* \SFT1.NREG */
+        LPC0 = 0x00
+        While (LPN0)
+        {
+            Local7 = DerefOf (Arg0 [LPC0])
+            Local0 = (Local7 << NB08) /* \SFT1.NB08 */
+            Local1 = (Local0 | PREV) /* \SFT1.PREV */
+            B000 [LPC0] = Local1
+            PREV = (Local7 >> NB09) /* \SFT1.NB09 */
+            LPN0--
+            LPC0++
+        }
+
+        If ((REST == 0x08))
+        {
+            TAIL = 0x00
+        }
+        ElseIf ((REST <= NB08))
+        {
+            TAIL = 0x01
+	}
+        Else
+        {
+            TAIL = 0x02
+            LBT0 = DerefOf (Arg0 [LPC0])
 	}
 
-	// Regular processing
+        /* =================== */
+        /* Processing the tail */
+        /* =================== */
+        If ((TAIL == 0x01))
+        {
+            /* Produce masks */
 
-	Store(nreg, lpN0)
-	Store(0, lpC0)
-	While (lpN0) {
-
-		Store(DeRefOf(Index(arg0, lpC0)), Local7)
-		ShiftLeft(Local7, nb08, Local0)
-		Or(Local0, prev, Local1)
-		Store(Local1, Index(b000, lpC0))
-		ShiftRight(Local7, nb09, prev)
-
-		Decrement(lpN0)
-		Increment(lpC0)
-	}
-
-	if (LEqual(rest, 8)) {
-		Store(0, tail)
-	} elseif (LLessEqual(rest, nb08)) {
-		Store(1, tail)
-	} else {
-		Store(2, tail)
-		Store(DeRefOf(Index(arg0, lpC0)), lbt0)
-	}
-
-	// ===================
-	// Processing the tail
-	// ===================
-
-	if (LEqual(tail, 1)) {
-
-		// Produce masks
-		ShiftRight(0xff, rest, Local0)
-		ShiftLeft(Local0, rest, ms03)
-		Not(ms03, ms02)
-
-		And(prev, ms02, Local0)
-		And(arg4, ms03, Local1)
-		Or(Local0, Local1, Local2)
-
-		Store(Local2, Index(b000, lpC0))
-
-	} elseif (LEqual(tail, 2)) {
-
-		And(prev, ms00, Local0)
-		ShiftLeft(lbt0, nb08, Local1)
-		Or(Local0, Local1, Local7)
-
+            Local0 = (0xFF >> REST) /* \SFT1.REST */
+            MS03 = (Local0 << REST) /* \SFT1.REST */
+            MS02 = ~MS03 /* \SFT1.MS03 */
+            Local0 = (PREV & MS02) /* \SFT1.MS02 */
+            Local1 = (Arg4 & MS03) /* \SFT1.MS03 */
+            Local2 = (Local0 | Local1)
+            B000 [LPC0] = Local2
+        }
+        ElseIf ((TAIL == 0x02))
+        {
+            Local0 = (PREV & MS00) /* \SFT1.MS00 */
+            Local1 = (LBT0 << NB08) /* \SFT1.NB08 */
+            Local7 = (Local0 | Local1)
 		/*
 		 * Byte layout:
 		 * 000011112222
@@ -1243,25 +1330,23 @@ Method(sft1, 5, Serialized)
 		 *     44444444
 		 *     rest
 		 */
+            /* Produce masks of rem field */
+            Local2 = (0xFF >> REST) /* \SFT1.REST */
+            Local0 = (Local2 << REST) /* \SFT1.REST */
+            Local1 = ~Local0
+            /* Determine contents of field */
 
-		// Produce masks of rem field
-		ShiftRight(0xff, rest, Local2)
-		ShiftLeft(Local2, rest, Local0)
-		Not(Local0, Local1)
+            Local2 = (Local7 & Local1)
+            /* Remained of original last (first) byte */
 
-		// Determine contents of field
-		And(Local7, Local1, Local2)
+            Local3 = (Arg4 & Local0)
+            /* Result */
 
-		// Remained of original last (first) byte
-		And(arg4, Local0, Local3)
-
-		// Result
-		Or(Local2, Local3, Local0)
-
-		Store(Local0, Index(b000, lpC0))
+            Local0 = (Local2 | Local3)
+            B000 [LPC0] = Local0
 	}
 
-	return (b000)
+        Return (B000) /* \SFT1.B000 */
 }
 
 /*
@@ -1275,36 +1360,42 @@ Method(sft1, 5, Serialized)
  *               in errors reports is lost, should be
  *               resolved in the future.
  */
-Method(m4c0, 4, Serialized)
+    Method (M4C0, 4, Serialized)
 {
-	Name(tmp0, 0)
-	Name(tmp1, 0)
-
-	Store(0, Local7)
-
-	Store(ObjectType(arg1), tmp0)
-
-	if (F64) {
-		Store(ObjectType(arg2), tmp1)
-		if (LNotEqual(tmp0, tmp1)) {
-			err(arg0, z062, __LINE__, 0, 0, tmp0, tmp1)
-			Store(1, Local7)
-		} elseif (LNotEqual(arg1, arg2)) {
-			err(arg0, z062, __LINE__, 0, 0, arg1, arg2)
-			Store(1, Local7)
+        Name (TMP0, 0x00)
+        Name (TMP1, 0x00)
+        Local7 = 0x00
+        TMP0 = ObjectType (Arg1)
+        If (F64)
+        {
+            TMP1 = ObjectType (Arg2)
+            If ((TMP0 != TMP1))
+            {
+                ERR (Arg0, Z062, 0x050A, 0x00, 0x00, TMP0, TMP1)
+                Local7 = 0x01
 		}
-	} else {
-		Store(ObjectType(arg3), tmp1)
-		if (LNotEqual(tmp0, tmp1)) {
-			err(arg0, z062, __LINE__, 0, 0, tmp0, tmp1)
-			Store(1, Local7)
-		} elseif (LNotEqual(arg1, arg3)) {
-			err(arg0, z062, __LINE__, 0, 0, arg1, arg3)
-			Store(1, Local7)
+            ElseIf ((Arg1 != Arg2))
+            {
+                ERR (Arg0, Z062, 0x050D, 0x00, 0x00, Arg1, Arg2)
+                Local7 = 0x01
 		}
 	}
+        Else
+        {
+            TMP1 = ObjectType (Arg3)
+            If ((TMP0 != TMP1))
+            {
+                ERR (Arg0, Z062, 0x0513, 0x00, 0x00, TMP0, TMP1)
+                Local7 = 0x01
+            }
+            ElseIf ((Arg1 != Arg3))
+            {
+                ERR (Arg0, Z062, 0x0516, 0x00, 0x00, Arg1, Arg3)
+                Local7 = 0x01
+            }
+        }
 
-	return (Local7)
+        Return (Local7)
 }
 
 /*
@@ -1313,24 +1404,27 @@ Method(m4c0, 4, Serialized)
  * arg0 - source string contains desirable symbols
  * srg1 - index inside the source string
  */
-Method(m4a1, 2, Serialized)
+    Method (M4A1, 2, Serialized)
 {
-	Name(s000, " ")
-	Store(DeRefOf(Index(arg0, arg1)), Local0)
-	Store(Local0, Index(s000, 0))
-	return (s000)
+        Name (S000, " ")
+        Local0 = DerefOf (Arg0 [Arg1])
+        S000 [0x00] = Local0
+        Return (S000) /* \M4A1.S000 */
 }
 
-// Initialization
+    /* Initialization */
+
 Method(STRT, 1, Serialized)
 {
-	Method(m555)
+        Method (M555, 0, NotSerialized)
 	{
 	}
 
 	/* Data to determine 32/64 mode, global because of mt-tests */
+
 	DataTableRegion (HDR, "DSDT", "", "")
-	Field(HDR, AnyAcc, NoLock, Preserve) {
+        Field (HDR, AnyAcc, NoLock, Preserve)
+        {
 		SIG, 32,
 		LENG, 32,
 		REV, 8,
@@ -1339,27 +1433,28 @@ Method(STRT, 1, Serialized)
 		OTID, 64,
 		OREV, 32,
 		CID, 32,
-		CREV, 32,
+            CREV,   32
 	}
 
 	/*
 	 * The first fictitious Method execution which statistics
 	 * is then used for to estimate all other Methods executions.
 	 */
-	m555()
-
-	Store(Timer, tmt0)
-
-	If (LLess (REV, 2)) {
-		Store(0, F64)
-		Store(4, ISZ0)
-		Store(8, ISZC)
-		Store ("32-bit mode", Debug)
-	} else {
-		Store(1, F64)
-		Store(8, ISZ0)
-		Store(16, ISZC)
-		Store ("64-bit mode", Debug)
+        M555 ()
+        TMT0 = Timer
+        If ((REV < 0x02))
+        {
+            F64 = 0x00
+            ISZ0 = 0x04
+            ISZC = 0x08
+            Debug = "32-bit mode"
+        }
+        Else
+        {
+            F64 = 0x01
+            ISZ0 = 0x08
+            ISZC = 0x10
+            Debug = "64-bit mode"
 	}
 
 	/*
@@ -1369,28 +1464,27 @@ Method(STRT, 1, Serialized)
 	 * this point as they didn't take place. Otherwise, an error
 	 * will be below registrated.
 	 */
-	if (CH02()) {
-		Increment(ERR7)
-
+        If (CH02 ())
+        {
+            ERR7++
 		/* Reset internal information about exceptions */
 
-		CH03("", 0, 0x888, __LINE__, 0)
-		Store(0, EXC0)
-		Store(0, EXC1)
+            CH03 ("", 0x00, 0x0888, 0x0561, 0x00)
+            EXC0 = 0x00
+            EXC1 = 0x00
 	}
 
-	SRTP(arg0)
-
+        SRTP (Arg0)
 	RTPI()
-
 	RST0()
 	RST2()
+        /* Adjust some skippings of tests for different ACPICA releases */
 
-	/* Adjust some skippings of tests for different ACPICA releases */
 	SET2(SETN)
 }
 
-Name(TCNP, Package() {
+    Name (TCNP, Package (0x09)
+    {
 	"compilation",
 	"functional",
 	"complex",
@@ -1399,18 +1493,20 @@ Name(TCNP, Package() {
 	"service",
 	"mt",
 	"Identity2MS",
-	"IMPL",
+        "IMPL"
 })
-
 /*
  * Test collection name
  * arg0 - index of test collection
  */
-Method(TCN0, 1) {
-	Store("?", Local7)
-	if (LLessEqual(arg0, MAXC)) {
-		Store(DerefOf(Index(TCNP, arg0)), Local7)
+    Method (TCN0, 1, NotSerialized)
+    {
+        Local7 = "?"
+        If ((Arg0 <= MAXC))
+        {
+            Local7 = DerefOf (TCNP [Arg0])
 	}
+
 	Return(Local7)
 }
 
@@ -1419,40 +1515,53 @@ Method(TCN0, 1) {
  * arg0 - index of test collection
  * arg1 - index of test inside the collection
  */
-Method(TNIC, 2, Serialized) {
-	Store("?", Local7)
-	switch (ToInteger (arg0)) {
-		case (1) {
-			Store(DeRefOf(Index(TNF0, arg1)), Local7)
+    Method (TNIC, 2, Serialized)
+    {
+        Local7 = "?"
+        Switch (ToInteger (Arg0))
+        {
+            Case (0x01)
+            {
+                Local7 = DerefOf (TNF0 [Arg1])
 		}
-		case (2) {
-			Store(DeRefOf(Index(TNC0, arg1)), Local7)
+            Case (0x02)
+            {
+                Local7 = DerefOf (TNC0 [Arg1])
 		}
-		case (3) {
-			Store(DeRefOf(Index(TNE0, arg1)), Local7)
+            Case (0x03)
+            {
+                Local7 = DerefOf (TNE0 [Arg1])
 		}
-		case (4) {
-			Store(SB00(arg1, 1), Local7)
+            Case (0x04)
+            {
+                Local7 = SB00 (Arg1, 0x01)
 		}
-		case (5) {
-			Store(DeRefOf(Index(TNS0, arg1)), Local7)
+            Case (0x05)
+            {
+                Local7 = DerefOf (TNS0 [Arg1])
 		}
-		case (6) {
-			Store(DeRefOf(Index(TNM0, arg1)), Local7)
+            Case (0x06)
+            {
+                Local7 = DerefOf (TNM0 [Arg1])
 		}
-		case (7) {
-			Store(DeRefOf(Index(TNT0, arg1)), Local7)
+            Case (0x07)
+            {
+                Local7 = DerefOf (TNT0 [Arg1])
 		}
-		case (8) {
-			Store(DeRefOf(Index(TNI0, arg1)), Local7)
+            Case (0x08)
+            {
+                Local7 = DerefOf (TNI0 [Arg1])
 		}
+
 	}
 
 	Return(Local7)
 }
 
-// Names of functional tests
-Name(TNF0, Package() {
+    /* Names of functional tests */
+
+    Name (TNF0, Package (0x0F)
+    {
 	"arithmetic",
 	"bfield",
 	"constant",
@@ -1467,14 +1576,12 @@ Name(TNF0, Package() {
 	"region",
 	"synchronization",
 	"table",
-	"module",
-	"external",
-	"alias",
-	"fwdref"
+	"module"
 })
+    /* Names of complex tests */
 
-// Names of complex tests
-Name(TNC0, Package() {
+    Name (TNC0, Package (0x14)
+    {
 	"misc",
 	"provoke",
 	"oarg",
@@ -1496,9 +1603,10 @@ Name(TNC0, Package() {
 	"badasl",
 	"namespace"
 })
+    /* Names of exceptions tests */
 
-// Names of exceptions tests
-Name(TNE0, Package() {
+    Name (TNE0, Package (0x07)
+    {
 	"exc",
 	"exc_operand1",
 	"exc_operand2",
@@ -1507,30 +1615,35 @@ Name(TNE0, Package() {
 	"exc_ref",
 	"exc_tbl"
 })
+    /* Names of service tests */
 
-// Names of service tests
-Name(TNS0, Package() {
+    Name (TNS0, Package (0x01)
+    {
 	"condbranches"
 })
+    /* Names of mt tests */
 
-// Names of mt tests
-Name(TNM0, Package() {
+    Name (TNM0, Package (0x01)
+    {
 	"mt-mutex"
 })
+    /* Names of Identity2MS tests */
 
-// Names of Identity2MS tests
-Name(TNT0, Package() {
+    Name (TNT0, Package (0x01)
+    {
 	"abbu"
 })
+    /* Names of IMPL tests */
 
-// Names of IMPL tests
-Name(TNI0, Package() {
+    Name (TNI0, Package (0x01)
+    {
 	"dynobj"
 })
+    /* Names of test files */
 
-// Names of test files
-Name(TFN0, Package() {
-	"UNDEF",		// 0
+    Name (TFN0, Package (0xCD)
+    {
+        "UNDEF",         /* 0 */
 	"crbuffield.asl",
 	"constants.asl",
 	"ctl0.asl",
@@ -1555,7 +1668,7 @@ Name(TFN0, Package() {
 	"memory32.asl",
 	"memory32fixed.asl",
 	"qwordio.asl",
-	"qwordmemory.asl",	// 25
+        "qwordmemory.asl",   /* 25 */
 	"qwordspace.asl",
 	"register.asl",
 	"resourcetemplate.asl",
@@ -1580,7 +1693,7 @@ Name(TFN0, Package() {
 	"tointeger.asl",
 	"tostring.asl",
 	"touuid.asl",
-	"unicode.asl",	// 50
+        "unicode.asl",   /* 50 */
 	"package.asl",
 	"event.asl",
 	"mutex.asl",
@@ -1591,7 +1704,7 @@ Name(TFN0, Package() {
 	"exc.asl",
 	"exc_operand1.asl",
 	"exc_result.asl",
-	"XXXXXX.asl",	// 61 - RESERVED, not in use
+        "XXXXXX.asl",    /* 61 - RESERVED, not in use */
 	"common.asl",
 	"ehandle.asl",
 	"oproc.asl",
@@ -1630,7 +1743,7 @@ Name(TFN0, Package() {
 	"exc_05_funit.asl",
 	"exc_06_dev.asl",
 	"exc_07_event.asl",
-	"exc_08_method.asl",	// 100
+        "exc_08_method.asl",     /* 100 */
 	"exc_09_mux.asl",
 	"exc_10_oreg.asl",
 	"exc_11_pwr.asl",
@@ -1646,11 +1759,11 @@ Name(TFN0, Package() {
 	"data.asl",
 	"dataproc.asl",
 	"datastproc.asl",
-	"ref07.asl",		// 116
+        "ref07.asl",         /* 116 */
 	"olocal.asl",
 	"oreturn.asl",
 	"oreftopackageel.asl",
-	"oreftonamed2.asl",	// 120
+        "oreftonamed2.asl",  /* 120 */
 	"oarg.asl",
 	"rcommon.asl",
 	"rstore.asl",
@@ -1660,7 +1773,7 @@ Name(TFN0, Package() {
 	"roptional.asl",
 	"tcicmd.asl",
 	"dobexec.asl",
-	"dobdecl.asl",	// 130
+        "dobdecl.asl",   /* 130 */
 	"dobctl.asl",
 	"dobexceptions.asl",
 	"method.asl",
@@ -1670,7 +1783,7 @@ Name(TFN0, Package() {
 	"standaloneRet.asl",
 	"store.asl",
 	"return.asl",
-	"dobmisc.asl",	// 140
+        "dobmisc.asl",   /* 140 */
 	"opregions.asl",
 	"dtregions.asl",
 	"regionfield.asl",
@@ -1680,7 +1793,7 @@ Name(TFN0, Package() {
 	"mt-common.asl",
 	"mt-mutex.asl",
 	"mt-mxs.asl",
-	"mutex2.asl",	// 150
+        "mutex2.asl",    /* 150 */
 	"mutex_proc.asl",
 	"mt-tests.asl",
 	"mt-service.asl",
@@ -1690,7 +1803,7 @@ Name(TFN0, Package() {
 	"ns3.asl",
 	"ns4.asl",
 	"ns5.asl",
-	"ns6.asl",			// 160
+        "ns6.asl",           /* 160 */
 	"I2MS_msfail0.asl",
 	"I2MS_st0.asl",
 	"I2MS_ns_in00.asl",
@@ -1700,61 +1813,52 @@ Name(TFN0, Package() {
 	"I2MS_ns_in40.asl",
 	"I2MS_ns_in50.asl",
 	"I2MS_mt0_abbu.asl",
-	"I2MS_mt0_aslts.asl",	// 170
+        "I2MS_mt0_aslts.asl",    /* 170 */
 	"I2MS_recursion_abbu.asl",
 	"I2MS_recursion_aslts.asl",
 	"serialized.asl",
-	"load.asl",			// 174
+        "load.asl",          /* 174 */
 	"unload.asl",
 	"loadtable.asl",
 	"recursion.asl",
-	"ns-scope.asl",		// 178
+        "ns-scope.asl",      /* 178 */
 	"ns-fullpath.asl",
-	"scope.asl",	// 180
+        "scope.asl",     /* 180 */
 	"object.asl",
 	"order.asl",
-
-
-// below are incorrect yet:
+        /* below are incorrect yet: */
 
 	"I2MS_ns_dv00.asl",
 	"I2MS_ns_dv10.asl",
 	"I2MS_ns_dv20.asl",
 	"I2MS_ns_dv30.asl",
-
 	"I2MS_ns_device.asl",
 	"I2MS_ns_device_abbu.asl",
 	"I2MS_ns_device_aslts.asl",
+        /* see these files can be not used at all: */
 
-// see these files can be not used at all:
-
-	"I2MS_ns4.asl",	// 190
+        "I2MS_ns4.asl",  /* 190 */
 	"I2MS_ns5.asl",
 	"I2MS_ns6.asl",
+        /* ACPI 5.0 */
 	
-// ACPI 5.0
-
 	"fixeddma.asl",
 	"gpioint.asl",
 	"gpioio.asl",
 	"i2cserialbus.asl",
 	"spiserialbus.asl",
 	"uartserialbus.asl",
-
-// ACPI 6.2
+        /* ACPI 6.2 */
 
 	"pinfunction.asl",
-	"pinconfig.asl",	// 200
+        "pinconfig.asl",     /* 200 */
 	"pingroup.asl",
 	"pingroupfunction.asl",
 	"pingroupconfig.asl",
+        /* External Op tests */
 
-// External Op tests
-
-	"external.asl",	// 204
-	"alias.asl"	// 205
+        "external.asl"  /* 204 */
 })
-
 /*
  * Unpack error
  *
@@ -1764,285 +1868,306 @@ Name(TFN0, Package() {
  */
 Method(UNP0, 3, Serialized)
 {
-	// c - index of tests collection
-	ShiftRight(arg0, 28, Local7)
-	And(Local7, 0x0f, Local0)
+        /* c - index of tests collection */
 
-	// t - index of test inside the collection
-	ShiftRight(arg0, 23, Local7)
-	And(Local7, 0x1f, Local1)
+        Local7 = (Arg0 >> 0x1C)
+        Local0 = (Local7 & 0x0F)
+        /* t - index of test inside the collection */
 
-	// f - absolute index of file reporting the error
-	ShiftRight(arg0, 12, Local7)
-	And(Local7, 0x07ff, Local2)
+        Local7 = (Arg0 >> 0x17)
+        Local1 = (Local7 & 0x1F)
+        /* f - absolute index of file reporting the error */
 
-	// e - index of error (inside the file)
-	And(arg0, 0x0fff, Local3)
+        Local7 = (Arg0 >> 0x0C)
+        Local2 = (Local7 & 0x07FF)
+        /* e - index of error (inside the file) */
 
-	Store("", Local6)
-	Store("", Local7)
+        Local3 = (Arg0 & 0x0FFF)
+        Local6 = ""
+        Local7 = ""
+        Switch (ToInteger (Local0))
+        {
+            Case (0x01)
+            {
+                Local6 = DerefOf (TNF0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", functional, "
+			}
+		}
+            Case (0x02)
+            {
+                Local6 = DerefOf (TNC0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", complex, "
+			}
+		}
+            Case (0x03)
+            {
+                Local6 = DerefOf (TNE0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", exceptions, "
+			}
+		}
+            Case (0x04)
+            {
+                /* m - in case of TCLD tests there is an index of bug */
 
-	Switch (ToInteger (Local0)) {
-		case (1) {
-			Store(DeRefOf(Index(TNF0, Local1)), Local6)
-			if (ERR4) {
-				Store(", functional, ", Local7)
+                Local0 = (Arg1 >> 0x17)
+                Local1 = (Local0 & 0x01FF)
+                Local6 = SB00 (Local1, 0x01)
+                If (ERR4)
+                {
+                    Local7 = ", bug-demo, "
 			}
 		}
-		case (2) {
-			Store(DeRefOf(Index(TNC0, Local1)), Local6)
-			if (ERR4) {
-				Store(", complex, ", Local7)
+            Case (0x05)
+            {
+                Local6 = DerefOf (TNS0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", service, "
 			}
 		}
-		case (3) {
-			Store(DeRefOf(Index(TNE0, Local1)), Local6)
-			if (ERR4) {
-				Store(", exceptions, ", Local7)
+            Case (0x06)
+            {
+                Local6 = DerefOf (TNM0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", mt, "
 			}
 		}
-		case (4) {
+            Case (0x07)
+            {
+                Local6 = DerefOf (TNT0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", Identity2MS, "
+			}
+		}
+            Case (0x08)
+            {
+                Local6 = DerefOf (TNI0 [Local1])
+                If (ERR4)
+                {
+                    Local7 = ", IMPL, "
+			}
+		}
 
-			// m - in case of TCLD tests there is an index of bug
-
-			ShiftRight(arg1, 23, Local0)
-			And(Local0, 0x1ff, Local1)
-			Store(SB00(Local1, 1), Local6)
-			if (ERR4) {
-				Store(", bug-demo, ", Local7)
-			}
-		}
-		case (5) {
-			Store(DeRefOf(Index(TNS0, Local1)), Local6)
-			if (ERR4) {
-				Store(", service, ", Local7)
-			}
-		}
-		case (6) {
-			Store(DeRefOf(Index(TNM0, Local1)), Local6)
-			if (ERR4) {
-				Store(", mt, ", Local7)
-			}
-		}
-		case (7) {
-			Store(DeRefOf(Index(TNT0, Local1)), Local6)
-			if (ERR4) {
-				Store(", Identity2MS, ", Local7)
-			}
-		}
-		case (8) {
-			Store(DeRefOf(Index(TNI0, Local1)), Local6)
-			if (ERR4) {
-				Store(", IMPL, ", Local7)
-			}
-		}
 	}
 
 	Concatenate(Local7, Local6, Local5)
 	Concatenate(Local5, ", ", Local1)
+        /* Error */
 
-	// Error
-
-	if (LEqual(Local2, zFFF)) {
-
-		// ATTENTION: dont use zFFF in tests other than TCLD
-		// m - in case of TCLD tests there is an index of bug
-
-		ShiftRight(arg1, 23, Local0)
-		And(Local0, 0x1ff, Local2)
-		Store(SB00(Local2, 0), Local6)
-
-	} else {
-		Store(DeRefOf(Index(TFN0, Local2)), Local6)
+        If ((Local2 == ZFFF))
+        {
+            /* ATTENTION: dont use zFFF in tests other than TCLD */
+            /* m - in case of TCLD tests there is an index of bug */
+            Local0 = (Arg1 >> 0x17)
+            Local2 = (Local0 & 0x01FF)
+            Local6 = SB00 (Local2, 0x00)
 	}
+        Else
+        {
+            Local6 = DerefOf (TFN0 [Local2])
+        }
 
 	Concatenate(Local1, Local6, Local7)
 	Concatenate(Local7, ", ", Local1)
 	Concatenate(Local1, Local3, Local7)
+        /* (z+u) - entire field of checking */
 
-	// (z+u) - entire field of checking
+        Local5 = (Arg1 & 0x007FFFFF)
+        If (Local5)
+        {
+            /* z - absolute index of file initiating the checking */
 
-	And(arg1, 0x07fffff, Local5)
+            Local5 = (Arg1 >> 0x0C)
+            Local2 = (Local5 & 0x07FF)
+            /* u - index of checking */
 
-	if (Local5) {
-		// z - absolute index of file initiating the checking
-		ShiftRight(arg1, 12, Local5)
-		And(Local5, 0x07ff, Local2)
-
-		// u - index of checking
-		And(arg1, 0x0fff, Local3)
-
-		if (LEqual(Local2, zFFF)) {
-			// ATTENTION: dont use zFFF in tests other than TCLD
-			// m - in case of TCLD tests there is an index of bug
-			ShiftRight(arg1, 23, Local0)
-			And(Local0, 0x1ff, Local2)
-			Store(SB00(Local2, 0), Local6)
-		} else {
-			Store(DeRefOf(Index(TFN0, Local2)), Local6)
+            Local3 = (Arg1 & 0x0FFF)
+            If ((Local2 == ZFFF))
+            {
+                /* ATTENTION: dont use zFFF in tests other than TCLD */
+                /* m - in case of TCLD tests there is an index of bug */
+                Local0 = (Arg1 >> 0x17)
+                Local2 = (Local0 & 0x01FF)
+                Local6 = SB00 (Local2, 0x00)
 		}
+            Else
+            {
+                Local6 = DerefOf (TFN0 [Local2])
+            }
 
 		Concatenate(Local7, ", ", Local1)
 		Concatenate(Local1, Local6, Local5)
 		Concatenate(Local5, ", ", Local1)
 		Concatenate(Local1, Local3, Local7)
-
-		if (LEqual(ObjectType(arg2), c00a)) {
+            If ((ObjectType (Arg2) == C00A))
+            {
 			Concatenate(Local7, ", ", Local1)
-			Concatenate(Local1, arg2, Local7)
+                Concatenate (Local1, Arg2, Local7)
 		}
 	}
 
-	return (Local7)
+        Return (Local7)
 }
 
-// Report errors
-Method(RERR,, Serialized)
+    /* Report errors */
+
+    Method (RERR, 0, Serialized)
+    {
+        Name (LPN0, 0x00)
+        Name (LPC0, 0x00)
+        LPN0 = ETR1 /* \ETR1 */
+        If ((ERRS < LPN0))
 {
-	Name(lpN0, 0)
-	Name(lpC0, 0)
-
-	Store(ETR1, lpN0)
-
-	if (LLess(ERRS, lpN0)) {
-		Store(ERRS, lpN0)
+            LPN0 = ERRS /* \ERRS */
 	}
 
-	Store(0, Local0)
-
-	Store("========= ERRORS SUMMARY (max 400):", Debug)
-
-	While (lpN0) {
-
-		Store(DeRefOf(Index(ERRP, Local0)), Local7)
-		Increment(Local0)
-		Store(DeRefOf(Index(ERRP, Local0)), Local6)
-		Increment(Local0)
-		Store(DeRefOf(Index(ERRP, Local0)), Local4)
-		Increment(Local0)
-
-		Store(UNP0(Local7, Local6, Local4), Local1)
-
-		if (ERR4) {
+        Local0 = 0x00
+        Debug = "========= ERRORS SUMMARY (max 400):"
+        While (LPN0)
+        {
+            Local7 = DerefOf (ERRP [Local0])
+            Local0++
+            Local6 = DerefOf (ERRP [Local0])
+            Local0++
+            Local4 = DerefOf (ERRP [Local0])
+            Local0++
+            Local1 = UNP0 (Local7, Local6, Local4)
+            If (ERR4)
+            {
 			Concatenate("", Local7, Local2)
 			Concatenate(Local2, ", ", Local5)
 			Concatenate(Local5, Local6, Local2)
 			Concatenate(Local2, Local1, Local7)
-		} else {
+            }
+            Else
+            {
 			Concatenate("", Local1, Local7)
 		}
 
-		Store(Local7, Debug)
+            Debug = Local7
+            LPN0--
+            LPC0++
+        }
 
-		Decrement(lpN0)
-		Increment(lpC0)
+        If ((ERRS > ETR1))
+        {
+            Debug = "********* Not all errors were traced, maximum exceeded!"
 	}
 
-	if (LGreater(ERRS, ETR1)) {
-		Store("********* Not all errors were traced, maximum exceeded!", Debug)
+        Debug = "========= END."
 	}
-	Store("========= END.", Debug)
+
+    /* Report root Methods run results */
+
+    Method (RRM0, 0, Serialized, 3)
+    {
+        Name (LPN0, 0x00)
+        Name (LPC0, 0x00)
+        LPN0 = ETR0 /* \ETR0 */
+        If ((RMRC < LPN0))
+        {
+            LPN0 = RMRC /* \RMRC */
 }
 
-// Report root Methods run results
-Method(RRM0,, Serialized, 3)
+        Debug = "========= ROOT METHODS SUMMARY (max 600):"
+        While (LPN0)
 {
-	Name(lpN0, 0)
-	Name(lpC0, 0)
+            Local7 = DerefOf (RP0P [LPC0])
+            Debug = Local7
+            LPN0--
+            LPC0++
+        }
 
-	Store(ETR0, lpN0)
+        If ((RMRC > ETR0))
+        {
+            Debug = "********* Not all root Methods were traced, maximum exceeded!"
+        }
 
-	if (LLess(RMRC, lpN0)) {
-		Store(RMRC, lpN0)
+        Debug = "========= END."
 	}
 
-	Store("========= ROOT METHODS SUMMARY (max 600):", Debug)
-	While (lpN0) {
-		Store(DeRefOf(Index(RP0P, lpC0)), Local7)
-		Store(Local7, Debug)
-		Decrement(lpN0)
-		Increment(lpC0)
-	}
-	if (LGreater(RMRC, ETR0)) {
-		Store("********* Not all root Methods were traced, maximum exceeded!", Debug)
-	}
-	Store("========= END.", Debug)
-}
+    /* Final actions */
 
-// Final actions
-Method(FNSH)
+    Method (FNSH, 0, NotSerialized)
 {
-	// Check, the current number of exceptions is zero
+        /* Check, the current number of exceptions is zero */
 
-	CH03("FNSH", 0, 0, __LINE__, 0)
-
-	// Check all the constants are not corrupted
+        CH03 ("FNSH", 0x00, 0x00, 0x07B5, 0x00)
+        /* Check all the constants are not corrupted */
 
 	CST0()
+        /* Run time */
 
-	// Run time
+        Local7 = Timer
+        Local6 = (Local7 - TMT0) /* \TMT0 */
+        Divide (Local6, 0x0A, Local1, Local2)
+        Divide (Local2, 0x000F4240, Local1, Local0)
+        Debug = Concatenate ("Run time (in seconds): 0x", Local0)
+        /* Exceptions total */
 
-	Store(Timer, Local7)
-	Subtract(Local7, tmt0, Local6)
-	Divide(Local6, 10, Local1, Local2)
-	Divide(Local2, 1000000, Local1, Local0)
-	Store(Concatenate("Run time (in seconds): 0x", Local0), Debug)
+        Debug = Concatenate ("The total number of exceptions handled: 0x", EXC1)
+        /* Status of test run */
 
-	// Exceptions total
-
-	Store(Concatenate("The total number of exceptions handled: 0x", EXC1), Debug)
-
-	// Status of test run
-
-	if (ERRS) {
+        If (ERRS)
+        {
 		RERR()
 	}
 
-	// Report root Methods run results
-	RRM0()
+        /* Report root Methods run results */
 
-	if (F64) {
+	RRM0()
+        If (F64)
+        {
 		Concatenate("TEST ACPICA: ", "64-bit :", Local0)
-	} else {
+        }
+        Else
+        {
 		Concatenate("TEST ACPICA: ", "32-bit :", Local0)
 	}
 
-	if (ERR7) {
+        If (ERR7)
+        {
 		Concatenate("!!!! ERRORS were detected during the loading stage, # 0x", ERR7, Debug)
 	}
 
-	Store(0, EXC1)
-
-	if (LOr(ERRS, ERR7)) {
+        EXC1 = 0x00
+        If ((ERRS || ERR7))
+        {
 		Concatenate(Local0, " FAIL : Errors # 0x", Local1)
 		Concatenate(Local1, ERRS, Local2)
 		Concatenate(Local2, ", Failed tests # 0x", Local1)
-		Store (Concatenate(Local1, ERR6), Debug)
-
-		return (1)
+            Debug = Concatenate (Local1, ERR6)
+            Return (0x01)
 	}
 
-	Store(Concatenate(Local0, " PASS"), Debug)
-
-	return (0)
+        Debug = Concatenate (Local0, " PASS")
+        Return (0x00)
 }
 
-// Trace execution
-
+    /* Trace execution */
 /*
  * Report write operation
  * arg0 - object where writing
  * arg1 - index where writing
  * arg2 - value
  */
-Method(TRC0, 3)
+    Method (TRC0, 3, NotSerialized)
 {
-	if (TRCF) {
+        If (TRCF)
+        {
 		Concatenate(TRCH, ", WRITE: where ", Local0)
-		Concatenate(Local0, arg1, Local1)
+            Concatenate (Local0, Arg1, Local1)
 		Concatenate(Local1, ", ", Local0)
-		Concatenate(Local0, arg2, Local1)
-		Store(Local1, Debug)
+            Concatenate (Local0, Arg2, Local1)
+            Debug = Local1
 	}
 }
 
@@ -2052,14 +2177,15 @@ Method(TRC0, 3)
  * arg1 - index from where reading
  * arg2 - obtained value
  */
-Method(TRC1, 3)
+    Method (TRC1, 3, NotSerialized)
 {
-	if (TRCF) {
+        If (TRCF)
+        {
 		Concatenate(TRCH, ", READ: where ", Local0)
-		Concatenate(Local0, arg1, Local1)
+            Concatenate (Local0, Arg1, Local1)
 		Concatenate(Local1, ", ", Local0)
-		Concatenate(Local0, arg2, Local1)
-		Store(Local1, Debug)
+            Concatenate (Local0, Arg2, Local1)
+            Debug = Local1
 	}
 }
 
@@ -2067,34 +2193,39 @@ Method(TRC1, 3)
  * Report string
  * arg0 - string
  */
-Method(TRC2, 1)
+    Method (TRC2, 1, NotSerialized)
 {
-	if (TRCF) {
+        If (TRCF)
+        {
 		Concatenate(TRCH, ", ", Local0)
-		Concatenate(Local0, arg0, Local1)
-		Store(Local1, Debug)
+            Concatenate (Local0, Arg0, Local1)
+            Debug = Local1
 	}
 }
 
-// Switch on trace
-Method(TRC8)
+    /* Switch on trace */
+
+    Method (TRC8, 0, NotSerialized)
 {
-	Store(1, TRCF)
+        TRCF = 0x01
 }
 
-// Switch off trace
-Method(TRC9)
+    /* Switch off trace */
+
+    Method (TRC9, 0, NotSerialized)
 {
-	Store(0, TRCF)
+        TRCF = 0x00
 }
 
-// Start of test
-Method(ts00, 1)
+    /* Start of test */
+
+    Method (TS00, 1, NotSerialized)
 {
-	if (pr01) {
-		Concatenate("Test ", arg0, Local0)
+        If (PR01)
+        {
+            Concatenate ("Test ", Arg0, Local0)
 		Concatenate(Local0, " started", Local1)
-		Store(Local1, Debug)
+            Debug = Local1
 	}
 }
 
@@ -2102,11 +2233,14 @@ Method(ts00, 1)
  * Convert the Timer units (one unit - 100 nsecs) to Seconds
  * arg0 - interval in Timer units
  */
-Method(TMR0, 1)
+    Method (TMR0, 1, NotSerialized)
 {
-	// Convert to microseconds
-	Divide(arg0, 10, Local0, Local1)
-	// Convert to seconds
-	Divide(Local1, 1000000, Local0, Local2)
+        /* Convert to microseconds */
+
+        Divide (Arg0, 0x0A, Local0, Local1)
+        /* Convert to seconds */
+
+        Divide (Local1, 0x000F4240, Local0, Local2)
 	Return (Local2)
 }
+

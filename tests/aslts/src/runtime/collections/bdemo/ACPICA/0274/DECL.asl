@@ -25,73 +25,74 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /*
  * Bug 274:
  *
  * SUMMARY: Named object as element of Package is handled by ACPICA differently than by MS
- *
- * MS handles Named References as strings since the ASL grammar does not allow
- * object references for PackageElements.
  */
-
-Method(mc74,, Serialized)
+    Method (MC74, 0, Serialized)
 {
-	Name(i000, 0xabcd0000)
-	Name(i001, 0xabcd0001)
-	Name(i002, 0xabcd0002)
-	Name(i003, 0xabcd0003)
-
-	Name(ii00, 0x11112222)
-
-	Name(p000, Package() {
-		i000,
-		i001,
-		i002,
+        Name (I000, 0xABCD0000)
+        Name (I001, 0xABCD0001)
+        Name (I002, 0xABCD0002)
+        Name (I003, 0xABCD0003)
+        Name (II00, 0x11112222)
+        Name (P000, Package (0x06)
+        {
+            I000, 
+            I001, 
+            I002, 
 		"i000",
-		\mc74.i003,
-		0xabcd0004
+            \MC74.I003, 
+            0xABCD0004
 		})
-
-	Method(CHCK, 4)
+        Method (CHCK, 4, NotSerialized)
 	{
-		Store(DerefOf(Index(Arg1, Arg2)), Local0)
-		if (LNotEqual(Local0, Arg0)) {
-			err("", zFFF, __LINE__, 0, 0, Arg0, Local0)
+            Local0 = DerefOf (Arg1 [Arg2])
+            If ((Local0 != Arg0))
+            {
+                ERR ("", ZFFF, 0x39, 0x00, 0x00, Arg0, Local0)
 		}
 	}
 
-	// Choose benchmark package
-	if (y274) {
-		Store(Package() {
+        /* Choose benchmark package */
+
+        If (SLCK)
+        {
+            Local2 = Package (0x06)
+                {
 				"I000",
 				"I001",
 				"I002",
 				"i000",
 				"I003",
-				0xabcd0004},
-			Local2)
-	} else {
-		Store(Package() {
-				0xabcd0000,
-				0xabcd0001,
-				0xabcd0002,
+                    0xABCD0004
+                }
+        }
+        Else
+        {
+            Local2 = Package (0x06)
+                {
+                    0xABCD0000, 
+                    0xABCD0001, 
+                    0xABCD0002, 
 				"i000",
-				0xabcd0003,
-				0xabcd0004},
-			Local2)
+                    0xABCD0003, 
+                    0xABCD0004
+                }
 	}
 
-	Store(DerefOf(Index(p000, 0)), Local0)
-	CHCK(Local0, Local2, 0, 0x001)
-	Store(DerefOf(Index(p000, 1)), Local0)
-	CHCK(Local0, Local2, 1, 0x002)
-	Store(DerefOf(Index(p000, 2)), Local0)
-	CHCK(Local0, Local2, 2, 0x003)
-	Store(DerefOf(Index(p000, 3)), Local0)
-	CHCK(Local0, Local2, 3, 0x004)
-	Store(DerefOf(Index(p000, 4)), Local0)
-	CHCK(Local0, Local2, 4, 0x005)
-	Store(DerefOf(Index(p000, 5)), Local0)
-	CHCK(Local0, Local2, 5, 0x006)
+        Local0 = DerefOf (P000 [0x00])
+        CHCK (Local0, Local2, 0x00, 0x01)
+        Local0 = DerefOf (P000 [0x01])
+        CHCK (Local0, Local2, 0x01, 0x02)
+        Local0 = DerefOf (P000 [0x02])
+        CHCK (Local0, Local2, 0x02, 0x03)
+        Local0 = DerefOf (P000 [0x03])
+        CHCK (Local0, Local2, 0x03, 0x04)
+        Local0 = DerefOf (P000 [0x04])
+        CHCK (Local0, Local2, 0x04, 0x05)
+        Local0 = DerefOf (P000 [0x05])
+        CHCK (Local0, Local2, 0x05, 0x06)
 }
+
