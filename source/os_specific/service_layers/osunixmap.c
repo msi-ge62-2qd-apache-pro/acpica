@@ -216,7 +216,7 @@ AcpiOsMapMemory (
     ACPI_PHYSICAL_ADDRESS   Where,
     ACPI_SIZE               Length)
 {
-    UINT8                   *MappedMemory;
+    void                   *MappedMemory;
     ACPI_PHYSICAL_ADDRESS   Offset;
     ACPI_SIZE               PageSize;
     int                     fd;
@@ -246,7 +246,7 @@ AcpiOsMapMemory (
     }
 
     close (fd);
-    return (ACPI_CAST8 (MappedMemory + Offset));
+    return (ACPI_CAST8 (MappedMemory) + Offset);
 }
 
 
@@ -275,5 +275,5 @@ AcpiOsUnmapMemory (
 
     PageSize = AcpiOsGetPageSize ();
     Offset = ACPI_TO_INTEGER (Where) % PageSize;
-    munmap ((UINT8 *) Where - Offset, (Length + Offset));
+    munmap ((caddr_t) (ACPI_CAST8 (Where) - Offset), (Length + Offset));
 }
