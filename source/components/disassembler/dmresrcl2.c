@@ -358,8 +358,10 @@ AcpiDmGpioCommon (
     AcpiDmIndent (Level + 1);
     AcpiOsPrintf ("}\n");
 
+#ifdef ACPI_APPLICATION
     MpSaveGpioInfo (Info->MappingOp, Resource,
         PinCount, PinList, DeviceName);
+#endif
 }
 
 
@@ -755,7 +757,9 @@ AcpiDmI2cSerialBusDescriptor (
     AcpiDmDumpSerialBusVendorData (Resource, Level);
     AcpiOsPrintf (")\n");
 
+#ifdef ACPI_APPLICATION
     MpSaveSerialInfo (Info->MappingOp, Resource, DeviceName);
+#endif
 }
 
 
@@ -838,7 +842,9 @@ AcpiDmSpiSerialBusDescriptor (
     AcpiDmDumpSerialBusVendorData (Resource, Level);
     AcpiOsPrintf (")\n");
 
+#ifdef ACPI_APPLICATION
     MpSaveSerialInfo (Info->MappingOp, Resource, DeviceName);
+#endif
 }
 
 
@@ -924,7 +930,9 @@ AcpiDmUartSerialBusDescriptor (
     AcpiDmDumpSerialBusVendorData (Resource, Level);
     AcpiOsPrintf (")\n");
 
+#ifdef ACPI_APPLICATION
     MpSaveSerialInfo (Info->MappingOp, Resource, DeviceName);
+#endif
 }
 
 

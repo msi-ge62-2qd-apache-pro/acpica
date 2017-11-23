@@ -483,6 +483,7 @@ AcpiDmUuid (
         Data[8], Data[9],
         Data[10], Data[11], Data[12], Data[13], Data[14], Data[15]);
 
+#ifdef ACPI_APPLICATION
     /* Dump the UUID description string if available */
 
     Description = AcpiAhMatchUuid (Data);
@@ -490,6 +491,7 @@ AcpiDmUuid (
     {
         AcpiOsPrintf (" /* %s */", Description);
     }
+#endif
 }
 
 

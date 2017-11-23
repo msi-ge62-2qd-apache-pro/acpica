@@ -42,8 +42,8 @@ extern "C" {
 #include <sys/ctype.h>
 #else
 #include <ctype.h>
-/* XXX-mg #include <strings.h> */
 #include <stdlib.h>
+#include <strings.h>
 #endif
 
 /* Function name used for debug output. */
@@ -69,8 +69,6 @@ uint32_t acpi_strtoul(const char *, char **, int);
  * We should use acgcc.h, but lint does not like it. Until lint is removed
  * we need to have private definitions here.
  */
-/* XXX-mg #define	ACPI_PRINTF_LIKE(c)	__PRINTFLIKE(c)
-#define	ACPI_UNUSED_VAR		__unused */
 #define	ACPI_USE_NATIVE_DIVIDE
 #ifdef _KERNEL
 #define	ACPI_FLUSH_CPU_CACHE()	(__acpi_wbinvd())
@@ -78,7 +76,10 @@ uint32_t acpi_strtoul(const char *, char **, int);
 #define	ACPI_FLUSH_CPU_CACHE()
 #endif
 
-/* XXX-mg #define	ACPI_DISASSEMBLER */
+#ifdef _KERNEL
+#define	ACPI_DISASSEMBLER
+#define	_STRICT_SYMBOLS
+#endif /* _KERNEL */
 #define	ACPI_PACKED_POINTERS_NOT_SUPPORTED
 
 /*
@@ -105,7 +106,7 @@ uint32_t acpi_strtoul(const char *, char **, int);
  * being loaded as part of accommon.h.
  */
 #define	ACPI_USE_SYSTEM_CLIBRARY
-#endif
+#endif /* _KERNEL */
 
 #define	ACPI_ASM_MACROS
 #define	BREAKPOINT3
