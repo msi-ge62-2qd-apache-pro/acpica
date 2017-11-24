@@ -585,7 +585,7 @@ ACPI_STATUS
 AcpiEvInitializeGpeBlock (
     ACPI_GPE_XRUPT_INFO     *GpeXruptInfo,
     ACPI_GPE_BLOCK_INFO     *GpeBlock,
-    void                    *Ignored)
+    void                    *Context)
 {
     ACPI_STATUS             Status;
     ACPI_GPE_EVENT_INFO     *GpeEventInfo;
@@ -594,6 +594,7 @@ AcpiEvInitializeGpeBlock (
     UINT32                  GpeNumber;
     UINT32                  i;
     UINT32                  j;
+    BOOLEAN                 *IsPollingNeeded = Context;
 
 
     ACPI_FUNCTION_TRACE (EvInitializeGpeBlock);
@@ -624,12 +625,15 @@ AcpiEvInitializeGpeBlock (
             GpeIndex = (i * ACPI_GPE_REGISTER_WIDTH) + j;
             GpeEventInfo = &GpeBlock->EventInfo[GpeIndex];
             GpeNumber = GpeBlock->BlockBaseNumber + GpeIndex;
+            GpeEventInfo->Flags |= ACPI_GPE_INITIALIZED;
 
             /*
              * Ignore GPEs that have no corresponding _Lxx/_Exx method
              * and GPEs that are used to wake the system
              */
             if ((ACPI_GPE_DISPATCH_TYPE (GpeEventInfo->Flags) != ACPI_GPE_DISPATCH_METHOD) ||
+                (ACPI_GPE_DISPATCH_TYPE (GpeEventInfo->Flags) == ACPI_GPE_DISPATCH_HANDLER) ||
+                (ACPI_GPE_DISPATCH_TYPE (GpeEventInfo->Flags) == ACPI_GPE_DISPATCH_RAW_HANDLER) ||
                 (GpeEventInfo->Flags & ACPI_GPE_CAN_WAKE))
             {
                 continue;
@@ -640,11 +644,17 @@ AcpiEvInitializeGpeBlock (
             {
                 ACPI_EXCEPTION ((AE_INFO, Status,
                     "Could not enable GPE 0x%02X",
-                    GpeNumber));
+                    GpeIndex + GpeBlock->BlockBaseNumber));
                 continue;
             }
 
             GpeEventInfo->Flags |= ACPI_GPE_AUTO_ENABLED;
+
+            if (IsPollingNeeded &&
+                ACPI_GPE_IS_POLLING_NEEDED (GpeEventInfo))
+            {
+                *IsPollingNeeded = TRUE;
+            }
             (void) AcpiEvDetectGpe (
                 GpeBlock->Node, GpeEventInfo, GpeNumber);
 
