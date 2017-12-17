@@ -416,27 +416,11 @@ AslDoOptions (
         {
         case '^':
 
-            /* Get the required argument */
-//REVIEW_REHABMAN: this is wrong: breaks common use (similar to -da below)
-#if 0
-            if (AcpiGetoptArgument (argc, argv))
-            {
-                return (-1);
-            }
-#endif
             Gbl_DoCompile = FALSE;
             break;
 
         case 'a':
 
-            /* Get the required argument */
-//REVIEW_REHABMAN: this is wrong: breaks common use (similar to -d^ above)
-#if 0
-            if (AcpiGetoptArgument (argc, argv))
-            {
-                return (-1);
-            }
-#endif
             Gbl_DoCompile = FALSE;
             Gbl_DisassembleAll = TRUE;
             break;
