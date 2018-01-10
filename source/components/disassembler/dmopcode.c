@@ -197,7 +197,7 @@ AcpiDmDisplayTargetPathname (
 {
     ACPI_PARSE_OBJECT       *NextOp;
     ACPI_PARSE_OBJECT       *PrevOp = NULL;
-    char                    *Pathname;
+    // char                    *Pathname;
     const ACPI_OPCODE_INFO  *OpInfo;
 
 
@@ -803,7 +803,7 @@ AcpiDmDisassembleOneOp (
     ACPI_PARSE_OBJECT       *Child;
     ACPI_STATUS             Status;
     UINT8                   *Aml;
-    const AH_DEVICE_ID      *IdInfo;
+    // const AH_DEVICE_ID      *IdInfo;
 
 
     if (!Op)
